@@ -1,9 +1,20 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.gilog">
+    <uses-permission android:name="android.permission.INTERNET"/>
    <application
         android:label="gilog"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+       <activity android:name="com.kakao.sdk.flutter.AuthCodeCustomTabsActivity">
+           <intent-filter android:label="flutter_web_auth">
+               <action android:name="android.intent.action.VIEW" />
+               <category android:name="android.intent.category.DEFAULT" />
+               <category android:name="android.intent.category.BROWSABLE" />
+
+               <!-- Redirect URI, "kakao${YOUR_NATIVE_APP_KEY}://oauth" 형식 -->
+               <data android:scheme="kakaoc4ddd110fec9eaab625667112de706fb" android:host="oauth"/>
+           </intent-filter>
+       </activity>
         <activity
             android:name=".MainActivity"
             android:exported="true"

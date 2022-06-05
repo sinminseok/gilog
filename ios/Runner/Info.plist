@@ -2,6 +2,23 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+    <key>LSApplicationQueriesSchemes</key>
+      <array>
+          <!-- common -->
+          <string>kakaoc4ddd110fec9eaab625667112de706fb</string>
+
+          <!-- KakaoTalk login -->
+          <string>kakaokompassauth</string>
+          <string>storykompassauth</string>
+
+          <!-- KakaoLink -->
+          <string>kakaolink</string>
+          <string>kakaotalk-5.9.7</string>
+      </array>
+
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>App needs access to photo lib for profile images</string>
+
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
