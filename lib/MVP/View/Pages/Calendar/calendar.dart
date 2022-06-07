@@ -65,15 +65,8 @@ class _Calendar_Screen extends State<Calendar_Screen> {
           Container(
             height: size.height * 0.7,
             child: SfCalendar(
-              headerStyle: CalendarHeaderStyle(
 
-                  textAlign: TextAlign.center,
-                  textStyle: TextStyle(
-                    fontSize: 21,
-                    fontStyle: FontStyle.normal,
-                    letterSpacing: 5,
-                    color: Colors.black,
-                  )),
+              viewHeaderHeight: 30,
               view: CalendarView.month,
               onTap: calendarTapped,
               dataSource: MeetingDataSource(_getDataSource()),

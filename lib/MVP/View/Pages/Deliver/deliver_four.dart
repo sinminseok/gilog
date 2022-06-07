@@ -25,6 +25,13 @@ class _Deliver_Four_Screen extends State<Deliver_Four_Screen> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        iconTheme: IconThemeData(
+          color: Colors.black,//색변경
+        ),
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -107,11 +114,7 @@ class _Deliver_Four_Screen extends State<Deliver_Four_Screen> {
                 ),
                 InkWell(
                   onTap: (){
-                    Navigator.push(
-                        context,
-                        PageTransition(
-                            type: PageTransitionType.fade,
-                            child: Deliver_Two_Screen()));
+
                   },
                   child: Column(
                     children: [

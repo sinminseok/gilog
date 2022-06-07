@@ -1,8 +1,11 @@
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:gilog/MVP/View/Pages/Deliver/deliver_two.dart';
 import 'package:page_transition/page_transition.dart';
+
+import '../../../../Utils/toast.dart';
 
 class Deliver_Screen extends StatefulWidget {
   const Deliver_Screen({Key? key}) : super(key: key);
@@ -21,8 +24,12 @@ class _Deliver_ScreenState extends State<Deliver_Screen> {
     'https://images.unsplash.com/photo-1519985176271-adb1088fa94c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=a0c8d632e977f94e5d312d9893258f59&auto=format&fit=crop&w=1355&q=80'
   ];
 
+  bool check_photo = false;
+  bool check_write = false;
+
   @override
   Widget build(BuildContext context) {
+
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: SingleChildScrollView(
@@ -42,7 +49,7 @@ class _Deliver_ScreenState extends State<Deliver_Screen> {
               options: CarouselOptions(
                   autoPlay: false, aspectRatio: 2.0, enlargeCenterPage: true),
             ),
-            SizedBox(height: size.height*0.1,),
+            SizedBox(height: size.height*0.05,),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -81,7 +88,7 @@ class _Deliver_ScreenState extends State<Deliver_Screen> {
               ],
             ),
             SizedBox(
-              height: size.height*0.1,
+              height: size.height*0.03,
             ),
 
             Row(
@@ -89,13 +96,27 @@ class _Deliver_ScreenState extends State<Deliver_Screen> {
               children: [
                 InkWell(
                   onTap: (){
+                    setState(() {
+
+                      if(check_write == true){
+                        check_photo = !check_photo;
+                        check_write = false;
+                      }else{
+                        check_photo = !check_photo;
+                      }
+                    });
 
                   },
                   child: Column(
                     children: [
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Text("사진만 할래요!", style: TextStyle(fontSize: 21,fontWeight: FontWeight.bold),),
+                        child: Row(
+                          children: [
+                            Text("사진만 할래요!", style: TextStyle(fontSize: 21,fontWeight: FontWeight.bold,fontFamily: "numberfont"),),
+                            check_photo == true ?Icon(Icons.check , color: Colors.purple,):Container()
+                          ],
+                        ),
                       ),
                       Container(
                         color: Colors.black,
@@ -107,17 +128,31 @@ class _Deliver_ScreenState extends State<Deliver_Screen> {
                 ),
                 InkWell(
                   onTap: (){
-                    Navigator.push(
-                        context,
-                        PageTransition(
-                            type: PageTransitionType.fade,
-                            child: Deliver_Two_Screen()));
+                    setState(() {
+
+                      if(check_photo == true){
+                        check_photo = false;
+                        check_write = !check_write;
+                      }else{
+                        check_write = !check_write;
+                      }
+                    });
+                    // Navigator.push(
+                    //     context,
+                    //     PageTransition(
+                    //         type: PageTransitionType.fade,
+                    //         child: Deliver_Two_Screen()));
                   },
                   child: Column(
                     children: [
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Text("사진만 할래요!", style: TextStyle(fontSize: 21,fontWeight: FontWeight.bold),),
+                        child: Row(
+                          children: [
+                            Text("글도 할래요!", style: TextStyle(fontSize: 21,fontWeight: FontWeight.bold,fontFamily: "numberfont"),),
+                            check_write==true ? Icon(Icons.check , color: Colors.purple,):Container()
+                          ],
+                        ),
                       ),
                       Container(
                         color: Colors.black,
@@ -129,7 +164,40 @@ class _Deliver_ScreenState extends State<Deliver_Screen> {
                 ),
 
               ],
-            )
+            ),
+            SizedBox(height: size.height*0.03,),
+            InkWell(
+              onTap: (){
+                if(check_photo ==false && check_write == false){
+                  showAlertDialog(context,"알림","사진 또는 글을 선택해주세요");
+                  return;
+                }if(check_photo == true){
+                  Navigator.push(
+                      context,
+                      PageTransition(
+                          type: PageTransitionType.fade,
+                          child: Deliver_Two_Screen(data: "사진만",)));
+                }if(check_write == true){
+                  Navigator.push(
+                      context,
+                      PageTransition(
+                          type: PageTransitionType.fade,
+                          child: Deliver_Two_Screen(data:"사진,글둘다")));
+                }
+
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(3), color: Colors.purple),
+                width: size.width * 0.7,
+                height: size.height * 0.06,
+                child: Center(
+                    child: Text(
+                      "다음으로",
+                      style: TextStyle(color: Colors.white,fontFamily: "numberfont",fontWeight: FontWeight.bold),
+                    )),
+              ),
+            ),
           ],
         ),
       ),

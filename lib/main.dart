@@ -30,15 +30,15 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     //StreamProvider 하단에 있는 widget 들은 value 값이 변경될때마다 감지가 가능하다.
     return MaterialApp(
-        // localizationsDelegates: [
-        //   GlobalMaterialLocalizations.delegate,
-        //   // ... app-specific localization delegate[s] here
-        //   SfGlobalLocalizations.delegate
-        // ],
-        // supportedLocales: [
-        //   const Locale('ko')
-        //   // ... other locales the app supports
-        // ],
+        localizationsDelegates: [
+          GlobalMaterialLocalizations.delegate,
+          // ... app-specific localization delegate[s] here
+          SfGlobalLocalizations.delegate
+        ],
+        supportedLocales: [
+          const Locale('ko')
+          // ... other locales the app supports
+        ],
         debugShowCheckedModeBanner: false,
         locale: const Locale('ko'),
         theme: ThemeData(

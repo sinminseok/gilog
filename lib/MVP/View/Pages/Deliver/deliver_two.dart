@@ -1,34 +1,46 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:carousel_slider/carousel_slider.dart';
+import 'package:gilog/MVP/View/Pages/Deliver/deliver_three.dart';
+import 'package:page_transition/page_transition.dart';
+
+import '../../../../Utils/toast.dart';
 
 class Deliver_Two_Screen extends StatefulWidget {
-  const Deliver_Two_Screen({Key? key}) : super(key: key);
+  String? data;
+  Deliver_Two_Screen({required this.data});
 
   @override
   _Deliver_Two_Screen createState() => _Deliver_Two_Screen();
 }
 
 class _Deliver_Two_Screen extends State<Deliver_Two_Screen> {
-  final List<String> imgList = [
-    'https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80',
-    'https://images.unsplash.com/photo-1522205408450-add114ad53fe?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=368f45b0888aeb0b7b08e3a1084d3ede&auto=format&fit=crop&w=1950&q=80',
-    'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=94a1e718d89ca60a6337a6008341ca50&auto=format&fit=crop&w=1950&q=80',
-    'https://images.unsplash.com/photo-1523205771623-e0faa4d2813d?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=89719a0d55dd05e2deae4120227e6efc&auto=format&fit=crop&w=1953&q=80',
-    'https://images.unsplash.com/photo-1508704019882-f9cf40e475b4?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=8c6e5e3aba713b17aa1fe71ab4f0ae5b&auto=format&fit=crop&w=1352&q=80',
-    'https://images.unsplash.com/photo-1519985176271-adb1088fa94c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=a0c8d632e977f94e5d312d9893258f59&auto=format&fit=crop&w=1355&q=80'
-  ];
+  bool check_one = false;
+  bool check_two = false;
+  int book_count = 0;
+
+  bool check_count_one = false;
+  bool check_count_two = false;
+  bool check_count_three = false;
+  bool check_count_four = false;
+  bool check_count_five = false;
+
+
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        iconTheme: IconThemeData(
+          color: Colors.black,//색변경
+        ),
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            SizedBox(
-              height: size.height * 0.1,
-            ),
+
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -67,21 +79,35 @@ class _Deliver_Two_Screen extends State<Deliver_Two_Screen> {
               ],
             ),
             SizedBox(
-              height: size.height * 0.1,
+              height: size.height * 0.05,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    setState(() {
+                      if(check_two == true){
+                        check_one = !check_one;
+                        check_two = false;
+                      }else{
+                        check_one = !check_one;
+                      }
+                    });
+                  },
                   child: Column(
                     children: [
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          "12개의 기-록",
-                          style: TextStyle(
-                              fontSize: 21, fontWeight: FontWeight.bold),
+                        child: Row(
+                          children: [
+                            Text(
+                              "12개의 기-록",
+                              style: TextStyle(
+                                  fontSize: 21, fontWeight: FontWeight.bold),
+                            ),
+                            check_one == true?Icon(Icons.check,color: Colors.purple,):Container(),
+                          ],
                         ),
                       ),
                       Container(
@@ -93,15 +119,34 @@ class _Deliver_Two_Screen extends State<Deliver_Two_Screen> {
                   ),
                 ),
                 InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    setState(() {
+                      if(check_one == true){
+                        check_two = !check_two;
+                        check_one = false;
+                      }else{
+                        check_two = !check_two;
+                      }
+                    });
+                    // Navigator.push(
+                    //     context,
+                    //     PageTransition(
+                    //         type: PageTransitionType.fade,
+                    //         child: Deliver_Three_Screen()));
+                  },
                   child: Column(
                     children: [
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          "24개의 기록",
-                          style: TextStyle(
-                              fontSize: 21, fontWeight: FontWeight.bold),
+                        child: Row(
+                          children: [
+                            Text(
+                              "24개의 기록",
+                              style: TextStyle(
+                                  fontSize: 21, fontWeight: FontWeight.bold),
+                            ),
+                            check_two==true?Icon(Icons.check,color: Colors.purple,):Container()
+                          ],
                         ),
                       ),
                       Container(
@@ -125,73 +170,205 @@ class _Deliver_Two_Screen extends State<Deliver_Two_Screen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Container(
-                  width: size.width * 0.17,
-                  height: size.height * 0.05,
-                  margin: EdgeInsets.all(4),
-                  padding: EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                      color: Colors.grey, borderRadius: BorderRadius.circular(10)),
-                  child: Center(
-                      child: Text(
-                        "1권",
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      )),
+                InkWell(
+
+                  onTap: (){
+                    setState(() {
+
+                      book_count = 1;
+                      if(check_count_five==true || check_count_two==true || check_count_three==true || check_count_four==true){
+                        check_count_five= false;
+                        check_count_two= false;
+                        check_count_three= false;
+                        check_count_four= false;
+                        check_count_one = !check_count_one;
+                      }else{
+                        check_count_one = !check_count_one;
+                      }
+
+                    });
+                  },
+                  child: Container(
+                    width: size.width * 0.17,
+                    height: size.height * 0.05,
+                    margin: EdgeInsets.all(4),
+                    padding: EdgeInsets.all(10),
+                    decoration: check_count_one == true?BoxDecoration(
+                        color: Colors.purple, borderRadius: BorderRadius.circular(10)):BoxDecoration(
+                        color: Colors.grey, borderRadius: BorderRadius.circular(10)),
+                    child: Center(
+                        child: Text(
+                          "1권",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        )),
+                  ),
                 ),
-                Container(
-                  width: size.width * 0.17,
-                  height: size.height * 0.05,
-                  margin: EdgeInsets.all(4),
-                  padding: EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                      color: Colors.grey, borderRadius: BorderRadius.circular(10)),
-                  child: Center(
-                      child: Text(
-                        "2권",
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      )),
+                InkWell(
+
+                  onTap: (){
+                    setState(() {
+
+                      book_count = 2;
+                      if(check_count_five==true || check_count_one==true || check_count_three==true || check_count_four==true){
+                        check_count_five= false;
+                        check_count_one= false;
+                        check_count_three= false;
+                        check_count_four= false;
+                        check_count_two = !check_count_two;
+                      }else{
+                        check_count_two = !check_count_two;
+                      }
+
+                    });
+                  },
+                  child: Container(
+                    width: size.width * 0.17,
+                    height: size.height * 0.05,
+                    margin: EdgeInsets.all(4),
+                    padding: EdgeInsets.all(10),
+                    decoration: check_count_two == true?BoxDecoration(
+                        color: Colors.purple, borderRadius: BorderRadius.circular(10)):BoxDecoration(
+                        color: Colors.grey, borderRadius: BorderRadius.circular(10)),
+                    child: Center(
+                        child: Text(
+                          "2권",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        )),
+                  ),
                 ),
-                Container(
-                  width: size.width * 0.17,
-                  height: size.height * 0.05,
-                  margin: EdgeInsets.all(4),
-                  padding: EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                      color: Colors.grey, borderRadius: BorderRadius.circular(10)),
-                  child: Center(
-                      child: Text(
-                        "3권",
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      )),
+                InkWell(
+
+                  onTap: (){
+                    setState(() {
+
+                      book_count = 3;
+                      if(check_count_five==true || check_count_two==true || check_count_one==true || check_count_four==true){
+                        check_count_five= false;
+                        check_count_two= false;
+                        check_count_one= false;
+                        check_count_four= false;
+                        check_count_three = !check_count_three;
+                      }else{
+                        check_count_three = !check_count_three;
+                      }
+
+                    });
+                  },
+                  child: Container(
+                    width: size.width * 0.17,
+                    height: size.height * 0.05,
+                    margin: EdgeInsets.all(4),
+                    padding: EdgeInsets.all(10),
+                    decoration: check_count_three == true?BoxDecoration(
+                        color: Colors.purple, borderRadius: BorderRadius.circular(10)):BoxDecoration(
+                        color: Colors.grey, borderRadius: BorderRadius.circular(10)),
+                    child: Center(
+                        child: Text(
+                          "3권",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        )),
+                  ),
                 ),
-                Container(
-                  width: size.width * 0.17,
-                  height: size.height * 0.05,
-                  margin: EdgeInsets.all(4),
-                  padding: EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                      color: Colors.grey, borderRadius: BorderRadius.circular(10)),
-                  child: Center(
-                      child: Text(
-                        "4권",
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      )),
+                InkWell(
+
+                  onTap: (){
+                    setState(() {
+
+                      book_count = 4;
+                      if(check_count_five==true || check_count_two==true || check_count_three==true || check_count_one==true){
+                        check_count_five= false;
+                        check_count_two= false;
+                        check_count_three= false;
+                        check_count_one= false;
+                        check_count_four = !check_count_four;
+                      }else{
+                        check_count_four = !check_count_four;
+                      }
+
+                    });
+                  },
+                  child: Container(
+                    width: size.width * 0.17,
+                    height: size.height * 0.05,
+                    margin: EdgeInsets.all(4),
+                    padding: EdgeInsets.all(10),
+                    decoration: check_count_four == true?BoxDecoration(
+                        color: Colors.purple, borderRadius: BorderRadius.circular(10)):BoxDecoration(
+                        color: Colors.grey, borderRadius: BorderRadius.circular(10)),
+                    child: Center(
+                        child: Text(
+                          "4권",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        )),
+                  ),
                 ),
-                Container(
-                  width: size.width * 0.17,
-                  height: size.height * 0.05,
-                  margin: EdgeInsets.all(4),
-                  padding: EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                      color: Colors.grey, borderRadius: BorderRadius.circular(10)),
-                  child: Center(
-                      child: Text(
-                        "5권",
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      )),
+                InkWell(
+
+                  onTap: (){
+                    setState(() {
+
+                      book_count = 5;
+                      if(check_count_one==true || check_count_two==true || check_count_three==true || check_count_four==true){
+                        check_count_one= false;
+                        check_count_two= false;
+                        check_count_three= false;
+                        check_count_four= false;
+                        check_count_five = !check_count_five;
+                      }else{
+                        check_count_five = !check_count_five;
+                      }
+
+                    });
+                  },
+                  child: Container(
+                    width: size.width * 0.17,
+                    height: size.height * 0.05,
+                    margin: EdgeInsets.all(4),
+                    padding: EdgeInsets.all(10),
+                    decoration: check_count_five == true?BoxDecoration(
+                        color: Colors.purple, borderRadius: BorderRadius.circular(10)):BoxDecoration(
+                        color: Colors.grey, borderRadius: BorderRadius.circular(10)),
+                    child: Center(
+                        child: Text(
+                          "5권",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        )),
+                  ),
                 ),
               ],
-            )
+            ),
+        SizedBox(height: size.height*0.07,),
+        InkWell(
+          onTap: (){
+            if(check_one ==false && check_two == false){
+              showAlertDialog(context,"알림","인화할 페이지 수를 선택해주세요");
+              return;
+            }if(check_one == true){
+              Navigator.push(
+                  context,
+                  PageTransition(
+                      type: PageTransitionType.fade,
+                      child: Deliver_Three_Screen(book_page: "12개의 기록", book_count: book_count)));
+            }if(check_two == true){
+              Navigator.push(
+                  context,
+                  PageTransition(
+                      type: PageTransitionType.fade,
+                      child: Deliver_Three_Screen(book_page:"24개의 기록" , book_count:book_count)));
+            }
+
+          },
+          child: Container(
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(3), color: Colors.purple),
+            width: size.width * 0.7,
+            height: size.height * 0.06,
+            child: Center(
+                child: Text(
+                  "다음으로",
+                  style: TextStyle(color: Colors.white,fontFamily: "numberfont",fontWeight: FontWeight.bold),
+                )),
+          ),)
           ],
         ),
       ),

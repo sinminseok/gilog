@@ -50,31 +50,44 @@ class _Mypage_ScreenState extends State<Mypage_Screen> {
                 SizedBox(
                   width: size.width * 0.1,
                 ),
-                Text("멀티 프로필",style: TextStyle(fontSize: 21),),
+                Text(
+                  "멀티 프로필",
+                  style: TextStyle(fontSize: 21),
+                ),
                 Padding(
                   padding: const EdgeInsets.only(left: 13.0),
                   child: Icon(Icons.settings),
                 )
               ],
             ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Container(
-              height: size.height*0.3,
-              child: ListView.builder(
-                  padding: const EdgeInsets.all(8),
-                  itemCount: entries.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Container(
-                      height: size.height*0.1,
-                      color: Colors.amber[colorCodes[index]],
-                      child: Center(child: Text('Entry ${entries[index]}')),
-                    );
-                  }
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                height: size.height * 0.3,
+                child: ListView.builder(
+                    padding: const EdgeInsets.all(8),
+                    itemCount: entries.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Container(
+                        height: size.height * 0.1,
+                        color: Colors.white12,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Container(child: Image.asset("assets/images/gi_icon.png"),),
+                            SizedBox(width: size.width*0.05,),
+                            Text("멀티프로필"),
+                            SizedBox(width: size.width*0.4,),
+                            Icon(Icons.arrow_forward_ios_outlined)
+                          ],
+                        )
+                      );
+                    }),
               ),
             ),
-          ),
-            SizedBox(height: size.height*0.2,),
+            SizedBox(
+              height: size.height * 0.2,
+            ),
             Container(
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(3), color: Colors.purple),
