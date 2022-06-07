@@ -9,9 +9,12 @@ class KakaoLogin implements KaKao_Social_Login{
       bool isInstalled = await isKakaoTalkInstalled();
       if (isInstalled) {
         try {
+
           await UserApi.instance.loginWithKakaoTalk();
           return true;
         } catch (e) {
+          print("FFFF");
+          print(e);
           return false;
         }
       } else {
@@ -19,6 +22,8 @@ class KakaoLogin implements KaKao_Social_Login{
           await UserApi.instance.loginWithKakaoAccount();
           return true;
         } catch (e) {
+          print("FFFFF");
+          print(e);
           return false;
         }
       }

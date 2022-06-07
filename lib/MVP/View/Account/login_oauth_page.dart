@@ -22,9 +22,14 @@ class _Login_Oauth_Screen extends State<Login_Oauth_Screen> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return WillPopScope(
-      onWillPop: () async => false,
-      child: Scaffold(
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        iconTheme: IconThemeData(
+          color: Colors.black,//색변경
+        ),
+      ),
         backgroundColor: Colors.white,
         body: Stack(
           children: <Widget>[
@@ -33,18 +38,16 @@ class _Login_Oauth_Screen extends State<Login_Oauth_Screen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SizedBox(
-                    height: size.height * 0.1,
-                  ),
+
                   Center(
                       child: Text(
                     "기 - log",
-                    style: TextStyle(fontSize: 52, fontFamily: "Mainfont"),
+                        style: TextStyle(fontSize:52,color: Colors.black,fontFamily: "Gilogfont"),
                   )),
                   SizedBox(
-                    height: size.height * 0.1,
+                    height: size.height * 0.05,
                   ),
-                  Text("나만의 추억 장소"),
+                  Text("나만의 추억 장소",style: TextStyle(fontSize:21,color: Colors.black,fontFamily: "Gilogfont"),),
                   SizedBox(
                     height: size.height * 0.35,
                   ),
@@ -86,14 +89,18 @@ class _Login_Oauth_Screen extends State<Login_Oauth_Screen> {
                         width: size.width * 0.7,
                         height: size.height * 0.07,
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            Icon(Icons.chat_bubble),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Icon(Icons.chat_bubble),
+                            ),
                             Center(
                                 child: Text(
                               "카카오톡으로 시작하기",
-                              style: TextStyle(color: Colors.black),
+                                  style: TextStyle(fontSize:21,color: Colors.black,fontFamily: "Gilogfont"),
                             )),
+                            SizedBox(width: size.width*0.03,)
                           ],
                         ),
                       ),
@@ -118,17 +125,21 @@ class _Login_Oauth_Screen extends State<Login_Oauth_Screen> {
                         width: size.width * 0.7,
                         height: size.height * 0.07,
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
+
                             Container(
-                              width: size.width*0.1,
-                                child: Image.asset(
-                                    "assets/images/apple_logo.png")),
+                                width: size.width*0.1,
+                                  child: Image.asset(
+                                      "assets/images/apple_logo.png")),
+
+
                             Center(
                                 child: Text(
                               "Apple로 시작하기",
-                              style: TextStyle(color: Colors.black),
+                                  style: TextStyle(fontSize:21,color: Colors.black,fontFamily: "Gilogfont"),
                             )),
+                            SizedBox(width: size.width*0.04,)
                           ],
                         ),
                       ),
@@ -146,7 +157,7 @@ class _Login_Oauth_Screen extends State<Login_Oauth_Screen> {
             ),
           ],
         ),
-      ),
+
     );
   }
 

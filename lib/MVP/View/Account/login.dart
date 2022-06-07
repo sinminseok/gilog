@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 
+import '../../../Utils/check_datetime.dart';
 import '../../../Utils/constants.dart';
 import '../../../Utils/toast.dart';
 import '../../Presenter/Kakao_Oauth/kakao_login_presenter.dart';
@@ -18,12 +19,24 @@ class Login_Screen extends StatefulWidget {
 
 class _Login_ScreenState extends State<Login_Screen> {
   final viewModel = Kakao_User_ViewModel(KakaoLogin());
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    Check_Datetime().check_Today();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          elevation: 0,
+        ),
         backgroundColor: Colors.white,
         body: Stack(
           children: <Widget>[
@@ -32,23 +45,23 @@ class _Login_ScreenState extends State<Login_Screen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SizedBox(
-                    height: size.height * 0.1,
-                  ),
                   Center(
                       child: Text(
                     "기 - log",
-                    style: TextStyle(fontSize: 52, fontFamily: "Mainfont"),
+                    style: TextStyle(fontSize: 52, fontFamily: "Gilogfont"),
                   )),
                   SizedBox(
-                    height: size.height * 0.1,
+                    height: size.height * 0.05,
                   ),
-                  Text("나만의 추억 장소"),
+                  Text(
+                    "나만의 추억 장소",
+                    style: TextStyle(fontSize: 21, fontFamily: "Gilogfont"),
+                  ),
                   SizedBox(
                     height: size.height * 0.35,
                   ),
                   InkWell(
-                    onTap: (){
+                    onTap: () {
                       Navigator.push(
                           context,
                           PageTransition(
@@ -68,14 +81,17 @@ class _Login_ScreenState extends State<Login_Screen> {
                       child: Center(
                           child: Text(
                         "저번에 왔어요!",
-                        style: TextStyle(color: Colors.black),
+                        style: TextStyle(
+                            fontSize: 21,
+                            color: Colors.black,
+                            fontFamily: "Gilogfont"),
                       )),
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 12.0),
                     child: InkWell(
-                      onTap: (){
+                      onTap: () {
                         Navigator.push(
                             context,
                             PageTransition(
@@ -91,13 +107,21 @@ class _Login_ScreenState extends State<Login_Screen> {
                         child: Center(
                             child: Text(
                           "새로왔어요!",
-                          style: TextStyle(color: Colors.white),
+                          style: TextStyle(
+                              fontSize: 21,
+                              color: Colors.white,
+                              fontFamily: "Gilogfont"),
                         )),
                       ),
                     ),
                   ),
-                  SizedBox(height: size.height*0.12,),
-                  Text("@copyright 2022 by comumu",style: TextStyle(color: Colors.grey),)
+                  SizedBox(
+                    height: size.height * 0.12,
+                  ),
+                  Text(
+                    "@copyright 2022 by comumu",
+                    style: TextStyle(color: Colors.grey),
+                  )
                 ],
               ),
             ),
@@ -106,8 +130,8 @@ class _Login_ScreenState extends State<Login_Screen> {
       ),
     );
   }
-  void get_info()async{
+
+  void get_info() async {
     print(viewModel.user!.kakaoAccount!.name);
   }
 }
-

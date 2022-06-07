@@ -16,8 +16,6 @@ class Kakao_User_ViewModel{
   Kakao_User_ViewModel(this.socialLogin);
 
   Future<bool?> login() async {
-
-
     isLogined = await socialLogin!.login();
     if (isLogined) {
       user = await UserApi.instance.me();

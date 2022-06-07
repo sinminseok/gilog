@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
+import '../Widgets/top_widget.dart';
 import 'calendar_detail.dart';
 
 class Calendar_Screen extends StatefulWidget {
@@ -14,6 +15,13 @@ class Calendar_Screen extends StatefulWidget {
 
 class _Calendar_Screen extends State<Calendar_Screen> {
   String? today;
+
+  final List<CalendarView> _allowedViews = <CalendarView>[
+    CalendarView.day,
+    CalendarView.week,
+    CalendarView.month,
+    CalendarView.schedule
+  ];
 
   @override
   void initState() {
@@ -43,20 +51,22 @@ class _Calendar_Screen extends State<Calendar_Screen> {
           SizedBox(
             height: size.height * 0.05,
           ),
+          Top_Widget(),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
               "기 - log",
-              style: TextStyle(fontSize: 21),
+              style: TextStyle(fontSize: 25,fontFamily: "Gilogfont"),
             ),
           ),
           SizedBox(
-            height: size.height * 0.05,
+            height: size.height * 0.03,
           ),
           Container(
             height: size.height * 0.7,
             child: SfCalendar(
               headerStyle: CalendarHeaderStyle(
+
                   textAlign: TextAlign.center,
                   textStyle: TextStyle(
                     fontSize: 21,
@@ -90,8 +100,7 @@ List<Meeting> _getDataSource() {
   final DateTime startTime =
       DateTime(today.year, today.month, today.day, 9, 0, 0);
   final DateTime endTime = startTime.add(const Duration(hours: 2));
-  meetings.add(Meeting(
-      'Conference', startTime, endTime, const Color(0xFF0F8644), false));
+  meetings.add(Meeting(startTime, endTime, Colors.white12, false));
   return meetings;
 }
 
@@ -114,11 +123,6 @@ class MeetingDataSource extends CalendarDataSource {
   }
 
   @override
-  String getSubject(int index) {
-    return source[index].eventName;
-  }
-
-  @override
   Color getColor(int index) {
     return source[index].background;
   }
@@ -130,9 +134,8 @@ class MeetingDataSource extends CalendarDataSource {
 }
 
 class Meeting {
-  Meeting(this.eventName, this.from, this.to, this.background, this.isAllDay);
+  Meeting(this.from, this.to, this.background, this.isAllDay);
 
-  String eventName;
   DateTime from;
   DateTime to;
   Color background;
