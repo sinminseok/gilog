@@ -20,9 +20,9 @@ class Home_Screen extends StatefulWidget {
 }
 
 class _Home_ScreenState extends State<Home_Screen> {
-
+  String? question = "오늘 하루는 어땠나요?";
   String? today;
-  TextEditingController _content_controller = TextEditingController();
+  TextEditingController _question_controller = TextEditingController();
   PickedFile? _image;
 
   @override
@@ -115,38 +115,23 @@ class _Home_ScreenState extends State<Home_Screen> {
                 ),
               ),
             ),
-            InkWell(
-              onTap: (){
-                Check_Datetime().check_Today();
-              },
-              child: Text("TEST"),
-            ),
-
+            // InkWell(
+            //   onTap: (){
+            //     print(File(_image!.path));
+            //
+            //   },
+            //   child: Text("TEST"),
+            // ),
 
             InkWell(
               onTap: () {
-                showModalBottomSheet<void>(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return Container(
-                        height: size.height * 0.4,
-                        color: Colors.white12,
-                        child: TextFormField(
-
-                          controller: _content_controller,
-                          textAlign: TextAlign.center,
-                          decoration: new InputDecoration(
-                              border: InputBorder.none,
-                              focusedBorder: InputBorder.none,
-                              contentPadding: EdgeInsets.only(
-                                  left: 5, bottom: 5, top: 5, right: 5),
-                              hintText: '...여기에 내용을 기록해보세요!'),
-                          minLines: 1,
-                          maxLines: 5,
-                          maxLengthEnforced: true,
-                        ));
-                  },
-                );
+                Navigator.push(
+                    context,
+                    PageTransition(
+                        type: PageTransitionType.fade,
+                        child: Post_Write(
+                          question: '${question}',
+                        )));
               },
               child: Container(
                 decoration: BoxDecoration(
@@ -160,7 +145,7 @@ class _Home_ScreenState extends State<Home_Screen> {
                 height: size.height * 0.1,
                 child: Center(
                     child: Text(
-                  "오늘 하늘은 어땠나요?",
+                  "${question}",
                   style: TextStyle(
                       fontFamily: "gilogfont",
                       fontSize: 21,
@@ -171,7 +156,53 @@ class _Home_ScreenState extends State<Home_Screen> {
             SizedBox(
               height: size.height * 0.02,
             ),
-            InkWell(onTap: () {}, child: Text("새로운 질문을 만들래요")),
+            InkWell(
+                onTap: () {
+                  showModalBottomSheet<void>(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return Container(
+                        height: size.height * 0.35,
+                        child: Column(
+                          children: [
+                            Container(
+                                height: size.height * 0.2,
+                                color: Colors.white12,
+                                child: TextFormField(
+                                  controller: _question_controller,
+                                  textAlign: TextAlign.center,
+                                  decoration: new InputDecoration(
+                                      border: InputBorder.none,
+                                      focusedBorder: InputBorder.none,
+                                      contentPadding: EdgeInsets.only(
+                                          left: 5, bottom: 5, top: 5, right: 5),
+                                      hintText: '...질문을 만들어보세요!'),
+                                  minLines: 1,
+                                  maxLines: 5,
+                                  maxLengthEnforced: true,
+                                )),
+                            Container(
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Colors.purple),
+                              width: size.width * 0.65,
+                              height: size.height * 0.06,
+                              child: ElevatedButton(
+                                  child: const Text('질문 만들기'),
+                                  onPressed: () {
+                                    setState(() {
+                                      question = _question_controller.text;
+                                    });
+                                    Navigator.pop(context);
+                                  }),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  );
+                },
+                child: Text("새로운 질문을 만들래요")),
           ],
         ),
       ),

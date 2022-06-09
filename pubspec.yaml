@@ -49,6 +49,7 @@ dependencies:
   permission_handler: ^8.3.0
   image_picker: ^0.8.5+3
   sign_in_with_apple: ^4.0.0
+  date_utils: ^0.2.0
 
   dio: ^4.0.0
   json_annotation: ^4.0.1

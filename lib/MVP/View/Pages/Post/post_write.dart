@@ -10,18 +10,24 @@ class Post_Write extends StatefulWidget {
 }
 
 class _Post_WriteState extends State<Post_Write> {
+  TextEditingController _content_controller = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
       appBar: AppBar(
-
+        backgroundColor: Colors.white,
+        elevation: 0,
+        iconTheme: IconThemeData(
+          color: Colors.black,//색변경
+        ),
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            SizedBox(height: size.height*0.1,),
+
             Container(
               color: Colors.black,
               width: size.width*0.9,
@@ -47,7 +53,40 @@ class _Post_WriteState extends State<Post_Write> {
                 ),
               ),
             ),
-            Text("...기-log해보세요")
+        TextFormField(
+          //
+                    controller: _content_controller,
+                    textAlign: TextAlign.center,
+                    decoration: new InputDecoration(
+                        border: InputBorder.none,
+                        focusedBorder: InputBorder.none,
+                        contentPadding: EdgeInsets.only(
+                            left: 5, bottom: 5, top: 5, right: 5),
+                        hintText: '...여기에 내용을 기록해보세요!'),
+                    minLines: 1,
+                    maxLines: 5,
+                    maxLengthEnforced: true,
+                  ),
+            SizedBox(height: size.height*0.14,),
+            InkWell(
+              onTap: (){
+                //http post 기록(datetime,img,
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(3), color: Colors.purple),
+                width: size.width * 0.7,
+                height: size.height * 0.06,
+                child: Center(
+                    child: Text(
+                      "기-록하기",
+                      style: TextStyle(color: Colors.white,fontFamily: "numberfont",fontWeight: FontWeight.bold),
+                    )),
+              ),
+            ),
+            
+            
+         
           ],
         ),
       ),

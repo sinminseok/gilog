@@ -23,7 +23,7 @@ void main() async {
 }
 
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatelessWidget{
 
   // This widget is the root of your application.
   @override
@@ -32,8 +32,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
         localizationsDelegates: [
           GlobalMaterialLocalizations.delegate,
-          // ... app-specific localization delegate[s] here
-          SfGlobalLocalizations.delegate
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+          // delegate from localization package.
+
         ],
         supportedLocales: [
           const Locale('ko')

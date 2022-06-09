@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:gilog/Utils/constants.dart';
-import 'package:gilog/Utils/datetime.dart';
-import 'package:intl/intl.dart';
+import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
-
 import '../Widgets/top_widget.dart';
 import 'calendar_detail.dart';
+import 'package:date_utils/date_utils.dart' as dt;
 
 class Calendar_Screen extends StatefulWidget {
   @override
@@ -14,6 +12,15 @@ class Calendar_Screen extends StatefulWidget {
 }
 
 class _Calendar_Screen extends State<Calendar_Screen> {
+  getToday() {
+
+// example
+    var date = new DateTime(2022, 7);
+
+    var lastDay = dt.DateUtils.daysInMonth(date);
+    print(lastDay);
+  }
+
   String? today;
 
   final List<CalendarView> _allowedViews = <CalendarView>[
@@ -30,6 +37,8 @@ class _Calendar_Screen extends State<Calendar_Screen> {
     today = getToday();
     super.initState();
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -51,12 +60,18 @@ class _Calendar_Screen extends State<Calendar_Screen> {
           SizedBox(
             height: size.height * 0.05,
           ),
+          InkWell(
+            onTap: (){
+              getToday();
+            },
+            child: Text("TEST"),
+          ),
           Top_Widget(),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
               "기 - log",
-              style: TextStyle(fontSize: 25,fontFamily: "Gilogfont"),
+              style: TextStyle(fontSize: 25, fontFamily: "Gilogfont"),
             ),
           ),
           SizedBox(
@@ -65,7 +80,6 @@ class _Calendar_Screen extends State<Calendar_Screen> {
           Container(
             height: size.height * 0.7,
             child: SfCalendar(
-
               viewHeaderHeight: 30,
               view: CalendarView.month,
               onTap: calendarTapped,
