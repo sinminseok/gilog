@@ -2,6 +2,14 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+    <key>NSAppTransportSecurity</key>
+    <dict>
+      <key>NSAllowsArbitraryLoads</key>
+      <true/>
+      <key>NSAllowsArbitraryLoadsInWebContent</key>
+      <true/>
+    </dict>
+
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
@@ -45,6 +53,10 @@
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+
+	<key>PermissionGroupNotification</key>
+	<string>매일 새로운 질문을 받기 위해 알림 권한이 필요합니다.</string>
+
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>기록할 사진을 가져오기위해서 갤러리 접근이 필요합니다.</string>
 	<key>UILaunchStoryboardName</key>

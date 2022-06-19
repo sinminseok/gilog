@@ -1,10 +1,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.gilog">
     <uses-permission android:name="android.permission.INTERNET"/>
+
+
    <application
         android:label="gilog"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+       android:usesCleartextTraffic="true">
        <activity android:name="com.kakao.sdk.flutter.AuthCodeCustomTabsActivity">
            <intent-filter android:label="flutter_web_auth">
                <action android:name="android.intent.action.VIEW" />

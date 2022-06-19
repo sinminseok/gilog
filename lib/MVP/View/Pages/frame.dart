@@ -27,6 +27,8 @@ class _Frame_Screen extends State<Frame_Screen> {
         resizeToAvoidBottomInset: false,
 
         bottomNavigationBar: CustomBottomNavigationBar(
+
+
           iconList: [
             Icons.home,
             Icons.calendar_today,

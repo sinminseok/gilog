@@ -2,11 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 
-import '../../../Utils/check_datetime.dart';
+import '../../../Utils/calendar_utils/check_datetime.dart';
 import '../../../Utils/constants.dart';
 import '../../../Utils/toast.dart';
-import '../../Presenter/Kakao_Oauth/kakao_login_presenter.dart';
-import '../../Presenter/Kakao_Oauth/kakao_login.dart';
+
 import '../Pages/frame.dart';
 import 'login_oauth_page.dart';
 
@@ -18,8 +17,6 @@ class Login_Screen extends StatefulWidget {
 }
 
 class _Login_ScreenState extends State<Login_Screen> {
-  final viewModel = Kakao_User_ViewModel(KakaoLogin());
-
   @override
   void initState() {
     // TODO: implement initState
@@ -34,10 +31,10 @@ class _Login_ScreenState extends State<Login_Screen> {
       onWillPop: () async => false,
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.white,
+          backgroundColor: kPrimaryColor,
           elevation: 0,
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: kPrimaryColor,
         body: Stack(
           children: <Widget>[
             SingleChildScrollView(
@@ -58,7 +55,14 @@ class _Login_ScreenState extends State<Login_Screen> {
                     style: TextStyle(fontSize: 21, fontFamily: "Gilogfont"),
                   ),
                   SizedBox(
-                    height: size.height * 0.35,
+                    height: size.height * 0.05,
+                  ),
+                  Container(
+                    width: size.width * 0.7,
+                    child: Image.asset("assets/images/pencils_icon.png"),
+                  ),
+                  SizedBox(
+                    height: size.height * 0.1,
                   ),
                   InkWell(
                     onTap: () {
@@ -119,7 +123,7 @@ class _Login_ScreenState extends State<Login_Screen> {
                     height: size.height * 0.12,
                   ),
                   Text(
-                    "@copyright 2022 by comumu",
+                    "@copyright 2022 by Sso-young",
                     style: TextStyle(color: Colors.grey),
                   )
                 ],
@@ -129,9 +133,5 @@ class _Login_ScreenState extends State<Login_Screen> {
         ),
       ),
     );
-  }
-
-  void get_info() async {
-    print(viewModel.user!.kakaoAccount!.name);
   }
 }

@@ -42,23 +42,30 @@ dependencies:
   page_transition: "^2.0.5"
   kakao_flutter_sdk: ^1.1.1
 
-  syncfusion_flutter_calendar: ^19.1.69
   syncfusion_localizations: ^19.1.66
-  table_calendar: ^3.0.6
+
   carousel_slider: ^4.1.1
   permission_handler: ^8.3.0
   image_picker: ^0.8.5+3
   sign_in_with_apple: ^4.0.0
   date_utils: ^0.2.0
-
+#  flutter_webview_plugin:
+#    git: https://github.com/nuc134r/flutter_webview_plugin.git
   dio: ^4.0.0
   json_annotation: ^4.0.1
-
   platform: ^3.0.0
   package_info_plus: ^1.0.4
-
   firebase_core: ^1.17.1
   firebase_auth: ^3.3.19
+
+  flutter_app_badger: ^1.4.0
+  flutter_local_notifications: ^9.4.0
+
+  sqflite: ^2.0.2+1
+  path: ^1.8.0
+  path_provider: ^2.0.11
+  flutter_native_timezone: ^2.0.0
+
 
 dev_dependencies:
   flutter_test:
@@ -86,6 +93,15 @@ flutter:
   assets:
     - assets/images/apple_logo.png
     - assets/images/gi_icon.png
+    - assets/images/gilog.png
+    - assets/images/pencils_icon.png
+    - assets/images/yellow_icon.psd
+    - assets/images/family_img.png
+    - assets/images/calendar_img1.jpeg
+    - assets/images/calendar_img2.jpeg
+    - assets/images/photo.jpg
+    - assets/images/write.jpg
+    - assets/images/yellow_pencil_icon.psd
 
 
   # An image asset can refer to one or more resolution-specific "variants", see
@@ -102,7 +118,7 @@ flutter:
   fonts:
     - family: Gilogfont
       fonts:
-        - asset: assets/fonts/gilogfont.otf
+        - asset: assets/fonts/gilogfont.ttf
           weight: 200
     - family: Numberfont
       fonts:

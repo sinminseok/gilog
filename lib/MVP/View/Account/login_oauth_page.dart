@@ -4,8 +4,7 @@ import 'package:page_transition/page_transition.dart';
 
 import '../../../Utils/constants.dart';
 import '../../../Utils/toast.dart';
-import '../../Presenter/Kakao_Oauth/kakao_login_presenter.dart';
-import '../../Presenter/Kakao_Oauth/kakao_login.dart';
+
 import '../Pages/frame.dart';
 import 'login.dart';
 
@@ -17,20 +16,20 @@ class Login_Oauth_Screen extends StatefulWidget {
 }
 
 class _Login_Oauth_Screen extends State<Login_Oauth_Screen> {
-  final viewModel = Kakao_User_ViewModel(KakaoLogin());
+
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: kPrimaryColor,
         elevation: 0,
         iconTheme: IconThemeData(
           color: Colors.black,//색변경
         ),
       ),
-        backgroundColor: Colors.white,
+        backgroundColor: kPrimaryColor,
         body: Stack(
           children: <Widget>[
             SingleChildScrollView(
@@ -48,31 +47,22 @@ class _Login_Oauth_Screen extends State<Login_Oauth_Screen> {
                     height: size.height * 0.05,
                   ),
                   Text("나만의 추억 장소",style: TextStyle(fontSize:21,color: Colors.black,fontFamily: "Gilogfont"),),
-                  SizedBox(
-                    height: size.height * 0.35,
+                  SizedBox(height: size.height*0.05,),
+                  Container(
+                    width: size.width*0.7,
+                    child: Image.asset("assets/images/pencils_icon.png"),
                   ),
+                  SizedBox(height: size.height*0.13,),
                   Padding(
                     padding: const EdgeInsets.only(top: 12.0),
                     child: InkWell(
                       onTap: () async {
-                        var check_login;
-                        check_login = await viewModel.login();
-                        get_info();
-                        if (check_login) {
-                          Navigator.push(
-                              context,
-                              PageTransition(
-                                  type: PageTransitionType.fade,
-                                  child: Frame_Screen()));
-                        } else {
-                          showAlertDialog(context, "로그인 실패", "다시 로그인 해주세요!");
 
                           Navigator.push(
                               context,
                               PageTransition(
                                   type: PageTransitionType.fade,
                                   child: Login_Screen()));
-                        }
                       },
                       child: Container(
                         decoration: BoxDecoration(
@@ -161,7 +151,4 @@ class _Login_Oauth_Screen extends State<Login_Oauth_Screen> {
     );
   }
 
-  void get_info() async {
-    print(viewModel.user!.kakaoAccount!.name);
-  }
 }

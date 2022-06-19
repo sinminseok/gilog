@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 
 import '../../../../Utils/constants.dart';
 
-
-
 class CustomBottomNavigationBar extends StatefulWidget {
   final int defaultSelectedIndex;
   final Function(int) onChange;
@@ -12,8 +10,8 @@ class CustomBottomNavigationBar extends StatefulWidget {
 
   CustomBottomNavigationBar(
       {this.defaultSelectedIndex = 0,
-        required this.iconList,
-        required this.onChange});
+      required this.iconList,
+      required this.onChange});
 
   @override
   _CustomBottomNavigationBarState createState() =>
@@ -46,16 +44,10 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
     );
   }
 
-
   Widget buildNavBarItem(IconData icon, int index) {
     return GestureDetector(
       onTap: () {
-        print(index);
-        // Navigator.push(
-        //     context,
-        //     PageTransition(
-        //         type: PageTransitionType.rightToLeftWithFade,
-        //         child: Signup_page()));
+
         widget.onChange(index);
         setState(() {
           _selectedIndex = index;
@@ -66,19 +58,19 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
         width: MediaQuery.of(context).size.width / _iconList.length,
         decoration: index == _selectedIndex
             ? BoxDecoration(
-            border: Border(
-              bottom: BorderSide(width: 4, color: kPrimaryColor),
-            ),
-            gradient: LinearGradient(colors: [
-              kPrimaryColor.withOpacity(0.17),
-              kPrimaryColor.withOpacity(0.015),
-            ], begin: Alignment.bottomCenter, end: Alignment.topCenter)
-          // color: index == _selectedItemIndex ? Colors.green : Colors.white,
-        )
+                border: Border(
+                  bottom: BorderSide(width: 4, color: kPrimaryColor),
+                ),
+                gradient: LinearGradient(colors: [
+                  kPrimaryColor.withOpacity(0.17),
+                  kPrimaryColor.withOpacity(0.015),
+                ], begin: Alignment.bottomCenter, end: Alignment.topCenter)
+                // color: index == _selectedItemIndex ? Colors.green : Colors.white,
+                )
             : BoxDecoration(),
         child: Icon(
           icon,
-          color: index == _selectedIndex ? Colors.black : Colors.grey,
+          color: index == _selectedIndex ? kIconColor : Colors.grey,
         ),
       ),
     );

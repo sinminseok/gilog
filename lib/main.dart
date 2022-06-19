@@ -4,10 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
-import 'package:syncfusion_localizations/syncfusion_localizations.dart';
+
 import 'package:kakao_flutter_sdk_common/kakao_flutter_sdk_common.dart';
-import 'MVP/Presenter/Kakao_Oauth/kakao_login_http.dart';
-import 'MVP/Presenter/Kakao_Oauth/kakao_login_presenter.dart';
 import 'MVP/View/Account/login.dart';
 import 'Utils/constants.dart';
 
@@ -15,9 +13,7 @@ import 'Utils/constants.dart';
 void main() async {
   KakaoSdk.init(nativeAppKey:'c4ddd110fec9eaab625667112de706fb');
   runApp(
-    MultiProvider(providers: [
-      ChangeNotifierProvider(create: (context) => Kakao_User_Http()),
-    ], child: MyApp()),
+      MyApp()
   );
 
 }
