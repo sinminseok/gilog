@@ -6,11 +6,14 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:gilog/Utils/constants.dart';
+import 'package:gilog/Utils/toast.dart';
 import 'package:page_transition/page_transition.dart';
 import '../../../../Local_DB/db.dart';
 import '../../../Model/post.dart';
 import 'calendar_detail.dart';
 import 'package:date_utils/date_utils.dart' as dt;
+
+import 'calendar_postdetail_test.dart';
 
 class Calendar_Screen extends StatefulWidget {
   @override
@@ -54,9 +57,9 @@ class _Calendar_Screen extends State<Calendar_Screen> {
     var data = await sd.posts();
     has_data_all_POST = [];
 
-
     for (var i = 0; i < data.length; i++) {
       has_data_all_POST.add(data[i]);
+      print("has_data_all_POST$has_data_all_POST");
     }
 
     for (var i = 0; i < has_data_all_POST.length; i++) {
@@ -96,7 +99,6 @@ class _Calendar_Screen extends State<Calendar_Screen> {
 
     super.initState();
   }
-
 
   get_datetime() {
     now = DateTime.now();
@@ -152,7 +154,6 @@ class _Calendar_Screen extends State<Calendar_Screen> {
     test_Data_list = [];
     date_list = [];
 
-
     setState(() {
       if (this_month + 1 == 13) {
         this_year = this_year + 1;
@@ -160,7 +161,6 @@ class _Calendar_Screen extends State<Calendar_Screen> {
       } else {
         this_month += 1;
       }
-
 
       DateTime date_time = DateTime(this_year, this_month);
       daysinmonth = dt.DateUtils.daysInMonth(date_time);
@@ -215,7 +215,6 @@ class _Calendar_Screen extends State<Calendar_Screen> {
             SizedBox(
               height: size.height * 0.1,
             ),
-
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -268,14 +267,38 @@ class _Calendar_Screen extends State<Calendar_Screen> {
                     children: [
                       Text(
                         "일",
-                        style: TextStyle(color: Colors.red , fontFamily: "gilogfont",fontSize: 20),
+                        style: TextStyle(
+                            color: Colors.red,
+                            fontFamily: "gilogfont",
+                            fontSize: 20),
                       ),
-                      Text("월",style: TextStyle(fontFamily: "gilogfont",fontSize: 20),),
-                      Text("화",style: TextStyle(fontFamily: "gilogfont",fontSize: 20),),
-                      Text("수",style: TextStyle(fontFamily: "gilogfont",fontSize: 20),),
-                      Text("목",style: TextStyle(fontFamily: "gilogfont",fontSize: 20),),
-                      Text("금",style: TextStyle(fontFamily: "gilogfont",fontSize: 20),),
-                      Text("토",style: TextStyle(fontFamily: "gilogfont",fontSize: 20,color: Colors.blue),),
+                      Text(
+                        "월",
+                        style: TextStyle(fontFamily: "gilogfont", fontSize: 20),
+                      ),
+                      Text(
+                        "화",
+                        style: TextStyle(fontFamily: "gilogfont", fontSize: 20),
+                      ),
+                      Text(
+                        "수",
+                        style: TextStyle(fontFamily: "gilogfont", fontSize: 20),
+                      ),
+                      Text(
+                        "목",
+                        style: TextStyle(fontFamily: "gilogfont", fontSize: 20),
+                      ),
+                      Text(
+                        "금",
+                        style: TextStyle(fontFamily: "gilogfont", fontSize: 20),
+                      ),
+                      Text(
+                        "토",
+                        style: TextStyle(
+                            fontFamily: "gilogfont",
+                            fontSize: 20,
+                            color: Colors.blue),
+                      ),
                     ],
                   ),
                   SizedBox(
@@ -284,10 +307,10 @@ class _Calendar_Screen extends State<Calendar_Screen> {
                   FutureBuilder(
                       future: local_data_filter_year(),
                       builder: (BuildContext context, AsyncSnapshot snapshot) {
-                        if(img_list.length == 0){
+                        if (img_list.length == 0) {
                           return Center(child: CircularProgressIndicator());
                         }
-                        if(snapshot.connectionState == false){
+                        if (snapshot.connectionState == false) {
                           return Center(child: CircularProgressIndicator());
                         }
                         if (snapshot.hasData == false) {
@@ -297,9 +320,8 @@ class _Calendar_Screen extends State<Calendar_Screen> {
                         else if (snapshot.hasError) {
                           return Center(
                             child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: CircularProgressIndicator()
-                            ),
+                                padding: const EdgeInsets.all(8.0),
+                                child: CircularProgressIndicator()),
                           );
                         }
                         // 데이터를 정상적으로 받아오게 되면 다음 부분을 실행하게 되는 것이다.
@@ -316,15 +338,20 @@ class _Calendar_Screen extends State<Calendar_Screen> {
                                             InkWell(
                                               onTap: () {
 
-                                                Navigator.push(
-                                                    context,
-                                                    PageTransition(
-                                                        type: PageTransitionType
-                                                            .fade,
-                                                        child: Calendar_detail(
-                                                          date_time:
-                                                              date_list[0],
-                                                        )));
+                                                if(img_list[0]==null){
+                                                  showtoast("기록된 일기가 없습니다");
+                                                }else{
+                                                  Navigator.push(
+                                                      context,
+                                                      PageTransition(
+                                                          type: PageTransitionType.fade,
+                                                          child: Calendar_detail_frame(
+                                                            date_list: has_data_all_POST,
+                                                            datetime: date_list[0],
+                                                            month: this_month,
+                                                            year: this_year,
+                                                          )));
+                                                }
                                               },
                                               child: Container(
                                                   width: size.width * 0.1,
@@ -355,25 +382,32 @@ class _Calendar_Screen extends State<Calendar_Screen> {
                                                                   height:
                                                                       size.height *
                                                                           0.07,
-                                                                  child: Image.memory(
-                                                                      img_list[
-                                                                              0]
-                                                                          as Uint8List)),
+                                                                  child: ClipRRect(
+                                                                    borderRadius: BorderRadius.circular(8.0),
+                                                                    child: Image.memory(
+                                                                        img_list[
+                                                                                0]
+                                                                            as Uint8List, fit: BoxFit.cover,),
+                                                                  )),
                                                     ],
                                                   )),
                                             ),
                                             InkWell(
                                               onTap: () {
-                                                print(date_list[1]);
-                                                Navigator.push(
-                                                    context,
-                                                    PageTransition(
-                                                        type: PageTransitionType
-                                                            .fade,
-                                                        child: Calendar_detail(
-                                                          date_time:
-                                                              date_list[1],
-                                                        )));
+                                                if(img_list[1]==null){
+                                                  showtoast("기록된 일기가 없습니다");
+                                                }else{
+                                                  Navigator.push(
+                                                      context,
+                                                      PageTransition(
+                                                          type: PageTransitionType.fade,
+                                                          child: Calendar_detail_frame(
+                                                            date_list: has_data_all_POST,
+                                                            datetime: date_list[1],
+                                                            month: this_month,
+                                                            year: this_year,
+                                                          )));
+                                                }
                                               },
                                               child: Container(
                                                   width: size.width * 0.1,
@@ -404,25 +438,32 @@ class _Calendar_Screen extends State<Calendar_Screen> {
                                                                   height:
                                                                       size.height *
                                                                           0.07,
-                                                                  child: Image.memory(
-                                                                      img_list[
-                                                                              1]
-                                                                          as Uint8List)),
+                                                                  child: ClipRRect(
+                                                                    borderRadius: BorderRadius.circular(8.0),
+                                                                    child: Image.memory(
+                                                                        img_list[
+                                                                                1]
+                                                                            as Uint8List, fit: BoxFit.cover,),
+                                                                  )),
                                                     ],
                                                   )),
                                             ),
                                             InkWell(
                                               onTap: () {
-                                                print(date_list[2]);
-                                                Navigator.push(
-                                                    context,
-                                                    PageTransition(
-                                                        type: PageTransitionType
-                                                            .fade,
-                                                        child: Calendar_detail(
-                                                          date_time:
-                                                              date_list[2],
-                                                        )));
+                                                if(img_list[2]==null){
+                                                  showtoast("기록된 일기가 없습니다");
+                                                }else{
+                                                  Navigator.push(
+                                                      context,
+                                                      PageTransition(
+                                                          type: PageTransitionType.fade,
+                                                          child: Calendar_detail_frame(
+                                                            date_list: has_data_all_POST,
+                                                            datetime: date_list[2],
+                                                            month: this_month,
+                                                            year: this_year,
+                                                          )));
+                                                }
                                               },
                                               child: Container(
                                                   width: size.width * 0.1,
@@ -453,25 +494,32 @@ class _Calendar_Screen extends State<Calendar_Screen> {
                                                                   height:
                                                                       size.height *
                                                                           0.07,
-                                                                  child: Image.memory(
-                                                                      img_list[
-                                                                              3]
-                                                                          as Uint8List)),
+                                                                  child: ClipRRect(
+                                                                    borderRadius: BorderRadius.circular(8.0),
+                                                                    child: Image.memory(
+                                                                        img_list[
+                                                                                3]
+                                                                            as Uint8List, fit: BoxFit.cover,),
+                                                                  )),
                                                     ],
                                                   )),
                                             ),
                                             InkWell(
                                               onTap: () {
-                                                print(date_list[3]);
-                                                Navigator.push(
-                                                    context,
-                                                    PageTransition(
-                                                        type: PageTransitionType
-                                                            .fade,
-                                                        child: Calendar_detail(
-                                                          date_time:
-                                                              date_list[3],
-                                                        )));
+                                                if(img_list[3]==null){
+                                                  showtoast("기록된 일기가 없습니다");
+                                                }else{
+                                                  Navigator.push(
+                                                      context,
+                                                      PageTransition(
+                                                          type: PageTransitionType.fade,
+                                                          child: Calendar_detail_frame(
+                                                            date_list: has_data_all_POST,
+                                                            datetime: date_list[3],
+                                                            month: this_month,
+                                                            year: this_year,
+                                                          )));
+                                                }
                                               },
                                               child: Container(
                                                   width: size.width * 0.1,
@@ -502,25 +550,32 @@ class _Calendar_Screen extends State<Calendar_Screen> {
                                                                   height:
                                                                       size.height *
                                                                           0.07,
-                                                                  child: Image.memory(
-                                                                      img_list[
-                                                                              3]
-                                                                          as Uint8List)),
+                                                                  child: ClipRRect(
+                                                                    borderRadius: BorderRadius.circular(8.0),
+                                                                    child: Image.memory(
+                                                                        img_list[
+                                                                                3]
+                                                                            as Uint8List, fit: BoxFit.cover,),
+                                                                  )),
                                                     ],
                                                   )),
                                             ),
                                             InkWell(
                                               onTap: () {
-                                                print(date_list[4]);
-                                                Navigator.push(
-                                                    context,
-                                                    PageTransition(
-                                                        type: PageTransitionType
-                                                            .fade,
-                                                        child: Calendar_detail(
-                                                          date_time:
-                                                              date_list[4],
-                                                        )));
+                                                if(img_list[4]==null){
+                                                  showtoast("기록된 일기가 없습니다");
+                                                }else{
+                                                  Navigator.push(
+                                                      context,
+                                                      PageTransition(
+                                                          type: PageTransitionType.fade,
+                                                          child: Calendar_detail_frame(
+                                                            date_list: has_data_all_POST,
+                                                            datetime: date_list[4],
+                                                            month: this_month,
+                                                            year: this_year,
+                                                          )));
+                                                }
                                               },
                                               child: Container(
                                                   width: size.width * 0.1,
@@ -551,25 +606,32 @@ class _Calendar_Screen extends State<Calendar_Screen> {
                                                                   height:
                                                                       size.height *
                                                                           0.07,
-                                                                  child: Image.memory(
-                                                                      img_list[
-                                                                              4]
-                                                                          as Uint8List)),
+                                                                  child: ClipRRect(
+                                                                    borderRadius: BorderRadius.circular(8.0),
+                                                                    child: Image.memory(
+                                                                        img_list[
+                                                                        4]
+                                                                        as Uint8List, fit: BoxFit.cover,),
+                                                                  )),
                                                     ],
                                                   )),
                                             ),
                                             InkWell(
                                               onTap: () {
-                                                print(date_list[5]);
-                                                Navigator.push(
-                                                    context,
-                                                    PageTransition(
-                                                        type: PageTransitionType
-                                                            .fade,
-                                                        child: Calendar_detail(
-                                                          date_time:
-                                                              date_list[5],
-                                                        )));
+                                                if(img_list[5]==null){
+                                                  showtoast("기록된 일기가 없습니다");
+                                                }else{
+                                                  Navigator.push(
+                                                      context,
+                                                      PageTransition(
+                                                          type: PageTransitionType.fade,
+                                                          child: Calendar_detail_frame(
+                                                            date_list: has_data_all_POST,
+                                                            datetime: date_list[5],
+                                                            month: this_month,
+                                                            year: this_year,
+                                                          )));
+                                                }
                                               },
                                               child: Container(
                                                   width: size.width * 0.1,
@@ -600,25 +662,32 @@ class _Calendar_Screen extends State<Calendar_Screen> {
                                                                   height:
                                                                       size.height *
                                                                           0.07,
-                                                                  child: Image.memory(
-                                                                      img_list[
-                                                                              5]
-                                                                          as Uint8List)),
+                                                                  child: ClipRRect(
+                                                                    borderRadius: BorderRadius.circular(8.0),
+                                                                    child: Image.memory(
+                                                                        img_list[
+                                                                        5]
+                                                                        as Uint8List, fit: BoxFit.cover,),
+                                                                  )),
                                                     ],
                                                   )),
                                             ),
                                             InkWell(
                                               onTap: () {
-                                                print(date_list[6]);
-                                                Navigator.push(
-                                                    context,
-                                                    PageTransition(
-                                                        type: PageTransitionType
-                                                            .fade,
-                                                        child: Calendar_detail(
-                                                          date_time:
-                                                              date_list[6],
-                                                        )));
+                                                if(img_list[6]==null){
+                                                  showtoast("기록된 일기가 없습니다");
+                                                }else{
+                                                  Navigator.push(
+                                                      context,
+                                                      PageTransition(
+                                                          type: PageTransitionType.fade,
+                                                          child: Calendar_detail_frame(
+                                                            date_list: has_data_all_POST,
+                                                            datetime: date_list[6],
+                                                            month: this_month,
+                                                            year: this_year,
+                                                          )));
+                                                }
                                               },
                                               child: Container(
                                                   width: size.width * 0.1,
@@ -649,10 +718,13 @@ class _Calendar_Screen extends State<Calendar_Screen> {
                                                                   height:
                                                                       size.height *
                                                                           0.07,
-                                                                  child: Image.memory(
-                                                                      img_list[
-                                                                              6]
-                                                                          as Uint8List)),
+                                                                  child: ClipRRect(
+                                                                    borderRadius: BorderRadius.circular(8.0),
+                                                                    child: Image.memory(
+                                                                        img_list[
+                                                                        6]
+                                                                        as Uint8List, fit: BoxFit.cover,),
+                                                                  )),
                                                     ],
                                                   )),
                                             ),
@@ -664,15 +736,20 @@ class _Calendar_Screen extends State<Calendar_Screen> {
                                       children: [
                                         InkWell(
                                           onTap: () {
-                                            print(date_list[0]);
-                                            Navigator.push(
-                                                context,
-                                                PageTransition(
-                                                    type:
-                                                        PageTransitionType.fade,
-                                                    child: Calendar_detail(
-                                                      date_time: date_list[0],
-                                                    )));
+                                            if(img_list[0]==null){
+                                              showtoast("기록된 일기가 없습니다");
+                                            }else{
+                                              Navigator.push(
+                                                  context,
+                                                  PageTransition(
+                                                      type: PageTransitionType.fade,
+                                                      child: Calendar_detail_frame(
+                                                        date_list: has_data_all_POST,
+                                                        datetime: date_list[0],
+                                                        month: this_month,
+                                                        year: this_year,
+                                                      )));
+                                            }
                                           },
                                           child: Container(
                                               width: size.width * 0.1,
@@ -702,23 +779,32 @@ class _Calendar_Screen extends State<Calendar_Screen> {
                                                               height:
                                                                   size.height *
                                                                       0.07,
-                                                              child: Image.memory(
-                                                                  img_list[0]
-                                                                      as Uint8List)),
+                                                              child: ClipRRect(
+                                                                borderRadius: BorderRadius.circular(8.0),
+                                                                child: Image.memory(
+                                                                    img_list[
+                                                                    0]
+                                                                    as Uint8List, fit: BoxFit.cover,),
+                                                              )),
                                                 ],
                                               )),
                                         ),
                                         InkWell(
                                           onTap: () {
-                                            print(date_list[1]);
-                                            Navigator.push(
-                                                context,
-                                                PageTransition(
-                                                    type:
-                                                        PageTransitionType.fade,
-                                                    child: Calendar_detail(
-                                                      date_time: date_list[1],
-                                                    )));
+                                            if(img_list[1]==null){
+                                              showtoast("기록된 일기가 없습니다");
+                                            }else{
+                                              Navigator.push(
+                                                  context,
+                                                  PageTransition(
+                                                      type: PageTransitionType.fade,
+                                                      child: Calendar_detail_frame(
+                                                        date_list: has_data_all_POST,
+                                                        datetime: date_list[1],
+                                                        month: this_month,
+                                                        year: this_year,
+                                                      )));
+                                            }
                                           },
                                           child: Container(
                                               width: size.width * 0.1,
@@ -748,23 +834,32 @@ class _Calendar_Screen extends State<Calendar_Screen> {
                                                               height:
                                                                   size.height *
                                                                       0.07,
-                                                              child: Image.memory(
-                                                                  img_list[1]
-                                                                      as Uint8List)),
+                                                              child: ClipRRect(
+                                                                borderRadius: BorderRadius.circular(8.0),
+                                                                child: Image.memory(
+                                                                    img_list[
+                                                                    1]
+                                                                    as Uint8List, fit: BoxFit.cover,),
+                                                              )),
                                                 ],
                                               )),
                                         ),
                                         InkWell(
                                           onTap: () {
-                                            print(date_list[2]);
-                                            Navigator.push(
-                                                context,
-                                                PageTransition(
-                                                    type:
-                                                        PageTransitionType.fade,
-                                                    child: Calendar_detail(
-                                                      date_time: date_list[2],
-                                                    )));
+                                            if(img_list[2]==null){
+                                              showtoast("기록된 일기가 없습니다");
+                                            }else{
+                                              Navigator.push(
+                                                  context,
+                                                  PageTransition(
+                                                      type: PageTransitionType.fade,
+                                                      child: Calendar_detail_frame(
+                                                        date_list: has_data_all_POST,
+                                                        datetime: date_list[2],
+                                                        month: this_month,
+                                                        year: this_year,
+                                                      )));
+                                            }
                                           },
                                           child: Container(
                                               width: size.width * 0.1,
@@ -794,22 +889,32 @@ class _Calendar_Screen extends State<Calendar_Screen> {
                                                               height:
                                                                   size.height *
                                                                       0.07,
-                                                              child: Image.memory(
-                                                                  img_list[2]
-                                                                      as Uint8List)),
+                                                              child: ClipRRect(
+                                                                borderRadius: BorderRadius.circular(8.0),
+                                                                child: Image.memory(
+                                                                    img_list[
+                                                                    2]
+                                                                    as Uint8List, fit: BoxFit.cover,),
+                                                              )),
                                                 ],
                                               )),
                                         ),
                                         InkWell(
                                           onTap: () {
-                                            Navigator.push(
-                                                context,
-                                                PageTransition(
-                                                    type:
-                                                        PageTransitionType.fade,
-                                                    child: Calendar_detail(
-                                                      date_time: date_list[3],
-                                                    )));
+                                            if(img_list[3]==null){
+                                              showtoast("기록된 일기가 없습니다");
+                                            }else{
+                                              Navigator.push(
+                                                  context,
+                                                  PageTransition(
+                                                      type: PageTransitionType.fade,
+                                                      child: Calendar_detail_frame(
+                                                        date_list: has_data_all_POST,
+                                                        datetime: date_list[3],
+                                                        month: this_month,
+                                                        year: this_year,
+                                                      )));
+                                            }
                                           },
                                           child: Container(
                                               width: size.width * 0.1,
@@ -839,23 +944,32 @@ class _Calendar_Screen extends State<Calendar_Screen> {
                                                               height:
                                                                   size.height *
                                                                       0.07,
-                                                              child: Image.memory(
-                                                                  img_list[3]
-                                                                      as Uint8List)),
+                                                              child: ClipRRect(
+                                                                borderRadius: BorderRadius.circular(8.0),
+                                                                child: Image.memory(
+                                                                    img_list[
+                                                                    3]
+                                                                    as Uint8List, fit: BoxFit.cover,),
+                                                              )),
                                                 ],
                                               )),
                                         ),
                                         InkWell(
                                           onTap: () {
-                                            print(date_list[4]);
-                                            Navigator.push(
-                                                context,
-                                                PageTransition(
-                                                    type:
-                                                        PageTransitionType.fade,
-                                                    child: Calendar_detail(
-                                                      date_time: date_list[4],
-                                                    )));
+                                            if(img_list[4]==null){
+                                              showtoast("기록된 일기가 없습니다");
+                                            }else{
+                                              Navigator.push(
+                                                  context,
+                                                  PageTransition(
+                                                      type: PageTransitionType.fade,
+                                                      child: Calendar_detail_frame(
+                                                        date_list: has_data_all_POST,
+                                                        datetime: date_list[4],
+                                                        month: this_month,
+                                                        year: this_year,
+                                                      )));
+                                            }
                                           },
                                           child: Container(
                                               width: size.width * 0.1,
@@ -885,23 +999,32 @@ class _Calendar_Screen extends State<Calendar_Screen> {
                                                               height:
                                                                   size.height *
                                                                       0.07,
-                                                              child: Image.memory(
-                                                                  img_list[4]
-                                                                      as Uint8List)),
+                                                              child: ClipRRect(
+                                                                borderRadius: BorderRadius.circular(8.0),
+                                                                child: Image.memory(
+                                                                    img_list[
+                                                                    4]
+                                                                    as Uint8List, fit: BoxFit.cover,),
+                                                              )),
                                                 ],
                                               )),
                                         ),
                                         InkWell(
                                           onTap: () {
-                                            print(date_list[5]);
-                                            Navigator.push(
-                                                context,
-                                                PageTransition(
-                                                    type:
-                                                        PageTransitionType.fade,
-                                                    child: Calendar_detail(
-                                                      date_time: date_list[5],
-                                                    )));
+                                            if(img_list[5]==null){
+                                              showtoast("기록된 일기가 없습니다");
+                                            }else{
+                                              Navigator.push(
+                                                  context,
+                                                  PageTransition(
+                                                      type: PageTransitionType.fade,
+                                                      child: Calendar_detail_frame(
+                                                        date_list: has_data_all_POST,
+                                                        datetime: date_list[5],
+                                                        month: this_month,
+                                                        year: this_year,
+                                                      )));
+                                            }
                                           },
                                           child: Container(
                                               width: size.width * 0.1,
@@ -931,23 +1054,32 @@ class _Calendar_Screen extends State<Calendar_Screen> {
                                                               height:
                                                                   size.height *
                                                                       0.07,
-                                                              child: Image.memory(
-                                                                  img_list[5]
-                                                                      as Uint8List)),
+                                                              child: ClipRRect(
+                                                                borderRadius: BorderRadius.circular(8.0),
+                                                                child: Image.memory(
+                                                                    img_list[
+                                                                    5]
+                                                                    as Uint8List, fit: BoxFit.cover,),
+                                                              )),
                                                 ],
                                               )),
                                         ),
                                         InkWell(
                                           onTap: () {
-                                            print(date_list[6]);
-                                            Navigator.push(
-                                                context,
-                                                PageTransition(
-                                                    type:
-                                                        PageTransitionType.fade,
-                                                    child: Calendar_detail(
-                                                      date_time: date_list[6],
-                                                    )));
+                                            if(img_list[6]==null){
+                                              showtoast("기록된 일기가 없습니다");
+                                            }else{
+                                              Navigator.push(
+                                                  context,
+                                                  PageTransition(
+                                                      type: PageTransitionType.fade,
+                                                      child: Calendar_detail_frame(
+                                                        date_list: has_data_all_POST,
+                                                        datetime: date_list[6],
+                                                        month: this_month,
+                                                        year: this_year,
+                                                      )));
+                                            }
                                           },
                                           child: Container(
                                               width: size.width * 0.1,
@@ -977,9 +1109,13 @@ class _Calendar_Screen extends State<Calendar_Screen> {
                                                               height:
                                                                   size.height *
                                                                       0.07,
-                                                              child: Image.memory(
-                                                                  img_list[6]
-                                                                      as Uint8List)),
+                                                              child: ClipRRect(
+                                                                borderRadius: BorderRadius.circular(8.0),
+                                                                child: Image.memory(
+                                                                    img_list[
+                                                                    6]
+                                                                    as Uint8List, fit: BoxFit.cover,),
+                                                              )),
                                                 ],
                                               )),
                                         ),
@@ -992,14 +1128,20 @@ class _Calendar_Screen extends State<Calendar_Screen> {
                                 children: [
                                   InkWell(
                                     onTap: () {
-                                      print(date_list[7]);
-                                      Navigator.push(
-                                          context,
-                                          PageTransition(
-                                              type: PageTransitionType.fade,
-                                              child: Calendar_detail(
-                                                date_time: date_list[7],
-                                              )));
+                                      if(img_list[7]==null){
+                                        showtoast("기록된 일기가 없습니다");
+                                      }else{
+                                        Navigator.push(
+                                            context,
+                                            PageTransition(
+                                                type: PageTransitionType.fade,
+                                                child: Calendar_detail_frame(
+                                                  date_list: has_data_all_POST,
+                                                  datetime: date_list[7],
+                                                  month: this_month,
+                                                  year: this_year,
+                                                )));
+                                      }
                                     },
                                     child: Container(
                                         width: size.width * 0.1,
@@ -1012,22 +1154,35 @@ class _Calendar_Screen extends State<Calendar_Screen> {
                                                 : Container(
                                                     width: size.width * 0.1,
                                                     height: size.height * 0.07,
-                                                    child: Image.memory(
-                                                        img_list[7]
-                                                            as Uint8List)),
+                                                    child: ClipRRect(
+                                                      borderRadius: BorderRadius.circular(8.0),
+                                                      child: ClipRRect(
+                                                        borderRadius: BorderRadius.circular(8.0),
+                                                        child: Image.memory(
+                                                            img_list[
+                                                            7]
+                                                            as Uint8List, fit: BoxFit.cover,),
+                                                      )
+                                                    )),
                                           ],
                                         )),
                                   ),
                                   InkWell(
                                     onTap: () {
-                                      print(date_list[8]);
-                                      Navigator.push(
-                                          context,
-                                          PageTransition(
-                                              type: PageTransitionType.fade,
-                                              child: Calendar_detail(
-                                                date_time: date_list[8],
-                                              )));
+                                      if(img_list[8]==null){
+                                        showtoast("기록된 일기가 없습니다");
+                                      }else{
+                                        Navigator.push(
+                                            context,
+                                            PageTransition(
+                                                type: PageTransitionType.fade,
+                                                child: Calendar_detail_frame(
+                                                  date_list: has_data_all_POST,
+                                                  datetime: date_list[8],
+                                                  month: this_month,
+                                                  year: this_year,
+                                                )));
+                                      }
                                     },
                                     child: Container(
                                         width: size.width * 0.1,
@@ -1040,22 +1195,32 @@ class _Calendar_Screen extends State<Calendar_Screen> {
                                                 : Container(
                                                     width: size.width * 0.1,
                                                     height: size.height * 0.07,
-                                                    child: Image.memory(
-                                                        img_list[8]
-                                                            as Uint8List)),
+                                                    child: ClipRRect(
+                                                      borderRadius: BorderRadius.circular(8.0),
+                                                      child: Image.memory(
+                                                          img_list[
+                                                          8]
+                                                          as Uint8List, fit: BoxFit.cover,),
+                                                    )),
                                           ],
                                         )),
                                   ),
                                   InkWell(
                                     onTap: () {
-                                      print(date_list[9]);
-                                      Navigator.push(
-                                          context,
-                                          PageTransition(
-                                              type: PageTransitionType.fade,
-                                              child: Calendar_detail(
-                                                date_time: date_list[9],
-                                              )));
+                                      if(img_list[9]==null){
+                                        showtoast("기록된 일기가 없습니다");
+                                      }else{
+                                        Navigator.push(
+                                            context,
+                                            PageTransition(
+                                                type: PageTransitionType.fade,
+                                                child: Calendar_detail_frame(
+                                                  date_list: has_data_all_POST,
+                                                  datetime: date_list[9],
+                                                  month: this_month,
+                                                  year: this_year,
+                                                )));
+                                      }
                                     },
                                     child: Container(
                                         width: size.width * 0.1,
@@ -1068,22 +1233,32 @@ class _Calendar_Screen extends State<Calendar_Screen> {
                                                 : Container(
                                                     width: size.width * 0.1,
                                                     height: size.height * 0.07,
-                                                    child: Image.memory(
-                                                        img_list[9]
-                                                            as Uint8List)),
+                                                    child: ClipRRect(
+                                                      borderRadius: BorderRadius.circular(8.0),
+                                                      child: Image.memory(
+                                                          img_list[
+                                                          9]
+                                                          as Uint8List, fit: BoxFit.cover,),
+                                                    )),
                                           ],
                                         )),
                                   ),
                                   InkWell(
                                     onTap: () {
-                                      print(date_list[10]);
-                                      Navigator.push(
-                                          context,
-                                          PageTransition(
-                                              type: PageTransitionType.fade,
-                                              child: Calendar_detail(
-                                                date_time: date_list[10],
-                                              )));
+                                      if(img_list[10]==null){
+                                        showtoast("기록된 일기가 없습니다");
+                                      }else{
+                                        Navigator.push(
+                                            context,
+                                            PageTransition(
+                                                type: PageTransitionType.fade,
+                                                child: Calendar_detail_frame(
+                                                  date_list: has_data_all_POST,
+                                                  datetime: date_list[10],
+                                                  month: this_month,
+                                                  year: this_year,
+                                                )));
+                                      }
                                     },
                                     child: Container(
                                         width: size.width * 0.1,
@@ -1096,22 +1271,32 @@ class _Calendar_Screen extends State<Calendar_Screen> {
                                                 : Container(
                                                     width: size.width * 0.1,
                                                     height: size.height * 0.07,
-                                                    child: Image.memory(
-                                                        img_list[10]
-                                                            as Uint8List)),
+                                                    child: ClipRRect(
+                                                      borderRadius: BorderRadius.circular(8.0),
+                                                      child: Image.memory(
+                                                          img_list[
+                                                          10]
+                                                          as Uint8List, fit: BoxFit.cover,),
+                                                    )),
                                           ],
                                         )),
                                   ),
                                   InkWell(
                                     onTap: () {
-                                      print(date_list[11]);
-                                      Navigator.push(
-                                          context,
-                                          PageTransition(
-                                              type: PageTransitionType.fade,
-                                              child: Calendar_detail(
-                                                date_time: date_list[11],
-                                              )));
+                                      if(img_list[11]==null){
+                                        showtoast("기록된 일기가 없습니다");
+                                      }else{
+                                        Navigator.push(
+                                            context,
+                                            PageTransition(
+                                                type: PageTransitionType.fade,
+                                                child: Calendar_detail_frame(
+                                                  date_list: has_data_all_POST,
+                                                  datetime: date_list[11],
+                                                  month: this_month,
+                                                  year: this_year,
+                                                )));
+                                      }
                                     },
                                     child: Container(
                                         width: size.width * 0.1,
@@ -1124,22 +1309,32 @@ class _Calendar_Screen extends State<Calendar_Screen> {
                                                 : Container(
                                                     width: size.width * 0.1,
                                                     height: size.height * 0.07,
-                                                    child: Image.memory(
-                                                        img_list[11]
-                                                            as Uint8List)),
+                                                    child: ClipRRect(
+                                                      borderRadius: BorderRadius.circular(8.0),
+                                                      child: Image.memory(
+                                                          img_list[
+                                                          11]
+                                                          as Uint8List, fit: BoxFit.cover,),
+                                                    )),
                                           ],
                                         )),
                                   ),
                                   InkWell(
                                     onTap: () {
-                                      print(date_list[12]);
-                                      Navigator.push(
-                                          context,
-                                          PageTransition(
-                                              type: PageTransitionType.fade,
-                                              child: Calendar_detail(
-                                                date_time: date_list[12],
-                                              )));
+                                      if(img_list[12]==null){
+                                        showtoast("기록된 일기가 없습니다");
+                                      }else{
+                                        Navigator.push(
+                                            context,
+                                            PageTransition(
+                                                type: PageTransitionType.fade,
+                                                child: Calendar_detail_frame(
+                                                  date_list: has_data_all_POST,
+                                                  datetime: date_list[12],
+                                                  month: this_month,
+                                                  year: this_year,
+                                                )));
+                                      }
                                     },
                                     child: Container(
                                         width: size.width * 0.1,
@@ -1152,22 +1347,32 @@ class _Calendar_Screen extends State<Calendar_Screen> {
                                                 : Container(
                                                     width: size.width * 0.1,
                                                     height: size.height * 0.07,
-                                                    child: Image.memory(
-                                                        img_list[12]
-                                                            as Uint8List)),
+                                                    child: ClipRRect(
+                                                      borderRadius: BorderRadius.circular(8.0),
+                                                      child: Image.memory(
+                                                          img_list[
+                                                          12]
+                                                          as Uint8List, fit: BoxFit.cover,),
+                                                    )),
                                           ],
                                         )),
                                   ),
                                   InkWell(
                                     onTap: () {
-                                      print(date_list[13]);
-                                      Navigator.push(
-                                          context,
-                                          PageTransition(
-                                              type: PageTransitionType.fade,
-                                              child: Calendar_detail(
-                                                date_time: date_list[13],
-                                              )));
+                                      if(img_list[13]==null){
+                                        showtoast("기록된 일기가 없습니다");
+                                      }else{
+                                        Navigator.push(
+                                            context,
+                                            PageTransition(
+                                                type: PageTransitionType.fade,
+                                                child: Calendar_detail_frame(
+                                                  date_list: has_data_all_POST,
+                                                  datetime: date_list[13],
+                                                  month: this_month,
+                                                  year: this_year,
+                                                )));
+                                      }
                                     },
                                     child: Container(
                                         width: size.width * 0.1,
@@ -1180,9 +1385,13 @@ class _Calendar_Screen extends State<Calendar_Screen> {
                                                 : Container(
                                                     width: size.width * 0.1,
                                                     height: size.height * 0.07,
-                                                    child: Image.memory(
-                                                        img_list[13]
-                                                            as Uint8List)),
+                                                    child: ClipRRect(
+                                                      borderRadius: BorderRadius.circular(8.0),
+                                                      child: Image.memory(
+                                                          img_list[
+                                                          13]
+                                                          as Uint8List, fit: BoxFit.cover,),
+                                                    )),
                                           ],
                                         )),
                                   ),
@@ -1194,14 +1403,20 @@ class _Calendar_Screen extends State<Calendar_Screen> {
                                 children: [
                                   InkWell(
                                     onTap: () {
-                                      print(date_list[14]);
-                                      Navigator.push(
-                                          context,
-                                          PageTransition(
-                                              type: PageTransitionType.fade,
-                                              child: Calendar_detail(
-                                                date_time: date_list[14],
-                                              )));
+                                      if(img_list[14]==null){
+                                        showtoast("기록된 일기가 없습니다");
+                                      }else{
+                                        Navigator.push(
+                                            context,
+                                            PageTransition(
+                                                type: PageTransitionType.fade,
+                                                child: Calendar_detail_frame(
+                                                  date_list: has_data_all_POST,
+                                                  datetime: date_list[14],
+                                                  month: this_month,
+                                                  year: this_year,
+                                                )));
+                                      }
                                     },
                                     child: Container(
                                         width: size.width * 0.1,
@@ -1214,21 +1429,32 @@ class _Calendar_Screen extends State<Calendar_Screen> {
                                                 : Container(
                                                     width: size.width * 0.1,
                                                     height: size.height * 0.07,
-                                                    child: Image.memory(
-                                                        img_list[14]
-                                                            as Uint8List)),
+                                                    child: ClipRRect(
+                                                      borderRadius: BorderRadius.circular(8.0),
+                                                      child: Image.memory(
+                                                          img_list[
+                                                          14]
+                                                          as Uint8List, fit: BoxFit.cover,),
+                                                    )),
                                           ],
                                         )),
                                   ),
                                   InkWell(
                                     onTap: () {
-                                      Navigator.push(
-                                          context,
-                                          PageTransition(
-                                              type: PageTransitionType.fade,
-                                              child: Calendar_detail(
-                                                date_time: date_list[15],
-                                              )));
+                                      if(img_list[15]==null){
+                                        showtoast("기록된 일기가 없습니다");
+                                      }else{
+                                        Navigator.push(
+                                            context,
+                                            PageTransition(
+                                                type: PageTransitionType.fade,
+                                                child: Calendar_detail_frame(
+                                                  date_list: has_data_all_POST,
+                                                  datetime: date_list[15],
+                                                  month: this_month,
+                                                  year: this_year,
+                                                )));
+                                      }
                                     },
                                     child: Container(
                                         width: size.width * 0.1,
@@ -1241,22 +1467,32 @@ class _Calendar_Screen extends State<Calendar_Screen> {
                                                 : Container(
                                                     width: size.width * 0.1,
                                                     height: size.height * 0.07,
-                                                    child: Image.memory(
-                                                        img_list[15]
-                                                            as Uint8List)),
+                                                    child: ClipRRect(
+                                                      borderRadius: BorderRadius.circular(8.0),
+                                                      child: Image.memory(
+                                                          img_list[
+                                                          15]
+                                                          as Uint8List, fit: BoxFit.cover,),
+                                                    )),
                                           ],
                                         )),
                                   ),
                                   InkWell(
                                     onTap: () {
-                                      print(date_list[16]);
-                                      Navigator.push(
-                                          context,
-                                          PageTransition(
-                                              type: PageTransitionType.fade,
-                                              child: Calendar_detail(
-                                                date_time: date_list[16],
-                                              )));
+                                      if(img_list[16]==null){
+                                        showtoast("기록된 일기가 없습니다");
+                                      }else{
+                                        Navigator.push(
+                                            context,
+                                            PageTransition(
+                                                type: PageTransitionType.fade,
+                                                child: Calendar_detail_frame(
+                                                  date_list: has_data_all_POST,
+                                                  datetime: date_list[16],
+                                                  month: this_month,
+                                                  year: this_year,
+                                                )));
+                                      }
                                     },
                                     child: Container(
                                         width: size.width * 0.1,
@@ -1269,23 +1505,32 @@ class _Calendar_Screen extends State<Calendar_Screen> {
                                                 : Container(
                                                     width: size.width * 0.1,
                                                     height: size.height * 0.07,
-                                                    child: Image.memory(
-                                                        img_list[16]
-                                                            as Uint8List)),
+                                                    child: ClipRRect(
+                                                      borderRadius: BorderRadius.circular(8.0),
+                                                      child: Image.memory(
+                                                          img_list[
+                                                          16]
+                                                          as Uint8List, fit: BoxFit.cover,),
+                                                    )),
                                           ],
                                         )),
                                   ),
                                   InkWell(
                                     onTap: () {
-                                      print({img_list[17].runtimeType});
-
-                                      Navigator.push(
-                                          context,
-                                          PageTransition(
-                                              type: PageTransitionType.fade,
-                                              child: Calendar_detail(
-                                                date_time: date_list[17],
-                                              )));
+                                      if(img_list[17]==null){
+                                        showtoast("기록된 일기가 없습니다");
+                                      }else{
+                                        Navigator.push(
+                                            context,
+                                            PageTransition(
+                                                type: PageTransitionType.fade,
+                                                child: Calendar_detail_frame(
+                                                  date_list: has_data_all_POST,
+                                                  datetime: date_list[17],
+                                                  month: this_month,
+                                                  year: this_year,
+                                                )));
+                                      }
                                     },
                                     child: Container(
                                         width: size.width * 0.1,
@@ -1298,22 +1543,32 @@ class _Calendar_Screen extends State<Calendar_Screen> {
                                                 : Container(
                                                     width: size.width * 0.1,
                                                     height: size.height * 0.07,
-                                                    child: Image.memory(
-                                                        img_list[17]
-                                                            as Uint8List)),
+                                                    child: ClipRRect(
+                                                      borderRadius: BorderRadius.circular(8.0),
+                                                      child: Image.memory(
+                                                          img_list[
+                                                          17]
+                                                          as Uint8List, fit: BoxFit.cover,),
+                                                    )),
                                           ],
                                         )),
                                   ),
                                   InkWell(
                                     onTap: () {
-                                      print(date_list[18]);
-                                      Navigator.push(
-                                          context,
-                                          PageTransition(
-                                              type: PageTransitionType.fade,
-                                              child: Calendar_detail(
-                                                date_time: date_list[18],
-                                              )));
+                                      if(img_list[18]==null){
+                                        showtoast("기록된 일기가 없습니다");
+                                      }else{
+                                        Navigator.push(
+                                            context,
+                                            PageTransition(
+                                                type: PageTransitionType.fade,
+                                                child: Calendar_detail_frame(
+                                                  date_list: has_data_all_POST,
+                                                  datetime: date_list[18],
+                                                  month: this_month,
+                                                  year: this_year,
+                                                )));
+                                      }
                                     },
                                     child: Container(
                                         width: size.width * 0.1,
@@ -1326,22 +1581,32 @@ class _Calendar_Screen extends State<Calendar_Screen> {
                                                 : Container(
                                                     width: size.width * 0.1,
                                                     height: size.height * 0.07,
-                                                    child: Image.memory(
-                                                        img_list[18]
-                                                            as Uint8List))
+                                                    child: ClipRRect(
+                                                      borderRadius: BorderRadius.circular(8.0),
+                                                      child: Image.memory(
+                                                          img_list[
+                                                          18]
+                                                          as Uint8List, fit: BoxFit.cover,),
+                                                    ))
                                           ],
                                         )),
                                   ),
                                   InkWell(
                                     onTap: () {
-                                      print(date_list[0]);
-                                      Navigator.push(
-                                          context,
-                                          PageTransition(
-                                              type: PageTransitionType.fade,
-                                              child: Calendar_detail(
-                                                date_time: date_list[19],
-                                              )));
+                                      if(img_list[19]==null){
+                                        showtoast("기록된 일기가 없습니다");
+                                      }else{
+                                        Navigator.push(
+                                            context,
+                                            PageTransition(
+                                                type: PageTransitionType.fade,
+                                                child: Calendar_detail_frame(
+                                                  date_list: has_data_all_POST,
+                                                  datetime: date_list[19],
+                                                  month: this_month,
+                                                  year: this_year,
+                                                )));
+                                      }
                                     },
                                     child: Container(
                                         width: size.width * 0.1,
@@ -1358,22 +1623,32 @@ class _Calendar_Screen extends State<Calendar_Screen> {
                                                         width: size.width * 0.1,
                                                         height:
                                                             size.height * 0.07,
-                                                        child: Image.memory(
-                                                            img_list[19]
-                                                                as Uint8List))),
+                                                        child:ClipRRect(
+                                                          borderRadius: BorderRadius.circular(8.0),
+                                                          child: Image.memory(
+                                                              img_list[
+                                                              19]
+                                                              as Uint8List, fit: BoxFit.cover,),
+                                                        ))),
                                           ],
                                         )),
                                   ),
                                   InkWell(
                                     onTap: () {
-                                      print(date_list[20]);
-                                      Navigator.push(
-                                          context,
-                                          PageTransition(
-                                              type: PageTransitionType.fade,
-                                              child: Calendar_detail(
-                                                date_time: date_list[20],
-                                              )));
+                                      if(img_list[20]==null){
+                                        showtoast("기록된 일기가 없습니다");
+                                      }else{
+                                        Navigator.push(
+                                            context,
+                                            PageTransition(
+                                                type: PageTransitionType.fade,
+                                                child: Calendar_detail_frame(
+                                                  date_list: has_data_all_POST,
+                                                  datetime: date_list[20],
+                                                  month: this_month,
+                                                  year: this_year,
+                                                )));
+                                      }
                                     },
                                     child: Container(
                                         width: size.width * 0.1,
@@ -1386,9 +1661,13 @@ class _Calendar_Screen extends State<Calendar_Screen> {
                                                 : Container(
                                                     width: size.width * 0.1,
                                                     height: size.height * 0.07,
-                                                    child: Image.memory(
-                                                        img_list[20]
-                                                            as Uint8List)),
+                                                    child: ClipRRect(
+                                                      borderRadius: BorderRadius.circular(8.0),
+                                                      child: Image.memory(
+                                                          img_list[
+                                                          20]
+                                                          as Uint8List, fit: BoxFit.cover,),
+                                                    )),
                                           ],
                                         )),
                                   ),
@@ -1400,14 +1679,20 @@ class _Calendar_Screen extends State<Calendar_Screen> {
                                 children: [
                                   InkWell(
                                     onTap: () {
-                                      print(date_list[21]);
-                                      Navigator.push(
-                                          context,
-                                          PageTransition(
-                                              type: PageTransitionType.fade,
-                                              child: Calendar_detail(
-                                                date_time: date_list[21],
-                                              )));
+                                      if(img_list[21]==null){
+                                        showtoast("기록된 일기가 없습니다");
+                                      }else{
+                                        Navigator.push(
+                                            context,
+                                            PageTransition(
+                                                type: PageTransitionType.fade,
+                                                child: Calendar_detail_frame(
+                                                  date_list: has_data_all_POST,
+                                                  datetime: date_list[21],
+                                                  month: this_month,
+                                                  year: this_year,
+                                                )));
+                                      }
                                     },
                                     child: Container(
                                         width: size.width * 0.1,
@@ -1420,22 +1705,32 @@ class _Calendar_Screen extends State<Calendar_Screen> {
                                                 : Container(
                                                     width: size.width * 0.1,
                                                     height: size.height * 0.07,
-                                                    child: Image.memory(
-                                                        img_list[21]
-                                                            as Uint8List)),
+                                                    child:ClipRRect(
+                                                      borderRadius: BorderRadius.circular(8.0),
+                                                      child: Image.memory(
+                                                          img_list[
+                                                          21]
+                                                          as Uint8List, fit: BoxFit.cover,),
+                                                    )),
                                           ],
                                         )),
                                   ),
                                   InkWell(
                                     onTap: () {
-                                      print(date_list[22]);
-                                      Navigator.push(
-                                          context,
-                                          PageTransition(
-                                              type: PageTransitionType.fade,
-                                              child: Calendar_detail(
-                                                date_time: date_list[22],
-                                              )));
+                                      if(img_list[22]==null){
+                                        showtoast("기록된 일기가 없습니다");
+                                      }else{
+                                        Navigator.push(
+                                            context,
+                                            PageTransition(
+                                                type: PageTransitionType.fade,
+                                                child: Calendar_detail_frame(
+                                                  date_list: has_data_all_POST,
+                                                  datetime: date_list[22],
+                                                  month: this_month,
+                                                  year: this_year,
+                                                )));
+                                      }
                                     },
                                     child: Container(
                                         width: size.width * 0.1,
@@ -1448,22 +1743,32 @@ class _Calendar_Screen extends State<Calendar_Screen> {
                                                 : Container(
                                                     width: size.width * 0.1,
                                                     height: size.height * 0.07,
-                                                    child: Image.memory(
-                                                        img_list[22]
-                                                            as Uint8List)),
+                                                    child: ClipRRect(
+                                                      borderRadius: BorderRadius.circular(8.0),
+                                                      child: Image.memory(
+                                                          img_list[
+                                                          22]
+                                                          as Uint8List, fit: BoxFit.cover,),
+                                                    )),
                                           ],
                                         )),
                                   ),
                                   InkWell(
                                     onTap: () {
-                                      print(date_list[23]);
-                                      Navigator.push(
-                                          context,
-                                          PageTransition(
-                                              type: PageTransitionType.fade,
-                                              child: Calendar_detail(
-                                                date_time: date_list[23],
-                                              )));
+                                      if(img_list[23]==null){
+                                        showtoast("기록된 일기가 없습니다");
+                                      }else{
+                                        Navigator.push(
+                                            context,
+                                            PageTransition(
+                                                type: PageTransitionType.fade,
+                                                child: Calendar_detail_frame(
+                                                  date_list: has_data_all_POST,
+                                                  datetime: date_list[23],
+                                                  month: this_month,
+                                                  year: this_year,
+                                                )));
+                                      }
                                     },
                                     child: Container(
                                         width: size.width * 0.1,
@@ -1476,22 +1781,32 @@ class _Calendar_Screen extends State<Calendar_Screen> {
                                                 : Container(
                                                     width: size.width * 0.1,
                                                     height: size.height * 0.07,
-                                                    child: Image.memory(
-                                                        img_list[23]
-                                                            as Uint8List)),
+                                                    child: ClipRRect(
+                                                      borderRadius: BorderRadius.circular(8.0),
+                                                      child: Image.memory(
+                                                          img_list[
+                                                          23]
+                                                          as Uint8List, fit: BoxFit.cover,),
+                                                    )),
                                           ],
                                         )),
                                   ),
                                   InkWell(
                                     onTap: () {
-                                      print(date_list[24]);
-                                      Navigator.push(
-                                          context,
-                                          PageTransition(
-                                              type: PageTransitionType.fade,
-                                              child: Calendar_detail(
-                                                date_time: date_list[24],
-                                              )));
+                                      if(img_list[24]==null){
+                                        showtoast("기록된 일기가 없습니다");
+                                      }else{
+                                        Navigator.push(
+                                            context,
+                                            PageTransition(
+                                                type: PageTransitionType.fade,
+                                                child: Calendar_detail_frame(
+                                                  date_list: has_data_all_POST,
+                                                  datetime: date_list[24],
+                                                  month: this_month,
+                                                  year: this_year,
+                                                )));
+                                      }
                                     },
                                     child: Container(
                                         width: size.width * 0.1,
@@ -1504,22 +1819,33 @@ class _Calendar_Screen extends State<Calendar_Screen> {
                                                 : Container(
                                                     width: size.width * 0.1,
                                                     height: size.height * 0.07,
-                                                    child: Image.memory(
-                                                        img_list[24]
-                                                            as Uint8List)),
+                                                    child: ClipRRect(
+                                                      borderRadius: BorderRadius.circular(8.0),
+                                                      child: Image.memory(
+                                                          img_list[
+                                                          24]
+                                                          as Uint8List, fit: BoxFit.cover,),
+                                                    )),
                                           ],
                                         )),
                                   ),
                                   InkWell(
                                     onTap: () {
-                                      print(date_list[25]);
-                                      Navigator.push(
-                                          context,
-                                          PageTransition(
-                                              type: PageTransitionType.fade,
-                                              child: Calendar_detail(
-                                                date_time: date_list[25],
-                                              )));
+                                      if(img_list[25]==null){
+                                        showtoast("기록된 일기가 없습니다");
+                                      }else{
+                                        print("DD");
+                                        Navigator.push(
+                                            context,
+                                            PageTransition(
+                                                type: PageTransitionType.fade,
+                                                child: Calendar_detail_frame(
+                                                  date_list: has_data_all_POST,
+                                                  datetime: date_list[25],
+                                                  month: this_month,
+                                                  year: this_year,
+                                                )));
+                                      }
                                     },
                                     child: Container(
                                         width: size.width * 0.1,
@@ -1532,22 +1858,33 @@ class _Calendar_Screen extends State<Calendar_Screen> {
                                                 : Container(
                                                     width: size.width * 0.1,
                                                     height: size.height * 0.07,
-                                                    child: Image.memory(
-                                                        img_list[25]
-                                                            as Uint8List)),
+                                                    child: ClipRRect(
+                                                      borderRadius: BorderRadius.circular(8.0),
+                                                      child: Image.memory(
+
+                                                          img_list[
+                                                          25]
+                                                          as Uint8List, fit: BoxFit.cover,),
+                                                    )),
                                           ],
                                         )),
                                   ),
                                   InkWell(
                                     onTap: () {
-                                      print(date_list[26]);
-                                      Navigator.push(
-                                          context,
-                                          PageTransition(
-                                              type: PageTransitionType.fade,
-                                              child: Calendar_detail(
-                                                date_time: date_list[26],
-                                              )));
+                                      if(img_list[26]==null){
+                                        showtoast("기록된 일기가 없습니다");
+                                      }else{
+                                        Navigator.push(
+                                            context,
+                                            PageTransition(
+                                                type: PageTransitionType.fade,
+                                                child: Calendar_detail_frame(
+                                                  date_list: has_data_all_POST,
+                                                  datetime: date_list[26],
+                                                  month: this_month,
+                                                  year: this_year,
+                                                )));
+                                      }
                                     },
                                     child: Container(
                                         width: size.width * 0.1,
@@ -1560,22 +1897,31 @@ class _Calendar_Screen extends State<Calendar_Screen> {
                                                 : Container(
                                                     width: size.width * 0.1,
                                                     height: size.height * 0.07,
-                                                    child: Image.memory(
-                                                        img_list[26]
-                                                            as Uint8List)),
+                                                    child: ClipRRect(
+
+                                                      borderRadius: BorderRadius.circular(8.0),
+                                                      child: Image.memory(img_list[
+                                                      26] as Uint8List, fit: BoxFit.cover,),
+                                                    )),
                                           ],
                                         )),
                                   ),
                                   InkWell(
                                     onTap: () {
-                                      print(date_list[27]);
-                                      Navigator.push(
-                                          context,
-                                          PageTransition(
-                                              type: PageTransitionType.fade,
-                                              child: Calendar_detail(
-                                                date_time: date_list[27],
-                                              )));
+                                      if(img_list[27]==null){
+                                        showtoast("기록된 일기가 없습니다");
+                                      }else{
+                                        Navigator.push(
+                                            context,
+                                            PageTransition(
+                                                type: PageTransitionType.fade,
+                                                child: Calendar_detail_frame(
+                                                  date_list: has_data_all_POST,
+                                                  datetime: date_list[27],
+                                                  month: this_month,
+                                                  year: this_year,
+                                                )));
+                                      }
                                     },
                                     child: Container(
                                         width: size.width * 0.1,
@@ -1588,9 +1934,13 @@ class _Calendar_Screen extends State<Calendar_Screen> {
                                                 : Container(
                                                     width: size.width * 0.1,
                                                     height: size.height * 0.07,
-                                                    child: Image.memory(
-                                                        img_list[27]
-                                                            as Uint8List)),
+                                                    child: ClipRRect(
+                                                      borderRadius: BorderRadius.circular(8.0),
+                                                      child: Image.memory(
+                                                          img_list[
+                                                          27]
+                                                          as Uint8List, fit: BoxFit.cover,),
+                                                    )),
                                           ],
                                         )),
                                   ),
@@ -1602,14 +1952,20 @@ class _Calendar_Screen extends State<Calendar_Screen> {
                                 children: [
                                   InkWell(
                                     onTap: () {
-                                      print(date_list[28]);
-                                      Navigator.push(
-                                          context,
-                                          PageTransition(
-                                              type: PageTransitionType.fade,
-                                              child: Calendar_detail(
-                                                date_time: date_list[28],
-                                              )));
+                                      if(img_list[28]==null){
+                                        showtoast("기록된 일기가 없습니다");
+                                      }else{
+                                        Navigator.push(
+                                            context,
+                                            PageTransition(
+                                                type: PageTransitionType.fade,
+                                                child: Calendar_detail_frame(
+                                                  date_list: has_data_all_POST,
+                                                  datetime: date_list[28],
+                                                  month: this_month,
+                                                  year: this_year,
+                                                )));
+                                      }
                                     },
                                     child: Container(
                                         width: size.width * 0.1,
@@ -1630,22 +1986,32 @@ class _Calendar_Screen extends State<Calendar_Screen> {
                                                         width: size.width * 0.1,
                                                         height:
                                                             size.height * 0.07,
-                                                        child: Image.memory(
-                                                            img_list[28]
-                                                                as Uint8List)),
+                                                        child: ClipRRect(
+                                                          borderRadius: BorderRadius.circular(8.0),
+                                                          child: Image.memory(
+                                                              img_list[
+                                                              28]
+                                                              as Uint8List, fit: BoxFit.cover,),
+                                                        )),
                                           ],
                                         )),
                                   ),
                                   InkWell(
                                     onTap: () {
-                                      print(date_list[29]);
-                                      Navigator.push(
-                                          context,
-                                          PageTransition(
-                                              type: PageTransitionType.fade,
-                                              child: Calendar_detail(
-                                                date_time: date_list[29],
-                                              )));
+                                      if(img_list[29]==null){
+                                        showtoast("기록된 일기가 없습니다");
+                                      }else{
+                                        Navigator.push(
+                                            context,
+                                            PageTransition(
+                                                type: PageTransitionType.fade,
+                                                child: Calendar_detail_frame(
+                                                  date_list: has_data_all_POST,
+                                                  datetime: date_list[29],
+                                                  month: this_month,
+                                                  year: this_year,
+                                                )));
+                                      }
                                     },
                                     child: Container(
                                         width: size.width * 0.1,
@@ -1666,22 +2032,32 @@ class _Calendar_Screen extends State<Calendar_Screen> {
                                                         width: size.width * 0.1,
                                                         height:
                                                             size.height * 0.07,
-                                                        child: Image.memory(
-                                                            img_list[29]
-                                                                as Uint8List)),
+                                                        child: ClipRRect(
+                                                          borderRadius: BorderRadius.circular(8.0),
+                                                          child: Image.memory(
+                                                              img_list[
+                                                              29]
+                                                              as Uint8List, fit: BoxFit.cover,),
+                                                        )),
                                           ],
                                         )),
                                   ),
                                   InkWell(
                                     onTap: () {
-                                      print(date_list[30]);
-                                      Navigator.push(
-                                          context,
-                                          PageTransition(
-                                              type: PageTransitionType.fade,
-                                              child: Calendar_detail(
-                                                date_time: date_list[30],
-                                              )));
+                                      if(img_list[30]==null){
+                                        showtoast("기록된 일기가 없습니다");
+                                      }else{
+                                        Navigator.push(
+                                            context,
+                                            PageTransition(
+                                                type: PageTransitionType.fade,
+                                                child: Calendar_detail_frame(
+                                                  date_list: has_data_all_POST,
+                                                  datetime: date_list[30],
+                                                  month: this_month,
+                                                  year: this_year,
+                                                )));
+                                      }
                                     },
                                     child: Container(
                                         width: size.width * 0.1,
@@ -1702,22 +2078,32 @@ class _Calendar_Screen extends State<Calendar_Screen> {
                                                         width: size.width * 0.1,
                                                         height:
                                                             size.height * 0.07,
-                                                        child: Image.memory(
-                                                            img_list[30]
-                                                                as Uint8List)),
+                                                        child: ClipRRect(
+                                                          borderRadius: BorderRadius.circular(8.0),
+                                                          child: Image.memory(
+                                                              img_list[
+                                                              30]
+                                                              as Uint8List, fit: BoxFit.cover,),
+                                                        )),
                                           ],
                                         )),
                                   ),
                                   InkWell(
                                     onTap: () {
-                                      print(date_list[31]);
-                                      Navigator.push(
-                                          context,
-                                          PageTransition(
-                                              type: PageTransitionType.fade,
-                                              child: Calendar_detail(
-                                                date_time: date_list[31],
-                                              )));
+                                      if(img_list[31]==null){
+                                        showtoast("기록된 일기가 없습니다");
+                                      }else{
+                                        Navigator.push(
+                                            context,
+                                            PageTransition(
+                                                type: PageTransitionType.fade,
+                                                child: Calendar_detail_frame(
+                                                  date_list: has_data_all_POST,
+                                                  datetime: date_list[31],
+                                                  month: this_month,
+                                                  year: this_year,
+                                                )));
+                                      }
                                     },
                                     child: Container(
                                         width: size.width * 0.1,
@@ -1738,22 +2124,32 @@ class _Calendar_Screen extends State<Calendar_Screen> {
                                                         width: size.width * 0.1,
                                                         height:
                                                             size.height * 0.07,
-                                                        child: Image.memory(
-                                                            img_list[31]
-                                                                as Uint8List)),
+                                                        child: ClipRRect(
+                                                          borderRadius: BorderRadius.circular(8.0),
+                                                          child: Image.memory(
+                                                              img_list[
+                                                              31]
+                                                              as Uint8List, fit: BoxFit.cover,),
+                                                        )),
                                           ],
                                         )),
                                   ),
                                   InkWell(
                                     onTap: () {
-                                      print(date_list[32]);
-                                      Navigator.push(
-                                          context,
-                                          PageTransition(
-                                              type: PageTransitionType.fade,
-                                              child: Calendar_detail(
-                                                date_time: date_list[32],
-                                              )));
+                                      if(img_list[32]==null){
+                                        showtoast("기록된 일기가 없습니다");
+                                      }else{
+                                        Navigator.push(
+                                            context,
+                                            PageTransition(
+                                                type: PageTransitionType.fade,
+                                                child: Calendar_detail_frame(
+                                                  date_list: has_data_all_POST,
+                                                  datetime: date_list[32],
+                                                  month: this_month,
+                                                  year: this_year,
+                                                )));
+                                      }
                                     },
                                     child: Container(
                                         width: size.width * 0.1,
@@ -1774,22 +2170,32 @@ class _Calendar_Screen extends State<Calendar_Screen> {
                                                         width: size.width * 0.1,
                                                         height:
                                                             size.height * 0.07,
-                                                        child: Image.memory(
-                                                            img_list[32]
-                                                                as Uint8List)),
+                                                        child: ClipRRect(
+                                                          borderRadius: BorderRadius.circular(8.0),
+                                                          child: Image.memory(
+                                                              img_list[
+                                                              32]
+                                                              as Uint8List, fit: BoxFit.cover,),
+                                                        )),
                                           ],
                                         )),
                                   ),
                                   InkWell(
                                     onTap: () {
-                                      print(date_list[33]);
-                                      Navigator.push(
-                                          context,
-                                          PageTransition(
-                                              type: PageTransitionType.fade,
-                                              child: Calendar_detail(
-                                                date_time: date_list[33],
-                                              )));
+                                      if(img_list[33]==null){
+                                        showtoast("기록된 일기가 없습니다");
+                                      }else{
+                                        Navigator.push(
+                                            context,
+                                            PageTransition(
+                                                type: PageTransitionType.fade,
+                                                child: Calendar_detail_frame(
+                                                  date_list: has_data_all_POST,
+                                                  datetime: date_list[33],
+                                                  month: this_month,
+                                                  year: this_year,
+                                                )));
+                                      }
                                     },
                                     child: Container(
                                         width: size.width * 0.1,
@@ -1810,22 +2216,32 @@ class _Calendar_Screen extends State<Calendar_Screen> {
                                                         width: size.width * 0.1,
                                                         height:
                                                             size.height * 0.07,
-                                                        child: Image.memory(
-                                                            img_list[33]
-                                                                as Uint8List)),
+                                                        child: ClipRRect(
+                                                          borderRadius: BorderRadius.circular(8.0),
+                                                          child: Image.memory(
+                                                              img_list[
+                                                              33]
+                                                              as Uint8List, fit: BoxFit.cover,),
+                                                        )),
                                           ],
                                         )),
                                   ),
                                   InkWell(
                                     onTap: () {
-                                      print(date_list[34]);
-                                      Navigator.push(
-                                          context,
-                                          PageTransition(
-                                              type: PageTransitionType.fade,
-                                              child: Calendar_detail(
-                                                date_time: date_list[34],
-                                              )));
+                                      if(img_list[34]==null){
+                                        showtoast("기록된 일기가 없습니다");
+                                      }else{
+                                        Navigator.push(
+                                            context,
+                                            PageTransition(
+                                                type: PageTransitionType.fade,
+                                                child: Calendar_detail_frame(
+                                                  date_list: has_data_all_POST,
+                                                  datetime: date_list[34],
+                                                  month: this_month,
+                                                  year: this_year,
+                                                )));
+                                      }
                                     },
                                     child: Container(
                                         width: size.width * 0.1,
@@ -1846,9 +2262,13 @@ class _Calendar_Screen extends State<Calendar_Screen> {
                                                         width: size.width * 0.1,
                                                         height:
                                                             size.height * 0.07,
-                                                        child: Image.memory(
-                                                            img_list[34]
-                                                                as Uint8List)),
+                                                        child: ClipRRect(
+                                                          borderRadius: BorderRadius.circular(8.0),
+                                                          child: Image.memory(
+                                                              img_list[
+                                                              34]
+                                                              as Uint8List, fit: BoxFit.cover,),
+                                                        )),
                                           ],
                                         )),
                                   ),
@@ -1861,15 +2281,20 @@ class _Calendar_Screen extends State<Calendar_Screen> {
                                       children: [
                                         InkWell(
                                           onTap: () {
-                                            print(date_list[35]);
-                                            Navigator.push(
-                                                context,
-                                                PageTransition(
-                                                    type:
-                                                        PageTransitionType.fade,
-                                                    child: Calendar_detail(
-                                                      date_time: date_list[35],
-                                                    )));
+                                            if(img_list[35]==null){
+                                              showtoast("기록된 일기가 없습니다");
+                                            }else{
+                                              Navigator.push(
+                                                  context,
+                                                  PageTransition(
+                                                      type: PageTransitionType.fade,
+                                                      child: Calendar_detail_frame(
+                                                        date_list: has_data_all_POST,
+                                                        datetime: date_list[35],
+                                                        month: this_month,
+                                                        year: this_year,
+                                                      )));
+                                            }
                                           },
                                           child: Container(
                                               width: size.width * 0.1,
@@ -1897,23 +2322,32 @@ class _Calendar_Screen extends State<Calendar_Screen> {
                                                               height:
                                                                   size.height *
                                                                       0.07,
-                                                              child: Image.memory(
-                                                                  img_list[35]
-                                                                      as Uint8List)),
+                                                              child: ClipRRect(
+                                                                borderRadius: BorderRadius.circular(8.0),
+                                                                child: Image.memory(
+                                                                    img_list[
+                                                                    35]
+                                                                    as Uint8List, fit: BoxFit.cover,),
+                                                              )),
                                                 ],
                                               )),
                                         ),
                                         InkWell(
                                           onTap: () {
-                                            print(date_list[36]);
-                                            Navigator.push(
-                                                context,
-                                                PageTransition(
-                                                    type:
-                                                        PageTransitionType.fade,
-                                                    child: Calendar_detail(
-                                                      date_time: date_list[36],
-                                                    )));
+                                            if(img_list[36]==null){
+                                              showtoast("기록된 일기가 없습니다");
+                                            }else{
+                                              Navigator.push(
+                                                  context,
+                                                  PageTransition(
+                                                      type: PageTransitionType.fade,
+                                                      child: Calendar_detail_frame(
+                                                        date_list: has_data_all_POST,
+                                                        datetime: date_list[36],
+                                                        month: this_month,
+                                                        year: this_year,
+                                                      )));
+                                            }
                                           },
                                           child: Container(
                                               width: size.width * 0.1,
@@ -1941,23 +2375,32 @@ class _Calendar_Screen extends State<Calendar_Screen> {
                                                               height:
                                                                   size.height *
                                                                       0.07,
-                                                              child: Image.memory(
-                                                                  img_list[36]
-                                                                      as Uint8List)),
+                                                              child: ClipRRect(
+                                                                borderRadius: BorderRadius.circular(8.0),
+                                                                child: Image.memory(
+                                                                    img_list[
+                                                                    36]
+                                                                    as Uint8List, fit: BoxFit.cover,),
+                                                              )),
                                                 ],
                                               )),
                                         ),
                                         InkWell(
                                           onTap: () {
-                                            print(date_list[37]);
-                                            Navigator.push(
-                                                context,
-                                                PageTransition(
-                                                    type:
-                                                        PageTransitionType.fade,
-                                                    child: Calendar_detail(
-                                                      date_time: date_list[37],
-                                                    )));
+                                            if(img_list[37]==null){
+                                              showtoast("기록된 일기가 없습니다");
+                                            }else{
+                                              Navigator.push(
+                                                  context,
+                                                  PageTransition(
+                                                      type: PageTransitionType.fade,
+                                                      child: Calendar_detail_frame(
+                                                        date_list: has_data_all_POST,
+                                                        datetime: date_list[37],
+                                                        month: this_month,
+                                                        year: this_year,
+                                                      )));
+                                            }
                                           },
                                           child: Container(
                                               width: size.width * 0.1,
@@ -1985,23 +2428,32 @@ class _Calendar_Screen extends State<Calendar_Screen> {
                                                               height:
                                                                   size.height *
                                                                       0.07,
-                                                              child: Image.memory(
-                                                                  img_list[37]
-                                                                      as Uint8List)),
+                                                              child: ClipRRect(
+                                                                borderRadius: BorderRadius.circular(8.0),
+                                                                child: Image.memory(
+                                                                    img_list[
+                                                                    37]
+                                                                    as Uint8List, fit: BoxFit.cover,),
+                                                              )),
                                                 ],
                                               )),
                                         ),
                                         InkWell(
                                           onTap: () {
-                                            print(date_list[38]);
-                                            Navigator.push(
-                                                context,
-                                                PageTransition(
-                                                    type:
-                                                        PageTransitionType.fade,
-                                                    child: Calendar_detail(
-                                                      date_time: date_list[38],
-                                                    )));
+                                            if(img_list[38]==null){
+                                              showtoast("기록된 일기가 없습니다");
+                                            }else{
+                                              Navigator.push(
+                                                  context,
+                                                  PageTransition(
+                                                      type: PageTransitionType.fade,
+                                                      child: Calendar_detail_frame(
+                                                        date_list: has_data_all_POST,
+                                                        datetime: date_list[38],
+                                                        month: this_month,
+                                                        year: this_year,
+                                                      )));
+                                            }
                                           },
                                           child: Container(
                                               width: size.width * 0.1,
@@ -2029,23 +2481,32 @@ class _Calendar_Screen extends State<Calendar_Screen> {
                                                               height:
                                                                   size.height *
                                                                       0.07,
-                                                              child: Image.memory(
-                                                                  img_list[38]
-                                                                      as Uint8List)),
+                                                              child:ClipRRect(
+                                                                borderRadius: BorderRadius.circular(8.0),
+                                                                child: Image.memory(
+                                                                    img_list[
+                                                                    38]
+                                                                    as Uint8List, fit: BoxFit.cover,),
+                                                              )),
                                                 ],
                                               )),
                                         ),
                                         InkWell(
                                           onTap: () {
-                                            print(date_list[39]);
-                                            Navigator.push(
-                                                context,
-                                                PageTransition(
-                                                    type:
-                                                        PageTransitionType.fade,
-                                                    child: Calendar_detail(
-                                                      date_time: date_list[39],
-                                                    )));
+                                            if(img_list[39]==null){
+                                              showtoast("기록된 일기가 없습니다");
+                                            }else{
+                                              Navigator.push(
+                                                  context,
+                                                  PageTransition(
+                                                      type: PageTransitionType.fade,
+                                                      child: Calendar_detail_frame(
+                                                        date_list: has_data_all_POST,
+                                                        datetime: date_list[39],
+                                                        month: this_month,
+                                                        year: this_year,
+                                                      )));
+                                            }
                                           },
                                           child: Container(
                                               width: size.width * 0.1,
@@ -2073,23 +2534,32 @@ class _Calendar_Screen extends State<Calendar_Screen> {
                                                               height:
                                                                   size.height *
                                                                       0.07,
-                                                              child: Image.memory(
-                                                                  img_list[39]
-                                                                      as Uint8List)),
+                                                              child: ClipRRect(
+                                                                borderRadius: BorderRadius.circular(8.0),
+                                                                child: Image.memory(
+                                                                    img_list[
+                                                                    39]
+                                                                    as Uint8List, fit: BoxFit.cover,),
+                                                              )),
                                                 ],
                                               )),
                                         ),
                                         InkWell(
                                           onTap: () {
-                                            print(date_list[40]);
-                                            Navigator.push(
-                                                context,
-                                                PageTransition(
-                                                    type:
-                                                        PageTransitionType.fade,
-                                                    child: Calendar_detail(
-                                                      date_time: date_list[40],
-                                                    )));
+                                            if(img_list[40]==null){
+                                              showtoast("기록된 일기가 없습니다");
+                                            }else{
+                                              Navigator.push(
+                                                  context,
+                                                  PageTransition(
+                                                      type: PageTransitionType.fade,
+                                                      child: Calendar_detail_frame(
+                                                        date_list: has_data_all_POST,
+                                                        datetime: date_list[40],
+                                                        month: this_month,
+                                                        year: this_year,
+                                                      )));
+                                            }
                                           },
                                           child: Container(
                                               width: size.width * 0.1,
@@ -2117,23 +2587,32 @@ class _Calendar_Screen extends State<Calendar_Screen> {
                                                               height:
                                                                   size.height *
                                                                       0.07,
-                                                              child: Image.memory(
-                                                                  img_list[40]
-                                                                      as Uint8List)),
+                                                              child: ClipRRect(
+                                                                borderRadius: BorderRadius.circular(8.0),
+                                                                child: Image.memory(
+                                                                    img_list[
+                                                                    40]
+                                                                    as Uint8List, fit: BoxFit.cover,),
+                                                              )),
                                                 ],
                                               )),
                                         ),
                                         InkWell(
                                           onTap: () {
-                                            print(date_list[41]);
-                                            Navigator.push(
-                                                context,
-                                                PageTransition(
-                                                    type:
-                                                        PageTransitionType.fade,
-                                                    child: Calendar_detail(
-                                                      date_time: date_list[41],
-                                                    )));
+                                            if(img_list[41]==null){
+                                              showtoast("기록된 일기가 없습니다");
+                                            }else{
+                                              Navigator.push(
+                                                  context,
+                                                  PageTransition(
+                                                      type: PageTransitionType.fade,
+                                                      child: Calendar_detail_frame(
+                                                        date_list: has_data_all_POST,
+                                                        datetime: date_list[41],
+                                                        month: this_month,
+                                                        year: this_year,
+                                                      )));
+                                            }
                                           },
                                           child: Container(
                                               width: size.width * 0.1,
@@ -2161,9 +2640,13 @@ class _Calendar_Screen extends State<Calendar_Screen> {
                                                               height:
                                                                   size.height *
                                                                       0.07,
-                                                              child: Image.memory(
-                                                                  img_list[41]
-                                                                      as Uint8List)),
+                                                              child: ClipRRect(
+                                                                borderRadius: BorderRadius.circular(8.0),
+                                                                child: Image.memory(
+                                                                    img_list[
+                                                                    41]
+                                                                    as Uint8List, fit: BoxFit.cover,),
+                                                              )),
                                                 ],
                                               )),
                                         ),

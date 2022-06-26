@@ -233,7 +233,7 @@ class _Deliver_Four_Screen extends State<Deliver_Four_Screen> {
                         context,
                         PageTransition(
                             type: PageTransitionType.fade,
-                            child: Frame_Screen()));
+                            child: Frame_Screen(Login_method: null,)));
                     showtoast("주문이 완료되었습니다!");
                   }
                 },

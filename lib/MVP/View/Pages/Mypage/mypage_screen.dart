@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gilog/MVP/View/Pages/Mypage/deliver_live.dart';
 import 'package:gilog/MVP/View/Pages/Mypage/set_alarm_page.dart';
+import 'package:gilog/MVP/View/Pages/Mypage/setting_profile.dart';
 import 'package:gilog/MVP/View/Pages/Mypage/useage_page.dart';
 import 'package:gilog/Utils/constants.dart';
 import 'package:page_transition/page_transition.dart';
@@ -102,7 +103,7 @@ class _Mypage_ScreenState extends State<Mypage_Screen> {
                                       decoration: BoxDecoration(
                                           borderRadius:
                                               BorderRadius.circular(10)),
-                                      height: size.height * 0.25,
+                                      height: size.height * 0.35,
                                       width: size.width * 0.9,
                                       child: Column(
                                         children: [
@@ -119,7 +120,29 @@ class _Mypage_ScreenState extends State<Mypage_Screen> {
                                               width: size.width * 0.1,
                                             ),
                                           ),
-
+                                          Container(
+                                            decoration: BoxDecoration(
+                                              border: Border(
+                                                  bottom: BorderSide(
+                                                      color: Colors.black,
+                                                      width: 0.1)),
+                                            ),
+                                            child: ListTile(
+                                              leading: new Icon(Icons.settings),
+                                              title: new Text(
+                                                '프로필 설정',
+                                                style: TextStyle(
+                                                    fontSize: 15,
+                                                    fontFamily: "numberfont"),
+                                              ),
+                                              onTap: () {
+                                                Navigator.push(
+                                                    context,
+                                                    PageTransition(
+                                                        type: PageTransitionType.rightToLeftWithFade, child: Setting_Profile()));
+                                              },
+                                            ),
+                                          ),
                                           Container(
                                             decoration: BoxDecoration(
                                               border: Border(

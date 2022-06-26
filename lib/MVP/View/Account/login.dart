@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 import '../../../Utils/calendar_utils/check_datetime.dart';
 import '../../../Utils/constants.dart';
@@ -26,6 +28,8 @@ class _Login_ScreenState extends State<Login_Screen> {
 
   @override
   Widget build(BuildContext context) {
+    WebViewController? _controller;
+
     Size size = MediaQuery.of(context).size;
     return WillPopScope(
       onWillPop: () async => false,
@@ -65,12 +69,64 @@ class _Login_ScreenState extends State<Login_Screen> {
                     height: size.height * 0.1,
                   ),
                   InkWell(
-                    onTap: () {
+                    onTap: () async{
                       Navigator.push(
                           context,
                           PageTransition(
                               type: PageTransitionType.fade,
-                              child: Frame_Screen()));
+                              child: Frame_Screen(Login_method: null,)));
+
+                    //   final prefs = await SharedPreferences.getInstance();
+                    //   // counter 키에 해당하는 데이터 읽기를 시도합니다. 만약 존재하지 않는 다면 0을 반환합니다.
+                    //   final login_check = prefs.getBool('kakao');
+                    //   print(login_check);
+                    //
+                    //   if(login_check == null){
+                    //     showtoast("소셜로그인을 진행해주세요");
+                    //   }else{
+                    //     const String _REST_API_KEY =
+                    //         "ee4ee61f1ea69f5a8d5f5924343083f7";
+                    //
+                    //     const String _REDIRECT =
+                    //         "http://ec2-3-39-195-205.ap-northeast-2.compute.amazonaws.com:8080/api/oauth2/code/kakao";
+                    //
+                    //     final _host = "https://kauth.kakao.com";
+                    //     final _url =
+                    //         "/oauth/authorize?client_id=${_REST_API_KEY}&redirect_uri=${_REDIRECT}&response_type=code";
+                    //     await Navigator.of(context).push(MaterialPageRoute(
+                    //         builder: (BuildContext context) => Scaffold(
+                    //
+                    //           body: WebView(
+                    //             javascriptMode: JavascriptMode.unrestricted,
+                    //             initialUrl: _host + _url,
+                    //             onWebViewCreated:
+                    //                 (WebViewController webviewController){
+                    //               _controller = webviewController;
+                    //             },
+                    //             javascriptChannels: Set.from([
+                    //               JavascriptChannel(
+                    //                   name: "JavaScriptChannel",
+                    //                   onMessageReceived:
+                    //                       (JavascriptMessage result) {
+                    //                     print(result.message);
+                    //
+                    //                     if (result.message != null) {
+                    //
+                    //                       Navigator.of(context)
+                    //                           .pushAndRemoveUntil(
+                    //                           MaterialPageRoute(
+                    //                               builder: (context) =>
+                    //                                   Frame_Screen(Login_method: 'kakao',)),
+                    //                               (Route r) => false);
+                    //                       return;
+                    //                     }
+                    //                     Navigator.of(context).pop();
+                    //                     return;
+                    //                   }),
+                    //             ]),
+                    //           ),
+                    //         )));
+                    //   }
                     },
                     child: Container(
                       decoration: BoxDecoration(

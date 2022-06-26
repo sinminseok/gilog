@@ -159,7 +159,7 @@ class _Deliver_Two_Screen extends State<Deliver_Two_Screen> {
                       children: [
                         Container(
                           child: Text(
-                            "28개의 기록",
+                            "28개의 기-록",
                             style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,
@@ -402,7 +402,7 @@ class _Deliver_Two_Screen extends State<Deliver_Two_Screen> {
                           child: Deliver_Three_Screen(
                               post_or_write:widget.data,
 
-                              book_page: 12, book_count: book_count)));
+                              book_page: 14, book_count: book_count)));
                 }
                 if (check_two == true) {
                   Navigator.push(
@@ -411,7 +411,7 @@ class _Deliver_Two_Screen extends State<Deliver_Two_Screen> {
                           type: PageTransitionType.bottomToTop,
                           child: Deliver_Three_Screen(
                               post_or_write:widget.data,
-                              book_page: 24, book_count: book_count)));
+                              book_page: 28, book_count: book_count)));
                 }
               },
               child: Container(

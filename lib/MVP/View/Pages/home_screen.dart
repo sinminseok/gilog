@@ -95,6 +95,7 @@ class _Home_ScreenState extends State<Home_Screen> {
               padding: const EdgeInsets.all(8.0),
               child: Container(
                 height: size.height * 0.34,
+                width: size.width*1,
                 decoration: BoxDecoration(
                   border: Border.all(
                       color: Colors.white12,
@@ -104,28 +105,47 @@ class _Home_ScreenState extends State<Home_Screen> {
                 child: Center(
                   child: _image == null
                       ? Image.asset(
-                          "assets/images/gilog.png",
+                          "assets/images/photo_null_image.png",
                           width: size.width * 0.6,
                         )
                       : Image.file(
                           File(_image!.path),
-                          height: size.height * 0.5,
+                          height: size.height * 0.34,
+                          width: size.width*1,
+                    fit:BoxFit.fitWidth,
                         ),
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 30.0),
-              child: InkWell(
-                onTap: () {
-                  Permission_handler().requestCameraPermission(context);
+            InkWell(
+              onTap: (){
+                Permission_handler().requestCameraPermission(context);
+                getImageFromGallery();
+              },
+              child: Container(
+                decoration: BoxDecoration(
 
-                  getImageFromGallery();
-                },
-                child: Text(
-                  "여기를 눌러 사진을 골라보세요!",
-                  style: TextStyle(fontFamily: "Gilogfont", fontSize: 23),
-                ),
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.3),
+                        spreadRadius: 5,
+                        blurRadius: 7,
+                        offset: Offset(0, 2), // changes position of shadow
+                      ),
+                    ],
+                    color: Colors.purple),
+
+                width: size.width * 0.3,
+                height: size.height * 0.05,
+                child: Center(
+                    child: Text(
+                      "사진 선택",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontFamily: "numberfont",
+                          fontWeight: FontWeight.bold),
+                    )),
               ),
             ),
             SizedBox(

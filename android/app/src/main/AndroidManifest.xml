@@ -8,7 +8,10 @@
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
        android:usesCleartextTraffic="true">
-       <activity android:name="com.kakao.sdk.flutter.AuthCodeCustomTabsActivity">
+       <activity android:name="com.kakao.sdk.flutter.AuthCodeCustomTabsActivity"
+           android:showWhenLocked="true"
+           android:turnScreenOn="true"
+           >
            <intent-filter android:label="flutter_web_auth">
                <action android:name="android.intent.action.VIEW" />
                <category android:name="android.intent.category.DEFAULT" />
