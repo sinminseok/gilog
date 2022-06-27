@@ -17,15 +17,28 @@ class _Deliver_liver_pageState extends State<Deliver_liver_page> {
       builder: (BuildContext context) {
         return AlertDialog(
           backgroundColor: kPrimaryColor,
-          title: Center(
-              child: new Text(
-            "주문 상세",
-            style: TextStyle(fontFamily: "gilogfont", fontSize: 21),
-          )),
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              InkWell(
+                  onTap: (){
+                    Navigator.pop(context);
+                  },
+                  child: Icon(Icons.close)),
+              Text("주문 상세",style: TextStyle(fontSize: 19),),
+              SizedBox(width: size.width*0.03,),
+            ],
+          ),
           content: SingleChildScrollView(
             child: Column(
               children: [
-                Text("글만 선텍 - 14개의 기록 -2권"),
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border(bottom: BorderSide(color: Colors.grey)),
+                  ),
+                ),
+                SizedBox(height: size.height*0.02,),
+                Text("글만 선택 - 14개의 기록 -2권"),
                 Container(
                   height: size.height * 0.03,
                   width: size.width * 0.6,
@@ -62,17 +75,21 @@ class _Deliver_liver_pageState extends State<Deliver_liver_page> {
                 Text(
                   "주문 현황 : 배송중",
                 ),
+                Container(
+                  height: size.height * 0.03,
+                  width: size.width * 0.6,
+                  decoration: BoxDecoration(
+                      border: Border(bottom: BorderSide(width: 0.06))),
+                ),
+                SizedBox(
+                  height: size.height * 0.03,
+                ),
+
+                Text("발송 정보:한진 택배 004004040")
               ],
             ),
           ),
-          actions: <Widget>[
-            new FlatButton(
-              child: new Text("닫기"),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-          ],
+
         );
       },
     );
@@ -140,7 +157,7 @@ class _Deliver_liver_pageState extends State<Deliver_liver_page> {
                   ),
                 ),
                 Container(
-                  width: size.width*0.22,
+                  width: size.width*0.24,
                   child: Column(
                     children: [
                       Row(
@@ -148,7 +165,7 @@ class _Deliver_liver_pageState extends State<Deliver_liver_page> {
                         children: [
                           SizedBox(width: size.width*0.06,),
                           Text("0"),
-                          SizedBox(width: size.width*0.04,),
+                          SizedBox(width: size.width*0.07,),
                           Icon(Icons.arrow_forward_ios_outlined,size: 18,color: Colors.grey.shade400,),
                         ],
                       ),
@@ -302,13 +319,13 @@ class _Deliver_liver_pageState extends State<Deliver_liver_page> {
                                               decoration: BoxDecoration(
                                                   border: Border.all(
                                                       width: 0.5,
-                                                      color: Colors.pink)),
+                                                      color: Colors.purple)),
                                               child: Center(
                                                   child: Text(
                                                     "배송중",
                                                     style: TextStyle(
-                                                        fontFamily: "gilogfont",
-                                                        fontSize: 20),
+
+                                                        fontSize: 16),
                                                   )),
                                             ),
                                             Padding(

@@ -29,6 +29,7 @@ class Permission_handler{
   Future<bool> requestNotifcation(BuildContext context) async {
 
     PermissionStatus status = await Permission.notification.request();
+
     if(!status.isGranted) { // 허용이 안된 경우
       showDialog(
           context: context,

@@ -48,7 +48,7 @@ class _Setting_ProfileState extends State<Setting_Profile> {
                     width: size.width * 0.1,
                   ),
                   CircleAvatar(
-                    radius: 55,
+                    radius: 65,
                     backgroundImage: NetworkImage(
                         'https://www.woolha.com/media/2020/03/eevee.png'),
                   ),

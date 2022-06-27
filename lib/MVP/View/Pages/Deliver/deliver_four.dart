@@ -13,9 +13,10 @@ class Deliver_Four_Screen extends StatefulWidget {
   String? post_or_write;
   int? book_page;
   int? book_count;
+  List<String?>? pick_datetime;
 
   Deliver_Four_Screen(
-      {required this.post_or_write, this.book_page, this.book_count});
+      {required this.post_or_write, this.book_page, this.book_count,this.pick_datetime});
 
   @override
   _Deliver_Four_Screen createState() => _Deliver_Four_Screen();

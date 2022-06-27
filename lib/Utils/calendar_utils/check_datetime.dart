@@ -1,7 +1,11 @@
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../MVP/Presenter/Http/http_presenter.dart';
+
 class Check_Datetime {
+
+
 
   Future<String?> check_Today() async {
     final prefs = await SharedPreferences.getInstance();
@@ -13,19 +17,23 @@ class Check_Datetime {
     // shared preferences 얻기
     shr_datetime = prefs.getString('datetime');
 
+
     if (strToday == shr_datetime) {
-      //날짜가 아직 안바뀌었을때
       return "notchange";
     }
     if(shr_datetime == null){
-      //어플 처음 시작할때(디스크에 저장된 날짜가 없을때)
+      print("null datetime");
+      //http question 요청
+    //  Http_Presenter().get_question(token);
       prefs.setString('datetime', strToday);
       return "first";
     }
 
-    else {
-
+    else{
+      print("change datetime");
+      //http question 요청
       //날짜가 바뀌었을때
+    //   Http_Presenter().get_question(token);
       prefs.remove("datetime");
       prefs.setString('datetime', strToday);
       return "change";

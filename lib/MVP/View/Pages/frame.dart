@@ -6,6 +6,7 @@ import 'package:gilog/MVP/View/Pages/Deliver/deliver.dart';
 import 'package:gilog/MVP/View/Pages/home_screen.dart';
 import 'package:gilog/MVP/View/Pages/Mypage/mypage_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../../Utils/calendar_utils/check_datetime.dart';
 import 'Widgets/bottom_nav_widget.dart';
 
 class Frame_Screen extends StatefulWidget {
@@ -20,7 +21,6 @@ class _Frame_Screen extends State<Frame_Screen> {
   @override
   void initState() {
     check_login_method();
-
     FlutterAppBadger.removeBadge();
     super.initState();
   }

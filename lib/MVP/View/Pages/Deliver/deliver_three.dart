@@ -454,7 +454,7 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                   ),
                   Container(
                     width: size.width * 1,
-                    height: size.height * 0.7,
+                    height: size.height * 0.66,
                     child: Column(
                       children: [
                         Row(
@@ -479,7 +479,7 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                         //   child: Text("GG"),
                         // ),
                         SizedBox(
-                          height: size.height * 0.03,
+                          height: size.height * 0.02,
                         ),
                         FutureBuilder(
                             future: local_data_filter_year(),
@@ -5938,23 +5938,47 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                                   ],
                                 );
                               }
-                            })
+                            }),
+
                       ],
                     ),
-                  )
+                  ),
+                  InkWell(
+                      onTap: (){
+                        showAlertDialog(context, "선택한 요일", "${plus_book_page}");
+                      },
+                      child: Text("선택한 요일 : ${plus_book_page.length}",style: TextStyle(fontFamily: "gilogfont",fontSize: 21),)),
+                  // SingleChildScrollView(
+                  //     scrollDirection: Axis.horizontal,
+                  //     child: Row(
+                  //         children: <Widget>[
+                  //           Text('${plus_book_page}'),
+                  //
+                  //         ]
+                  //     )
+                  // ),
+                  SizedBox(height: size.height*0.01,)
+
                 ],
               ),
+
               InkWell(
                 onTap: () {
-                  Navigator.push(
-                      context,
-                      PageTransition(
-                          type: PageTransitionType.fade,
-                          child: Deliver_Four_Screen(
-                            post_or_write: widget.post_or_write,
-                            book_page: widget.book_page,
-                            book_count: widget.book_count,
-                          )));
+                  if(plus_book_page.length < widget.book_page!.toInt()){
+                    showtoast("${widget.book_page}개의 기록을 선택해주세요!");
+                  }else{
+                    Navigator.push(
+                        context,
+                        PageTransition(
+                            type: PageTransitionType.fade,
+                            child: Deliver_Four_Screen(
+                              post_or_write: widget.post_or_write,
+                              book_page: widget.book_page,
+                              book_count: widget.book_count,
+                              pick_datetime: plus_book_page,
+                            )));
+                  }
+
                 },
                 child: Container(
                   decoration: BoxDecoration(

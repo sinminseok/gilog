@@ -22,7 +22,6 @@ class _Login_ScreenState extends State<Login_Screen> {
   @override
   void initState() {
     // TODO: implement initState
-    Check_Datetime().check_Today();
     super.initState();
   }
 

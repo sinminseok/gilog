@@ -23,6 +23,22 @@ class _Login_Oauth_Screen extends State<Login_Oauth_Screen> {
 // WebViewController를 선언합니다.
   WebViewController? _controller;
 
+  set_token(String token)async{
+    print("set token");
+    // shared preferences 얻기
+    final prefs = await SharedPreferences.getInstance();
+    final before_token = prefs.getString('token');
+
+    if(before_token == null){
+      print("이전에 저장된 토큰이 없습니다.");
+      prefs.setString('token', token);
+    }else{
+      print("이전에 저장된 토큰이 있습니다..");
+      prefs.remove('token');
+      prefs.setString('token', token);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -104,6 +120,8 @@ class _Login_Oauth_Screen extends State<Login_Oauth_Screen> {
                                           print(result.message);
 
                                           if (result.message != null) {
+                                            set_token(result.message);
+
 
                                             Navigator.of(context)
                                                 .pushAndRemoveUntil(

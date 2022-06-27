@@ -34,6 +34,7 @@ class _Post_WriteState extends State<Post_Write> {
   var check_id;
   String? final_text;
   bool check_today_WRITE = false;
+  List<Messagge> messages = [];
 
   @override
   void initState() {
@@ -49,14 +50,12 @@ class _Post_WriteState extends State<Post_Write> {
     sd.database;
     var data = await sd.posts();
 
-    print(data.length);
 
     for (var i = 0; i < data.length; i++) {
       if (data[i].datetime == datetime) {
         setState(() {
-          check_today_WRITE = true;  
+          check_today_WRITE = true;
         });
-
       }
     }
   }
@@ -64,11 +63,10 @@ class _Post_WriteState extends State<Post_Write> {
   @override
   void dispose() {
     // TODO: implement dispose
-    check_today_WRITE==true?print("이미 기록함 ㅅㄱ"):sub_controller_text();
+    check_today_WRITE == true ? print("이미 기록함 ㅅㄱ") : sub_controller_text();
     super.dispose();
   }
 
-  List<Messagge> messages = [];
 
   @override
   Widget build(BuildContext context) {
@@ -122,7 +120,9 @@ class _Post_WriteState extends State<Post_Write> {
                 )
               ],
             ),
-            SizedBox(height: size.height*0.03,),
+            SizedBox(
+              height: size.height * 0.03,
+            ),
             Expanded(
                 child: GroupedListView<Messagge, DateTime>(
               padding: const EdgeInsets.all(8),
@@ -155,36 +155,34 @@ class _Post_WriteState extends State<Post_Write> {
               ),
             )),
             Container(
-              decoration: BoxDecoration(
-                color: Colors.purple.shade100,
-                borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(30),
-                  topLeft: Radius.circular(30)
+                decoration: BoxDecoration(
+                  color: Colors.purple.shade100,
+                  borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(30),
+                      topLeft: Radius.circular(30)),
                 ),
-              ),
-
                 height: size.height * 0.08,
-
                 child: TextField(
                   controller: _content_controller,
                   decoration: InputDecoration(
-                    contentPadding: EdgeInsets.only(left: 20,top: 20),
+                    contentPadding: EdgeInsets.only(left: 20, top: 20),
                     hintText: "내용을 입력하세요",
-                    hintStyle: TextStyle(fontFamily: "gilogfont",fontSize: 21),
+                    hintStyle: TextStyle(fontFamily: "gilogfont", fontSize: 21),
                     border: InputBorder.none,
                     suffixIcon: Padding(
-                      padding: const EdgeInsets.only(top: 10.0,right: 10),
+                      padding: const EdgeInsets.only(top: 10.0, right: 10),
                       child: IconButton(
                         onPressed: () {
                           chekc_today_write();
-                          if(check_today_WRITE == true){
+                          if (check_today_WRITE == true) {
                             showtoast("기록은 하루에 한번만 할 수 있습니다!");
-                          }else{
+                          } else {
                             if (_content_controller.text == "") {
                               showtoast("내용을 입력해주세요");
                             } else {
                               final message = Messagge(
-                                  text: _content_controller.text, isSentByMe: true);
+                                  text: _content_controller.text,
+                                  isSentByMe: true);
                               setState(() {
                                 messages.add(message);
                                 _content_controller.clear();
@@ -192,10 +190,12 @@ class _Post_WriteState extends State<Post_Write> {
                             }
                           }
 
-
                           print(messages);
                         },
-                        icon: Icon(Icons.send,color: Colors.black,),
+                        icon: Icon(
+                          Icons.send,
+                          color: Colors.black,
+                        ),
                       ),
                     ),
                   ),
@@ -248,7 +248,5 @@ class _Post_WriteState extends State<Post_Write> {
     );
 
     await sd.insertPOST(fido);
-
-
   }
 }

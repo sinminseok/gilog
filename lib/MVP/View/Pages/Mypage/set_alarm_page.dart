@@ -10,6 +10,7 @@ import 'package:timezone/data/latest.dart' as tz;
 
 import '../../../../Utils/calendar_utils/datetime.dart';
 import '../../../../Utils/constants.dart';
+import '../../../../Utils/permission.dart';
 import '../../../../Utils/toast.dart';
 
 class Set_Alarm extends StatefulWidget {
@@ -30,6 +31,7 @@ class _Set_AlarmState extends State<Set_Alarm> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
+    Permission_handler().requestNotifcation(context);
     WidgetsBinding.instance!.addObserver(this);
     _init();
   }
@@ -153,6 +155,7 @@ class _Set_AlarmState extends State<Set_Alarm> with WidgetsBindingObserver {
             padding: const EdgeInsets.all(8.0),
             child: Text("설정한 시간에 질문 알림을 받을 수 있어요!",style: TextStyle(fontSize: 18,fontFamily: "gilogfont"),),
           ),
+          SizedBox(height: size.height*0.05,),
 
           Center(
             child: Container(
