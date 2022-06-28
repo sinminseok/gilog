@@ -18,6 +18,8 @@ class _Deliver_ScreenState extends State<Deliver_Screen> {
   bool check_photo = false;
   bool check_write = false;
 
+  final List<String> images = <String>['review1.png','review2.png'];
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -34,38 +36,17 @@ class _Deliver_ScreenState extends State<Deliver_Screen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Stack(
-              children: [
-                Container(
-                    height: size.height * 0.35,
-                    width: size.width * 1,
-                    decoration: BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey,
-                          blurRadius: 10.0,
-                          spreadRadius: 3.0,
-                        ),
-                      ],
-                    ),
-                    child: Image.asset(
-                      "assets/images/calendar_img1.jpeg",
-                      fit: BoxFit.fill,
-                    )),
-                Container(
-                  height: size.height*0.36,
+            Container(
+              height: size.height * 0.35,
 
-                    child: Center(
-                      child: Text(
-                  "기-log 집으로 받아보기",
-                  style: TextStyle(
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: "gilogfont",
-                        color: Colors.white),
-                ),
-                    ))
-              ],
+              child: PageView.builder(
+                controller: PageController(initialPage: images.length),
+              itemCount: images.length,
+                itemBuilder: (BuildContext context,int index){
+                return Container(width: size.width*1,height: size.height*0.2,
+                child: Image.asset('assets/images/${images[index]}',fit: BoxFit.contain,),);
+                },
+              ),
             ),
             SizedBox(
               height: size.height * 0.03,
@@ -120,7 +101,7 @@ class _Deliver_ScreenState extends State<Deliver_Screen> {
                         ),
                         width: size.width * 0.43,
                         height: size.height * 0.2,
-                        child: Image.asset("assets/images/photo.jpg",fit: BoxFit.fitHeight,),
+                        child: Image.asset("assets/images/only_image.png",fit: BoxFit.cover,),
                       )
                     ],
                   ),
@@ -172,7 +153,7 @@ class _Deliver_ScreenState extends State<Deliver_Screen> {
                         ),
                         width: size.width * 0.43,
                         height: size.height * 0.2,
-                        child: Image.asset("assets/images/write.jpg",fit: BoxFit.fitHeight,),
+                        child: Image.asset("assets/images/image_and_write.png",fit: BoxFit.cover,),
                       )
                     ],
                   ),

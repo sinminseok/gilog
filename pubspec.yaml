@@ -110,6 +110,11 @@ flutter:
     - assets/images/use_info2.png
     - assets/images/use_info3.png
     - assets/images/use_info4.png
+    - assets/images/image_and_write.png
+    - assets/images/only_image.png
+    - assets/images/review1.png
+    - assets/images/review2.png
+    - assets/images/user_img.png
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

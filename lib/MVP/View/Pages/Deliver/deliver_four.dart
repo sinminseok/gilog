@@ -24,18 +24,31 @@ class Deliver_Four_Screen extends StatefulWidget {
 
 class _Deliver_Four_Screen extends State<Deliver_Four_Screen> {
   var datetime;
+  int? total_price;
   TextEditingController _destination_controller = TextEditingController();
+
 
   @override
   void initState() {
     // TODO: implement initState
     datetime = full_getToday();
+    Calculate_price();
     super.initState();
+  }
+
+  Calculate_price(){
+    if(widget.book_page == 14){
+      total_price = 4900*(widget.book_count!.toInt());
+    }else{
+      total_price = 5900*(widget.book_count!.toInt());
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+
     Size size = MediaQuery.of(context).size;
+
     return Scaffold(
       backgroundColor: kPrimaryColor,
       appBar: AppBar(
@@ -175,7 +188,7 @@ class _Deliver_Four_Screen extends State<Deliver_Four_Screen> {
                   Padding(
                     padding: const EdgeInsets.only(left: 10.0, top: 20),
                     child: Text(
-                      "주문 금액: 18400",
+                      "주문 금액: ${total_price}",
                       style: TextStyle(fontFamily: "gilogfont", fontSize: 21),
                     ),
                   )

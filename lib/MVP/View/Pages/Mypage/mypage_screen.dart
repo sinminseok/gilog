@@ -43,9 +43,9 @@ class _Mypage_ScreenState extends State<Mypage_Screen> {
                     width: size.width * 0.1,
                   ),
                   CircleAvatar(
+                    backgroundColor: kProfileColor,
                     radius: 55,
-                    backgroundImage: NetworkImage(
-                        'https://www.woolha.com/media/2020/03/eevee.png'),
+                    backgroundImage: AssetImage('assets/images/user_img.png')
                   ),
                   SizedBox(
                     width: size.width * 0.1,

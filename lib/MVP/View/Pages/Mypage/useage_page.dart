@@ -45,15 +45,6 @@ class _Useage_page extends State<Useage_page> {
                         "assets/images/use_info2.png",
                         fit: BoxFit.fitHeight,
                       ),
-                    ],
-                  ),
-                )),
-            Container(
-                height: size.height * 0.5,
-                width: MediaQuery.of(context).size.width,
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
                       Image.asset(
                         "assets/images/use_info3.png",
                         fit: BoxFit.fitHeight,
@@ -65,6 +56,7 @@ class _Useage_page extends State<Useage_page> {
                     ],
                   ),
                 )),
+
           ],
         ));
   }

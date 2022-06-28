@@ -186,6 +186,7 @@ class _Post_WriteState extends State<Post_Write> {
                               setState(() {
                                 messages.add(message);
                                 _content_controller.clear();
+                                FocusScope.of(context).unfocus();
                               });
                             }
                           }
