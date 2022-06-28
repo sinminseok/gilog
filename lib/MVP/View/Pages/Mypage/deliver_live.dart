@@ -85,7 +85,7 @@ class _Deliver_liver_pageState extends State<Deliver_liver_page> {
                   height: size.height * 0.03,
                 ),
 
-                Text("발송 정보:한진 택배 004004040")
+                Text("입금 계좌: 110-445-151150 신한은행 심소연")
               ],
             ),
           ),

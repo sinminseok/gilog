@@ -213,7 +213,7 @@ class _Post_WriteState extends State<Post_Write> {
       return;
     } else {
       for (var i = 0; messages.length > i; i++) {
-        test += messages[i].text;
+        test += "${messages[i].text}\n";
       }
       print(test);
       final_text = test;

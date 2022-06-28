@@ -22,9 +22,6 @@ class _Calendar_detailState extends State<Calendar_detail> {
 
   @override
   void initState() {
-    // TODO: implement initState
-    //get http datetime detail
-
     chekc_today_write();
     super.initState();
   }
@@ -33,15 +30,11 @@ class _Calendar_detailState extends State<Calendar_detail> {
     DBHelper sd = DBHelper();
     sd.database;
     var data = await sd.posts();
-
-    print(data.length);
-
     for (var i = 0; i < data.length; i++) {
       if (data[i].datetime == widget.date_time) {
         this_post = data[i];
       }
     }
-
     return this_post;
   }
 
@@ -64,7 +57,7 @@ class _Calendar_detailState extends State<Calendar_detail> {
             }
 
             //error가 발생하게 될 경우 반환하게 되는 부분
-             if (snapshot.hasError) {
+            if (snapshot.hasError) {
               return Center(
                 child: Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -81,10 +74,10 @@ class _Calendar_detailState extends State<Calendar_detail> {
                     width: size.width * 1,
                     height: size.height * 0.4,
                     child: Image.memory(
-                      this_post!.image_url
-                      as Uint8List, fit: BoxFit.fitWidth,),
+                      this_post!.image_url as Uint8List,
+                      fit: BoxFit.fitWidth,
+                    ),
                   ),
-
                   Stack(
                     children: [
                       Padding(
@@ -130,10 +123,15 @@ class _Calendar_detailState extends State<Calendar_detail> {
                     padding: const EdgeInsets.all(15.0),
                     child: SizedBox(
                         width: size.width * 0.9,
-                        height: size.height * 0.4,
-                        child: Text(
-                          "${this_post!.content}",
-                          style: TextStyle(fontFamily: "gilogfont", fontSize: 20),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "${this_post!.content}",
+                              style: TextStyle(
+                                  fontFamily: "gilogfont", fontSize: 20),
+                            ),
+                          ],
                         )),
                   ),
                 ],

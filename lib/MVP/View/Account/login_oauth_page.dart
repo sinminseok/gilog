@@ -23,16 +23,16 @@ class _Login_Oauth_Screen extends State<Login_Oauth_Screen> {
 // WebViewController를 선언합니다.
   WebViewController? _controller;
 
-  set_token(String token)async{
+  set_token(String token) async {
     print("set token");
     // shared preferences 얻기
     final prefs = await SharedPreferences.getInstance();
     final before_token = prefs.getString('token');
 
-    if(before_token == null){
+    if (before_token == null) {
       print("이전에 저장된 토큰이 없습니다.");
       prefs.setString('token', token);
-    }else{
+    } else {
       print("이전에 저장된 토큰이 있습니다..");
       prefs.remove('token');
       prefs.setString('token', token);
@@ -43,9 +43,7 @@ class _Login_Oauth_Screen extends State<Login_Oauth_Screen> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-
       appBar: AppBar(
-
         backgroundColor: kPrimaryColor,
         elevation: 0,
         iconTheme: IconThemeData(
@@ -79,7 +77,14 @@ class _Login_Oauth_Screen extends State<Login_Oauth_Screen> {
                       fontFamily: "Gilogfont"),
                 ),
                 SizedBox(
-                  height: size.height * 0.35,
+                  height: size.height * 0.05,
+                ),
+                Container(
+                  width: size.width * 0.7,
+                  child: Image.asset("assets/images/pencils_icon.png"),
+                ),
+                SizedBox(
+                  height: size.height * 0.1,
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 12.0),
@@ -98,7 +103,6 @@ class _Login_Oauth_Screen extends State<Login_Oauth_Screen> {
                       await Navigator.of(context).push(MaterialPageRoute(
                           builder: (BuildContext context) => Scaffold(
                                 appBar: AppBar(
-
                                   backgroundColor: kPrimaryColor,
                                   elevation: 0,
                                   iconTheme: IconThemeData(
@@ -109,9 +113,9 @@ class _Login_Oauth_Screen extends State<Login_Oauth_Screen> {
                                   javascriptMode: JavascriptMode.unrestricted,
                                   initialUrl: _host + _url,
                                   onWebViewCreated:
-                                      (WebViewController webviewController){
+                                      (WebViewController webviewController) {
                                     _controller = webviewController;
-                                    },
+                                  },
                                   javascriptChannels: Set.from([
                                     JavascriptChannel(
                                         name: "JavaScriptChannel",
@@ -121,13 +125,16 @@ class _Login_Oauth_Screen extends State<Login_Oauth_Screen> {
 
                                           if (result.message != null) {
                                             set_token(result.message);
-
+                                            //http user get
 
                                             Navigator.of(context)
                                                 .pushAndRemoveUntil(
                                                     MaterialPageRoute(
                                                         builder: (context) =>
-                                                            Frame_Screen(Login_method: 'kakao',)),
+                                                            Frame_Screen(
+                                                              Login_method:
+                                                                  'kakao',
+                                                            )),
                                                     (Route r) => false);
                                             return;
                                           }
@@ -150,21 +157,24 @@ class _Login_Oauth_Screen extends State<Login_Oauth_Screen> {
                           borderRadius: BorderRadius.circular(10),
                           color: Colors.amber),
                       width: size.width * 0.7,
-                      height: size.height * 0.07,
+                      height: size.height * 0.065,
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Icon(Icons.chat_bubble),
+                            padding: const EdgeInsets.only(right: 8.0),
+                            child: Icon(
+                              Icons.chat_bubble,
+                              size: 18,
+                            ),
                           ),
                           Center(
                               child: Text(
-                            "카카오톡으로 시작하기",
+                            "Katalk으로 로그인",
                             style: TextStyle(
-                                fontSize: 21,
-                                color: Colors.black,
-                                fontFamily: "Gilogfont"),
+                              fontSize: 21,
+                              color: Colors.black,
+                            ),
                           )),
                           SizedBox(
                             width: size.width * 0.03,
@@ -174,45 +184,10 @@ class _Login_Oauth_Screen extends State<Login_Oauth_Screen> {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 12.0),
-                  child: InkWell(
-                    onTap: () async {},
-                    child: Container(
-                      decoration: BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.3),
-                              spreadRadius: 1,
-                              blurRadius: 1,
-                            ),
-                          ],
-                          borderRadius: BorderRadius.circular(10),
-                          color: Colors.white12),
-                      width: size.width * 0.7,
-                      height: size.height * 0.07,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Container(
-                              width: size.width * 0.1,
-                              child:
-                                  Image.asset("assets/images/apple_logo.png")),
-                          Center(
-                              child: Text(
-                            "Apple로 시작하기",
-                            style: TextStyle(
-                                fontSize: 21,
-                                color: Colors.black,
-                                fontFamily: "Gilogfont"),
-                          )),
-                          SizedBox(
-                            width: size.width * 0.04,
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
+                Container(
+                  width: size.width * 0.7,
+                  height: size.height * 0.09,
+                  child: Image.asset("assets/images/apple_oauth.png"),
                 ),
                 SizedBox(
                   height: size.height * 0.12,

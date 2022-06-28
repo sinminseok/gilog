@@ -1,14 +1,16 @@
-class Gilog_Model{
+class Gilog_User{
   String? username;
-  String? nickname;
-  final List<dynamic>? authorityDtoSet;
-  Gilog_Model({this.username , this.nickname, this.authorityDtoSet});
+  String? gender;
+  String? age;
 
-  factory Gilog_Model.fromJson(Map<String, dynamic> json) {
-    return Gilog_Model(
+  Gilog_User({this.username , this.gender,this.age});
+
+  factory Gilog_User.fromJson(Map<String, dynamic> json) {
+    return Gilog_User(
       username: json['username'],
-      nickname: json['nickname'],
-      authorityDtoSet: json['authorityDtoSet'],
+      gender: json['gender'],
+        age:json['age'],
+
     );
   }
 

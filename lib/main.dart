@@ -1,27 +1,23 @@
-
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 
 import 'package:kakao_flutter_sdk_common/kakao_flutter_sdk_common.dart';
+import 'MVP/Presenter/Http/http_presenter.dart';
 import 'MVP/View/Account/login.dart';
 import 'Utils/constants.dart';
 
-
 void main() async {
-  KakaoSdk.init(nativeAppKey:'c4ddd110fec9eaab625667112de706fb');
+  KakaoSdk.init(nativeAppKey: 'c4ddd110fec9eaab625667112de706fb');
   runApp(
-      MyApp()
+    MultiProvider(providers: [
+      ChangeNotifierProvider(create: (context) => Http_Presenter()),
+    ], child: MyApp()),
   );
-
 }
 
-
-class MyApp extends StatelessWidget{
-
-
+class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -32,7 +28,6 @@ class MyApp extends StatelessWidget{
           GlobalWidgetsLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
           // delegate from localization package.
-
         ],
         supportedLocales: [
           const Locale('ko')
