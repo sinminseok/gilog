@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -10,10 +11,13 @@ import 'Utils/constants.dart';
 
 void main() async {
   KakaoSdk.init(nativeAppKey: 'c4ddd110fec9eaab625667112de706fb');
+  // WidgetsFlutterBinding.ensureInitialized();
+  // await Firebase.initializeApp();
   runApp(
-    MultiProvider(providers: [
-      ChangeNotifierProvider(create: (context) => Http_Presenter()),
-    ], child: MyApp()),
+    ChangeNotifierProvider(
+      create: (context) => Http_Presenter(),
+      child: MyApp(),
+    ),
   );
 }
 

@@ -1,3 +1,5 @@
+
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
@@ -5,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:gilog/Local_DB/db.dart';
 import 'package:gilog/MVP/Model/post.dart';
+import 'package:gilog/MVP/Presenter/Http/http_presenter.dart';
 import 'package:gilog/MVP/View/Pages/frame.dart';
 import 'package:gilog/MVP/View/Pages/home_screen.dart';
 import 'package:gilog/Utils/calendar_utils/datetime.dart';
@@ -20,9 +23,10 @@ import '../../../Model/message.dart';
 
 class Post_Write extends StatefulWidget {
   String? question;
+  File? image_file;
   Uint8List? image_url;
 
-  Post_Write({required this.question, this.image_url});
+  Post_Write({required this.question,this.image_file, this.image_url});
 
   @override
   _Post_WriteState createState() => _Post_WriteState();
@@ -154,6 +158,7 @@ class _Post_WriteState extends State<Post_Write> {
                 ),
               ),
             )),
+
             Container(
                 decoration: BoxDecoration(
                   color: Colors.purple.shade100,
@@ -249,5 +254,14 @@ class _Post_WriteState extends State<Post_Write> {
     );
 
     await sd.insertPOST(fido);
+
+    var token = await Http_Presenter().read_token();
+    var return_value =  await Http_Presenter().post_test_gilog(datetime, "content", "question", token);
+    Http_Presenter().post_gilog(widget.image_file, return_value, token);
+
   }
+
+
+
+
 }

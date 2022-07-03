@@ -1,4 +1,0 @@
-
-class SQL_LITE{
-
-}

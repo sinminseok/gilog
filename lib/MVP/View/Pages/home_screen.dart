@@ -35,7 +35,7 @@ class _Home_ScreenState extends State<Home_Screen> {
   String? question_disk;
   Future? myFuture;
   double degrees = 90;
-
+  String? token;
   @override
   void initState() {
     // TODO: implement initState
@@ -47,7 +47,7 @@ class _Home_ScreenState extends State<Home_Screen> {
 
   read_today_question() async {
 
-    String? token = await Http_Presenter().read_token();
+     token = await Http_Presenter().read_token();
     var check = await Check_Datetime().check_Today();
 
     final prefs = await SharedPreferences.getInstance();
@@ -56,8 +56,9 @@ class _Home_ScreenState extends State<Home_Screen> {
       print("not change");
       // counter 키에 해당하는 데이터 읽기를 시도합니다. 만약 존재하지 않는 다면 0을 반환합니다.
       question_disk = prefs.getString('question');
-      print(question_disk);
+
       if(question_disk == null){
+
         return "오늘 가장 생각났던 사람은 누구인가요?";
       }
       else{
@@ -65,13 +66,15 @@ class _Home_ScreenState extends State<Home_Screen> {
       }
 
     } else {
-      print("date change");
+      print("date change $token");
+      prefs.remove('question');
       //디스크에 question 저장
       http_get_question = await Http_Presenter().get_question(token);
-      prefs.remove('question');
+
       prefs.setString('question', http_get_question!.question!);
       print(http_get_question!.question);
       question_disk = http_get_question!.question;
+      print("asddas$question_disk");
       return question_disk;
     }
 
@@ -181,8 +184,10 @@ class _Home_ScreenState extends State<Home_Screen> {
                         // var token = await Http_Presenter().read_token();
                         // print("FF$token");
                         // Http_Presenter().get_question(token);
+
                         Permission_handler().requestCameraPermission(context);
                         getImageFromGallery();
+
                       },
                       child: Container(
                         decoration: BoxDecoration(
@@ -223,6 +228,7 @@ class _Home_ScreenState extends State<Home_Screen> {
                                   type: PageTransitionType.fade,
                                   child: Post_Write(
                                       question: '${question_disk}',
+                                      image_file:File(_image!.path),
                                       image_url: imim)));
                         }
                       },

@@ -11,7 +11,6 @@ import 'package:date_utils/date_utils.dart' as dt;
 
 import '../../../../Local_DB/db.dart';
 import '../../../../Utils/toast.dart';
-import '../../../Model/calendar_picker_bool.dart';
 import '../../../Model/post.dart';
 import '../Calendar/calendar_detail.dart';
 
@@ -337,6 +336,43 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
     calendar_39 = false;
     calendar_40 = false;
     calendar_41 = false;
+  }
+
+  List<String?> filiter_list = [];
+
+  test(){
+    print(plus_book_page);
+    for(var i=0;plus_book_page.length>i;i++){
+
+      if(plus_book_page[i]!.substring(6,7) == "-"){
+
+
+        if(plus_book_page[i]!.length == 8){
+          filiter_list.add(plus_book_page[i]!.substring(0,5)+"0"+plus_book_page[i]!.substring(5,7)+"0"+plus_book_page[i]!.substring(7));
+          print(plus_book_page[i]!.substring(0,5)+"0"+plus_book_page[i]!.substring(5,7)+"0"+plus_book_page[i]!.substring(7));
+
+        }else{
+          filiter_list.add(plus_book_page[i]!.substring(0,5)+"0"+plus_book_page[i]!.substring(5,7)+plus_book_page[i]!.substring(7));
+          print(plus_book_page[i]!.substring(0,5)+"0"+plus_book_page[i]!.substring(5,7)+plus_book_page[i]!.substring(7));
+        }
+        //1~9월까지
+      }else{
+        if(plus_book_page[i]!.length == 9){
+          //10-12월까지 요일 한자리일때
+          filiter_list.add(plus_book_page[i]!.substring(0,8)+"0"+plus_book_page[i]!.substring(8));
+          print(plus_book_page[i]!.substring(0,8)+"0"+plus_book_page[i]!.substring(8));
+        }else{
+          filiter_list.add(plus_book_page[i]);
+          print("10-12월까지 요일 두자리일때${plus_book_page[i]}");  //
+        }
+
+
+
+      }
+
+    }
+    print(filiter_list);
+
   }
 
   @override
@@ -5957,7 +5993,12 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                   //         ]
                   //     )
                   // ),
-                  SizedBox(height: size.height*0.01,)
+                  SizedBox(height: size.height*0.01,),
+                  InkWell(onTap: (){
+                    test();
+
+                  },
+                  child: Text("das"),)
 
                 ],
               ),
@@ -5967,6 +6008,9 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                   if(plus_book_page.length < widget.book_page!.toInt()){
                     showtoast("${widget.book_page}개의 기록을 선택해주세요!");
                   }else{
+
+                    test();
+
                     Navigator.push(
                         context,
                         PageTransition(
@@ -5975,7 +6019,7 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                               post_or_write: widget.post_or_write,
                               book_page: widget.book_page,
                               book_count: widget.book_count,
-                              pick_datetime: plus_book_page,
+                              pick_datetime: filiter_list,
                             )));
                   }
 

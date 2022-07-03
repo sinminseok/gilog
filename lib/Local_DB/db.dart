@@ -30,9 +30,7 @@ class DBHelper {
   Future<void> insertPOST(POST post) async {
     final db = await database;
 
-    // Memo를 올바른 테이블에 추가하세요. 또한
-    // `conflictAlgorithm`을 명시할 것입니다. 본 예제에서는
-    // 만약 동일한 memo가 여러번 추가되면, 이전 데이터를 덮어쓸 것입니다.
+
     await db.insert(
       TableName,
       post.toMap(),
@@ -43,10 +41,10 @@ class DBHelper {
   Future<List<POST>> posts() async {
     final db = await database;
 
-    // 모든 Memo를 얻기 위해 테이블에 질의합니다.
+
     final List<Map<String, dynamic>> maps = await db.query('POSTS');
 
-    // List<Map<String, dynamic>를 List<Memo>으로 변환합니다.
+
     return List.generate(maps.length, (i) {
       return POST(
         id: maps[i]['id'],

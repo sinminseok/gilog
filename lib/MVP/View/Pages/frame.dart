@@ -21,6 +21,7 @@ class _Frame_Screen extends State<Frame_Screen> {
   @override
   void initState() {
     check_login_method();
+
     FlutterAppBadger.removeBadge();
     super.initState();
   }
@@ -29,11 +30,13 @@ class _Frame_Screen extends State<Frame_Screen> {
     if(widget.Login_method == "kakao"){
       print("kakao");
       final prefs = await SharedPreferences.getInstance();
-      prefs.setBool('kakao', true);
+      prefs.setString('login_method', "kakao");
     }if(widget.Login_method == "apple"){
       print("apple");
       final prefs = await SharedPreferences.getInstance();
-      prefs.setBool('apple', true);
+      prefs.setString('login_method', "apple");
+    }else{
+      return;
     }
   }
 

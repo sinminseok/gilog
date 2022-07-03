@@ -1,11 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:gilog/MVP/Presenter/Http/http_presenter.dart';
 import 'package:gilog/MVP/View/Pages/Mypage/deliver_live.dart';
+import 'package:gilog/MVP/View/Pages/Mypage/resign.dart';
 import 'package:gilog/MVP/View/Pages/Mypage/set_alarm_page.dart';
 import 'package:gilog/MVP/View/Pages/Mypage/setting_profile.dart';
 import 'package:gilog/MVP/View/Pages/Mypage/useage_page.dart';
 import 'package:gilog/Utils/constants.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:provider/provider.dart';
+
+import '../../../../Utils/toast.dart';
+import '../../../Model/user.dart';
 
 
 class Mypage_Screen extends StatefulWidget {
@@ -16,8 +22,16 @@ class Mypage_Screen extends StatefulWidget {
 }
 
 class _Mypage_ScreenState extends State<Mypage_Screen> {
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+    Gilog_User? user = Provider.of<Http_Presenter>(context).gilog_user;
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: kPrimaryColor,
@@ -40,12 +54,17 @@ class _Mypage_ScreenState extends State<Mypage_Screen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   SizedBox(
-                    width: size.width * 0.1,
+                    width: size.width * 0.04,
                   ),
-                  CircleAvatar(
-                    backgroundColor: kProfileColor,
-                    radius: 55,
-                    backgroundImage: AssetImage('assets/images/user_img.png')
+                  InkWell(
+                    onTap: (){
+                      print(user!.username);
+                    },
+                    child: CircleAvatar(
+                      backgroundColor: kProfileColor,
+                      radius: 55,
+                      backgroundImage: AssetImage('assets/images/user_img.png')
+                    ),
                   ),
                   SizedBox(
                     width: size.width * 0.1,
@@ -55,22 +74,25 @@ class _Mypage_ScreenState extends State<Mypage_Screen> {
                       SizedBox(
                         height: size.height * 0.06,
                       ),
-                      Row(
-                        children: [
-                          Text(
-                            "신민석",
-                            style: TextStyle(
-                                fontSize: 23, fontFamily: "gilogfont"),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              "기로기",
+                      Container(
+                        width: size.width*0.45,
+                        child: Column(
+                          children: [
+                            Text(
+                              "${user!.username}",
                               style: TextStyle(
-                                  fontSize: 17, fontFamily: "gilogfont"),
+                                  fontSize: 21, fontFamily: "gilogfont"),
                             ),
-                          ),
-                        ],
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                "기로기",
+                                style: TextStyle(
+                                    fontSize: 17, fontFamily: "gilogfont"),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 12.0),
@@ -180,7 +202,11 @@ class _Mypage_ScreenState extends State<Mypage_Screen> {
                                                     fontFamily: "numberfont"),
                                               ),
                                               onTap: () {
-                                                Navigator.pop(context);
+                                                Navigator.push(
+                                                    context,
+                                                    PageTransition(
+                                                        type: PageTransitionType.rightToLeftWithFade, child: Resign_Page()));
+
                                               },
                                             ),
                                           ),

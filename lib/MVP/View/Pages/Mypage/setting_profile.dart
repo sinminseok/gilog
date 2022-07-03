@@ -8,6 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:page_transition/page_transition.dart';
 
 import '../../../../Utils/constants.dart';
+import '../../Account/start_setting_profile .dart';
 
 class Setting_Profile extends StatefulWidget {
   const Setting_Profile({Key? key}) : super(key: key);
@@ -43,9 +44,17 @@ class _Setting_ProfileState extends State<Setting_Profile> {
       backgroundColor: kPrimaryColor,
       appBar: AppBar(
         backgroundColor: kPrimaryColor,
-        title: Text(
-          "프로필 수정",
-          style: TextStyle(color: Colors.black, fontFamily: "gilogfont"),
+        title: InkWell(
+          onTap: (){
+            Navigator.push(
+                context,
+                PageTransition(
+                    type: PageTransitionType.rightToLeftWithFade, child: Profile_Setting(login_method: 'kakao',)));
+          },
+          child: Text(
+            "프로필 수정",
+            style: TextStyle(color: Colors.black, fontFamily: "gilogfont"),
+          ),
         ),
         elevation: 0,
         iconTheme: IconThemeData(
@@ -118,7 +127,32 @@ class _Setting_ProfileState extends State<Setting_Profile> {
                       child: TextField(
                         decoration: InputDecoration(
                           labelText: '회원 이름',
-                          hintText: 'Enter your email',
+                          hintText: '이름을 입력하세요!',
+                          labelStyle: TextStyle(color: Colors.purple),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                            borderSide: BorderSide(width: 1, color: Colors.purple),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                            borderSide: BorderSide(width: 1, color: Colors.purple),
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                          ),
+                        ),
+                        keyboardType: TextInputType.emailAddress,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      width: size.width*0.7,
+                      child: TextField(
+                        decoration: InputDecoration(
+                          labelText: '닉네임',
+                          hintText: '닉네임을 입력해주세요!',
                           labelStyle: TextStyle(color: Colors.purple),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.all(Radius.circular(10.0)),

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:gilog/MVP/Presenter/Http/http_presenter.dart';
 import 'package:gilog/MVP/View/Pages/Deliver/deliver_two.dart';
 import 'package:gilog/MVP/View/Pages/frame.dart';
 import 'package:gilog/Utils/constants.dart';
@@ -8,6 +9,7 @@ import 'package:gilog/Utils/toast.dart';
 import 'package:page_transition/page_transition.dart';
 
 import '../../../../Utils/calendar_utils/datetime.dart';
+import 'deliver_finish.dart';
 
 class Deliver_Four_Screen extends StatefulWidget {
   String? post_or_write;
@@ -16,7 +18,10 @@ class Deliver_Four_Screen extends StatefulWidget {
   List<String?>? pick_datetime;
 
   Deliver_Four_Screen(
-      {required this.post_or_write, this.book_page, this.book_count,this.pick_datetime});
+      {required this.post_or_write,
+      this.book_page,
+      this.book_count,
+      this.pick_datetime});
 
   @override
   _Deliver_Four_Screen createState() => _Deliver_Four_Screen();
@@ -25,28 +30,33 @@ class Deliver_Four_Screen extends StatefulWidget {
 class _Deliver_Four_Screen extends State<Deliver_Four_Screen> {
   var datetime;
   int? total_price;
+  String? product = "";
+  DateTime dateTime = DateTime.now();
   TextEditingController _destination_controller = TextEditingController();
-
 
   @override
   void initState() {
     // TODO: implement initState
     datetime = full_getToday();
     Calculate_price();
+    make_product();
     super.initState();
   }
 
-  Calculate_price(){
-    if(widget.book_page == 14){
-      total_price = 4900*(widget.book_count!.toInt());
-    }else{
-      total_price = 5900*(widget.book_count!.toInt());
+  Calculate_price() {
+    if (widget.book_page == 14) {
+      total_price = 4900 * (widget.book_count!.toInt());
+    } else {
+      total_price = 5900 * (widget.book_count!.toInt());
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
+  make_product() {
+    product = "${widget.book_page}" + "${widget.post_or_write}";
+  }
 
+  @override
+   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
@@ -161,9 +171,7 @@ class _Deliver_Four_Screen extends State<Deliver_Four_Screen> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(
-                      left: 10.0,top: 20.0
-                    ),
+                    padding: const EdgeInsets.only(left: 10.0, top: 20.0),
                     child: Text(
                       "배송지 정보",
                       style: TextStyle(fontFamily: "gilogfont", fontSize: 23),
@@ -236,19 +244,32 @@ class _Deliver_Four_Screen extends State<Deliver_Four_Screen> {
             Padding(
               padding: const EdgeInsets.all(14.0),
               child: InkWell(
-                onTap: () {
+                onTap: () async{
                   print(_destination_controller.text == "");
                   if (_destination_controller.text == "") {
                     showAlertDialog(context, "알림", "배송지 정보를 입력해주세요");
                   } else {
-                    Navigator.pushNamedAndRemoveUntil(
-                        context, '/', (_) => false);
-                    Navigator.push(
-                        context,
-                        PageTransition(
-                            type: PageTransitionType.fade,
-                            child: Frame_Screen(Login_method: null,)));
-                    showtoast("주문이 완료되었습니다!");
+                    var token = await Http_Presenter().read_token();
+                  //  showAlertDialog(context,"주문이 완료 되었습니다.","주문 정보는 마이페이지 에서 확인할 수 있습니다.");
+                    var test = await Http_Presenter().post_deliver_info(product, dateTime.toString().substring(0,10), widget.book_count, widget.pick_datetime,total_price, _destination_controller.text, token);
+                    print(test);
+                    // Http_Presenter().post_deliver_info(product, orderDate, amount, dateList, token)
+                    // Navigator.pushNamedAndRemoveUntil(
+                    //     context, '/', (_) => false);
+                    if(test == true){
+                      print("성공");
+                      Navigator.push(
+                          context,
+                          PageTransition(
+                              type: PageTransitionType.fade,
+                              child: Deliver_Finish_Screen(
+
+                              )));
+                    }else{
+                      print("실패");
+                    }
+
+
                   }
                 },
                 child: Container(
