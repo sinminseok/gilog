@@ -417,7 +417,7 @@ class _Deliver_Two_Screen extends State<Deliver_Two_Screen> {
               child: Container(
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(3),
-                    color: Colors.purple),
+                    color: kButtonColor),
                 width: size.width * 0.7,
                 height: size.height * 0.06,
                 child: Center(

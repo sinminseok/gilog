@@ -2,10 +2,13 @@
     package="com.example.gilog">
     <uses-permission android:name="android.permission.INTERNET"/>
 
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
    <application
         android:label="gilog"
-        android:name="${applicationName}"
+        android:name="기log"
         android:icon="@mipmap/ic_launcher"
        android:usesCleartextTraffic="true">
        <activity android:name="com.kakao.sdk.flutter.AuthCodeCustomTabsActivity"

@@ -1,15 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gilog/MVP/Presenter/Http/http_presenter.dart';
+import 'package:gilog/MVP/View/Account/start_setting_profile%20.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 import '../../../Utils/calendar_utils/check_datetime.dart';
 import '../../../Utils/constants.dart';
 import '../../../Utils/toast.dart';
 
+import '../../Presenter/Http/user_http.dart';
 import '../Pages/frame.dart';
 import 'login_oauth_page.dart';
 
@@ -25,6 +28,34 @@ class _Login_ScreenState extends State<Login_Screen> {
   void initState() {
     // TODO: implement initState
     super.initState();
+  }
+
+  signInWithApple() async {
+    // Request credential for the currently signed in Apple account.
+    final appleCredential = await SignInWithApple.getAppleIDCredential(
+      scopes: [
+        AppleIDAuthorizationScopes.email,
+        AppleIDAuthorizationScopes.fullName,
+      ],
+    );
+
+    var jwt_apple = await Http_Presenter().post_apple_token(
+        appleCredential.identityToken, appleCredential.authorizationCode);
+
+    if (jwt_apple != null) {
+      Http_Presenter().set_token(jwt_apple);
+
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(
+              builder: (context) => Frame_Screen(
+                    Login_method: 'apple',
+                  )),
+          (Route r) => false);
+
+      return;
+    } else {
+      showAlertDialog(context, "로그인 실패", "다시 한번 시도해주세요");
+    }
   }
 
   @override
@@ -82,23 +113,35 @@ class _Login_ScreenState extends State<Login_Screen> {
                       final prefs = await SharedPreferences.getInstance();
                       // counter 키에 해당하는 데이터 읽기를 시도합니다. 만약 존재하지 않는 다면 0을 반환합니다.
                       final login_check = prefs.getString('login_method');
-                      print(login_check);
 
-                      if (login_check == null) {
-                        showtoast("소셜로그인을 진행해주세요");
-                      }
-                      if (login_check == "kakao") {
+                      var return_logout_check =
+                          await prefs.getString("logout_check");
+
+
+                      if (return_logout_check == "kakao_logout") {
+
+                        await prefs.remove("logout_check");
+
                         const String _REST_API_KEY =
                             "ee4ee61f1ea69f5a8d5f5924343083f7";
 
                         const String _REDIRECT =
-                            "http://ec2-3-39-195-205.ap-northeast-2.compute.amazonaws.com:8080/api/oauth2/code/kakao";
+                            "http://ec2-43-200-33-232.ap-northeast-2.compute.amazonaws.com:8080/api/oauth2/code/kakao";
 
                         final _host = "https://kauth.kakao.com";
+
                         final _url =
                             "/oauth/authorize?client_id=${_REST_API_KEY}&redirect_uri=${_REDIRECT}&response_type=code";
+
                         await Navigator.of(context).push(MaterialPageRoute(
                             builder: (BuildContext context) => Scaffold(
+                                  appBar: AppBar(
+                                    backgroundColor: kPrimaryColor,
+                                    elevation: 0,
+                                    iconTheme: IconThemeData(
+                                      color: Colors.black, //색변경
+                                    ),
+                                  ),
                                   body: WebView(
                                     javascriptMode: JavascriptMode.unrestricted,
                                     initialUrl: _host + _url,
@@ -114,8 +157,10 @@ class _Login_ScreenState extends State<Login_Screen> {
                                             print(result.message);
 
                                             if (result.message != null) {
-                                              Http_Presenter().set_token(result.message);
-                                              Provider.of<Http_Presenter>(context, listen: false).get_user_info(result.message);
+                                              Http_Presenter()
+                                                  .set_token(result.message);
+                                              //http user get
+
                                               Navigator.of(context)
                                                   .pushAndRemoveUntil(
                                                       MaterialPageRoute(
@@ -133,8 +178,79 @@ class _Login_ScreenState extends State<Login_Screen> {
                                     ]),
                                   ),
                                 )));
+                      }
+                      if (return_logout_check == "apple_logout") {
+                        await prefs.remove("logout_check");
+
+                        signInWithApple();
                       } else {
-                        print("auto apple login");
+                        if (login_check == null) {
+                          showtoast("소셜로그인을 진행해주세요");
+                        }
+                        if (login_check == "kakao") {
+                          const String _REST_API_KEY =
+                              "ee4ee61f1ea69f5a8d5f5924343083f7";
+
+                          const String _REDIRECT =
+                              "http://ec2-43-200-33-232.ap-northeast-2.compute.amazonaws.com:8080/api/oauth2/code/kakao";
+
+                          final _host = "https://kauth.kakao.com";
+                          final _url =
+                              "/oauth/authorize?client_id=${_REST_API_KEY}&redirect_uri=${_REDIRECT}&response_type=code";
+                          await Navigator.of(context).push(MaterialPageRoute(
+                              builder: (BuildContext context) => Scaffold(
+                                    body: WebView(
+                                      javascriptMode:
+                                          JavascriptMode.unrestricted,
+                                      initialUrl: _host + _url,
+                                      onWebViewCreated: (WebViewController
+                                          webviewController) {
+                                        _controller = webviewController;
+                                      },
+                                      javascriptChannels: Set.from([
+                                        JavascriptChannel(
+                                            name: "JavaScriptChannel",
+                                            onMessageReceived:
+                                                (JavascriptMessage result) {
+                                              print(result.message);
+
+                                              if (result.message != null) {
+                                                Http_Presenter()
+                                                    .set_token(result.message);
+                                                Provider.of<User_Http>(context,
+                                                        listen: false)
+                                                    .get_user_info(
+                                                        result.message,
+                                                        context);
+                                                Navigator.of(context)
+                                                    .pushAndRemoveUntil(
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                Frame_Screen(
+                                                                  Login_method:
+                                                                      'kakao',
+                                                                )),
+                                                        (Route r) => false);
+                                                return;
+                                              }
+                                              Navigator.of(context).pop();
+                                              return;
+                                            }),
+                                      ]),
+                                    ),
+                                  )));
+                        }
+                        if (login_check == "apple") {
+                          print("자동로그인 애플");
+                          Navigator.of(context).pushAndRemoveUntil(
+                              MaterialPageRoute(
+                                  builder: (context) => Frame_Screen(
+                                        Login_method: 'apple',
+                                      )),
+                              (Route r) => false);
+                        } else {
+                          return;
+                        }
                       }
                     },
                     child: Container(

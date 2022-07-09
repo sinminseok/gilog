@@ -58,23 +58,22 @@ class _Home_ScreenState extends State<Home_Screen> {
       question_disk = prefs.getString('question');
 
       if(question_disk == null){
-
-        return "오늘 가장 생각났던 사람은 누구인가요?";
+        question_disk = "질문을 만들어보세요!";
+        return question_disk;
       }
       else{
         return question_disk;
       }
 
     } else {
-      print("date change $token");
+      print("date change$token");
+      //원래 있던 질문 삭제(어제 질문)
       prefs.remove('question');
       //디스크에 question 저장
-      http_get_question = await Http_Presenter().get_question(token);
+      http_get_question = await Http_Presenter().get_question(token,context);
 
       prefs.setString('question', http_get_question!.question!);
-      print(http_get_question!.question);
       question_disk = http_get_question!.question;
-      print("asddas$question_disk");
       return question_disk;
     }
 
@@ -201,7 +200,7 @@ class _Home_ScreenState extends State<Home_Screen> {
                                     Offset(0, 2), // changes position of shadow
                               ),
                             ],
-                            color: Colors.purple),
+                            color: kButtonColor),
                         width: size.width * 0.3,
                         height: size.height * 0.05,
                         child: Center(

@@ -196,15 +196,15 @@ class _Set_AlarmState extends State<Set_Alarm> with WidgetsBindingObserver {
             child: Container(
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(3),
-                    color: Colors.purple),
+                    color: kButtonColor),
                 width: size.width * 0.7,
                 height: size.height * 0.06,
                 child: Center(
                     child: Text(
-                  "알림 설정하기",
+                  "설정 하기",
                   style: TextStyle(
-                      fontSize: 25,
-                      fontFamily: "gilogfont",
+                      fontSize: 21,
+
                       color: Colors.white),
                 ))),
           )

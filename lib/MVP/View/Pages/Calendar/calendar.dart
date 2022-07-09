@@ -247,13 +247,13 @@ class _Calendar_Screen extends State<Calendar_Screen> {
                     )),
               ],
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                "기 - log",
-                style: TextStyle(fontSize: 25, fontFamily: "Gilogfont"),
-              ),
-            ),
+            // Padding(
+            //   padding: const EdgeInsets.all(8.0),
+            //   child: Text(
+            //     "기 - log",
+            //     style: TextStyle(fontSize: 25, fontFamily: "Gilogfont"),
+            //   ),
+            // ),
             SizedBox(
               height: size.height * 0.05,
             ),

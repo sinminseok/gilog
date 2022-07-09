@@ -1,7 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:gilog/MVP/Presenter/Http/http_presenter.dart';
+import 'package:gilog/Utils/http_url.dart';
+import 'package:gilog/Utils/toast.dart';
+import 'package:page_transition/page_transition.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../Utils/constants.dart';
+import '../../../Presenter/Http/user_http.dart';
+import '../../Account/login.dart';
 
 class Resign_Page extends StatefulWidget {
   const Resign_Page({Key? key}) : super(key: key);
@@ -64,7 +71,31 @@ class _Resign_PageState extends State<Resign_Page> {
               ),
               Center(
                 child: InkWell(
-                  onTap: (){
+                  onTap: ()async{
+
+                    if(isChecked == true){
+                      final prefs = await SharedPreferences.getInstance();
+                      var login_metohd = prefs.getString("login_method");
+                      print(login_metohd);
+                      prefs.remove("login_method");
+                      print(login_metohd);
+
+
+                      var token = await Http_Presenter().read_token();
+                      var return_value = await User_Http().resign(token, context);
+
+                      await Http_Presenter().break_token();
+
+                      showtoast("회원 탈퇴가 완료 되었습니다.");
+                      Navigator.push(
+                          context,
+                          PageTransition(
+                              type: PageTransitionType.rightToLeftWithFade,
+                              child: Login_Screen()));
+
+                    }else{
+                      showAlertDialog(context, "알림", "동의 항목을 선택해주세요");
+                    }
 
                   },
                   child: Container(

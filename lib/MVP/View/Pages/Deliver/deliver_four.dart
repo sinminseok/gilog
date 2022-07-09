@@ -9,6 +9,7 @@ import 'package:gilog/Utils/toast.dart';
 import 'package:page_transition/page_transition.dart';
 
 import '../../../../Utils/calendar_utils/datetime.dart';
+import '../../../Presenter/Http/deliver_http.dart';
 import 'deliver_finish.dart';
 
 class Deliver_Four_Screen extends StatefulWidget {
@@ -28,6 +29,7 @@ class Deliver_Four_Screen extends StatefulWidget {
 }
 
 class _Deliver_Four_Screen extends State<Deliver_Four_Screen> {
+  String? subString;
   var datetime;
   int? total_price;
   String? product = "";
@@ -52,11 +54,22 @@ class _Deliver_Four_Screen extends State<Deliver_Four_Screen> {
   }
 
   make_product() {
-    product = "${widget.book_page}" + "${widget.post_or_write}";
+    product = "${widget.book_page}(${widget.post_or_write})";
+
+
+  }
+
+  String? test_string;
+  filter_string(){
+    final pos = widget.pick_datetime!.toString().length - 1;
+    print(widget.pick_datetime!.toString());
+    print(pos);
+    test_string = widget.pick_datetime!.toString().substring(1,pos);
+    print("$test_string");
   }
 
   @override
-   Widget build(BuildContext context) {
+  Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
@@ -119,9 +132,14 @@ class _Deliver_Four_Screen extends State<Deliver_Four_Screen> {
             SizedBox(
               height: size.height * 0.03,
             ),
-            Text(
-              "추억을 집 앞에 잘 배송하기 위해",
-              style: TextStyle(fontFamily: "gilogfont", fontSize: 23),
+            InkWell(
+              onTap: (){
+                filter_string();
+              },
+              child: Text(
+                "추억을 집 앞에 잘 배송하기 위해",
+                style: TextStyle(fontFamily: "gilogfont", fontSize: 23),
+              ),
             ),
             Text(
               "다음 사항을 꼭 확인해주세요",
@@ -244,38 +262,38 @@ class _Deliver_Four_Screen extends State<Deliver_Four_Screen> {
             Padding(
               padding: const EdgeInsets.all(14.0),
               child: InkWell(
-                onTap: () async{
+                onTap: () async {
                   print(_destination_controller.text == "");
                   if (_destination_controller.text == "") {
                     showAlertDialog(context, "알림", "배송지 정보를 입력해주세요");
                   } else {
+                    filter_string();
                     var token = await Http_Presenter().read_token();
-                  //  showAlertDialog(context,"주문이 완료 되었습니다.","주문 정보는 마이페이지 에서 확인할 수 있습니다.");
-                    var test = await Http_Presenter().post_deliver_info(product, dateTime.toString().substring(0,10), widget.book_count, widget.pick_datetime,total_price, _destination_controller.text, token);
-                    print(test);
-                    // Http_Presenter().post_deliver_info(product, orderDate, amount, dateList, token)
-                    // Navigator.pushNamedAndRemoveUntil(
-                    //     context, '/', (_) => false);
-                    if(test == true){
+                    //  showAlertDialog(context,"주문이 완료 되었습니다.","주문 정보는 마이페이지 에서 확인할 수 있습니다.");
+                    var test = await Deliver_Http().post_deliver_info(
+                        product,
+                        dateTime.toString().substring(0, 10),
+                        widget.book_count,
+                        test_string,
+                        total_price,
+                        _destination_controller.text,
+                        token);
+                    if (test == true) {
                       print("성공");
                       Navigator.push(
                           context,
                           PageTransition(
                               type: PageTransitionType.fade,
-                              child: Deliver_Finish_Screen(
-
-                              )));
-                    }else{
+                              child: Deliver_Finish_Screen()));
+                    } else {
                       print("실패");
                     }
-
-
                   }
                 },
                 child: Container(
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(3),
-                      color: Colors.purple),
+                      color: kButtonColor),
                   width: size.width * 0.7,
                   height: size.height * 0.06,
                   child: Center(

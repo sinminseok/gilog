@@ -1,8 +1,8 @@
-
 import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:gilog/Local_DB/db.dart';
@@ -26,7 +26,7 @@ class Post_Write extends StatefulWidget {
   File? image_file;
   Uint8List? image_url;
 
-  Post_Write({required this.question,this.image_file, this.image_url});
+  Post_Write({required this.question, this.image_file, this.image_url});
 
   @override
   _Post_WriteState createState() => _Post_WriteState();
@@ -54,7 +54,6 @@ class _Post_WriteState extends State<Post_Write> {
     sd.database;
     var data = await sd.posts();
 
-
     for (var i = 0; i < data.length; i++) {
       if (data[i].datetime == datetime) {
         setState(() {
@@ -67,10 +66,9 @@ class _Post_WriteState extends State<Post_Write> {
   @override
   void dispose() {
     // TODO: implement dispose
-    check_today_WRITE == true ? print("이미 기록함 ㅅㄱ") : sub_controller_text();
+    // check_today_WRITE == true ? print("이미 기록함 ㅅㄱ") : sub_controller_text();
     super.dispose();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +77,43 @@ class _Post_WriteState extends State<Post_Write> {
     return Scaffold(
         backgroundColor: kPrimaryColor,
         appBar: AppBar(
-          backgroundColor: kPrimaryColor,
+          backgroundColor: kBackgroundColor,
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                width: size.width * 0.1,
+              ),
+              Text(
+                datetime,
+                style: TextStyle(
+                    fontFamily: "gilogfont", fontSize: 32, color: Colors.black),
+              ),
+              SizedBox(
+                width: size.width * 0.1,
+              ),
+              InkWell(
+                onTap: () {
+                  check_today_WRITE == true
+                      ? print("이미 기록함 ㅅㄱ")
+                      : sub_controller_text(context);
+                },
+                child: Container(
+                  width: size.width * 0.2,
+                  height: size.height * 0.045,
+                  decoration: BoxDecoration(
+                      color: kButtonColor,
+                      borderRadius: BorderRadius.circular(50)),
+                  child: Center(
+                      child: Text(
+                    "기록",
+                    style:
+                        TextStyle(fontFamily: "gilogfont", color: Colors.black),
+                  )),
+                ),
+              )
+            ],
+          ),
           elevation: 0,
           iconTheme: IconThemeData(
             color: Colors.black, //색변경
@@ -87,19 +121,9 @@ class _Post_WriteState extends State<Post_Write> {
         ),
         body: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                datetime,
-                style: TextStyle(fontFamily: "gilogfont", fontSize: 32),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 18.0),
-              child: Text(
-                "기-록",
-                style: TextStyle(fontFamily: "gilogfont", fontSize: 21),
-              ),
+
+            SizedBox(
+              height: size.height * 0.02,
             ),
             Row(
               children: [
@@ -158,7 +182,6 @@ class _Post_WriteState extends State<Post_Write> {
                 ),
               ),
             )),
-
             Container(
                 decoration: BoxDecoration(
                   color: Colors.purple.shade100,
@@ -195,8 +218,6 @@ class _Post_WriteState extends State<Post_Write> {
                               });
                             }
                           }
-
-                          print(messages);
                         },
                         icon: Icon(
                           Icons.send,
@@ -210,19 +231,19 @@ class _Post_WriteState extends State<Post_Write> {
         ));
   }
 
-  void sub_controller_text() {
+  void sub_controller_text(context) {
     String test = "";
     print(messages.length);
 
     if (messages.length == 0) {
-      return;
+      return showAlertDialog(context, "알림", "내용을 입력해주세요");
     } else {
       for (var i = 0; messages.length > i; i++) {
         test += "${messages[i].text}\n";
       }
       print(test);
       final_text = test;
-      savedb();
+      savedb(context);
     }
   }
 
@@ -240,28 +261,40 @@ class _Post_WriteState extends State<Post_Write> {
     }
   }
 
-  Future<void> savedb() async {
-    DBHelper sd = DBHelper();
-    sd.database;
-    check_id_fun();
+  Future<void> savedb(BuildContext context) async {
 
-    var fido = POST(
-      id: check_id,
-      question: widget.question,
-      datetime: datetime,
-      content: final_text,
-      image_url: widget.image_url,
-    );
-
-    await sd.insertPOST(fido);
 
     var token = await Http_Presenter().read_token();
-    var return_value =  await Http_Presenter().post_test_gilog(datetime, "content", "question", token);
-    Http_Presenter().post_gilog(widget.image_file, return_value, token);
+    var return_value = await Http_Presenter()
+        .post_test_gilog(datetime, final_text, widget.question, token,context);
+    var check_return_bool =await Http_Presenter().post_gilog(widget.image_file, return_value, token,context);
+
+    print("return_value$return_value");
+
+    if(check_return_bool == true){
+      DBHelper sd = DBHelper();
+      sd.database;
+      check_id_fun();
+
+      var fido = POST(
+        id: check_id,
+        question: widget.question,
+        datetime: datetime,
+        content: final_text,
+        image_url: widget.image_url,
+      );
+
+      await sd.insertPOST(fido);
+
+      Navigator.push(
+          context,
+          PageTransition(
+              type: PageTransitionType.fade,
+              child: Frame_Screen(Login_method: null,)));
+    }else{
+      showAlertDialog(context, "알림", "네트워크 오류");
+    }
+
 
   }
-
-
-
-
 }

@@ -133,7 +133,7 @@ class _Deliver_ScreenState extends State<Deliver_Screen> {
                             check_write == true
                                 ? Icon(
                                     Icons.check,
-                                    color: Colors.purple,
+                                    color: kButtonColor,
                                   )
                                 : Container()
                           ],
@@ -161,7 +161,7 @@ class _Deliver_ScreenState extends State<Deliver_Screen> {
               ],
             ),
             SizedBox(
-              height: size.height * 0.03,
+              height: size.height * 0.06,
             ),
             InkWell(
               onTap: () {
@@ -183,13 +183,13 @@ class _Deliver_ScreenState extends State<Deliver_Screen> {
                       context,
                       PageTransition(
                           type: PageTransitionType.bottomToTop,
-                          child: Deliver_Two_Screen(data: "사진,글둘다")));
+                          child: Deliver_Two_Screen(data: "사진+글")));
                 }
               },
               child: Container(
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(3),
-                    color: Colors.purple),
+                    color: kButtonColor),
                 width: size.width * 0.7,
                 height: size.height * 0.06,
                 child: Center(

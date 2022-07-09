@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io' show Platform;
+
 // import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -30,11 +31,10 @@ class _Login_Oauth_Screen extends State<Login_Oauth_Screen> {
 // WebViewController를 선언합니다.
   WebViewController? _controller;
   var check;
-  check_before_signup()async{
 
+  check_before_signup() async {
     final prefs = await SharedPreferences.getInstance();
-    check = prefs.getString('login_method');
-
+    check = await prefs.getString('login_method');
   }
 
   @override
@@ -43,7 +43,6 @@ class _Login_Oauth_Screen extends State<Login_Oauth_Screen> {
     check_before_signup();
     super.initState();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -76,16 +75,7 @@ class _Login_Oauth_Screen extends State<Login_Oauth_Screen> {
                   height: size.height * 0.05,
                 ),
                 InkWell(
-                  onTap: (){
-                    Navigator.push(
-                        context,
-                        PageTransition(
-                            type: PageTransitionType.fade,
-                            child: Deliver_Finish_Screen(
-
-                            )));
-
-                  },
+                  onTap: () {},
                   child: Text(
                     "나만의 추억 장소",
                     style: TextStyle(
@@ -108,67 +98,67 @@ class _Login_Oauth_Screen extends State<Login_Oauth_Screen> {
                   padding: const EdgeInsets.only(top: 12.0),
                   child: InkWell(
                     onTap: () async {
-
-                      if(check == null){
+                      if (check == null) {
                         const String _REST_API_KEY =
                             "ee4ee61f1ea69f5a8d5f5924343083f7";
 
                         const String _REDIRECT =
-                            "http://ec2-3-39-195-205.ap-northeast-2.compute.amazonaws.com:8080/api/oauth2/code/kakao";
+                            "http://ec2-43-200-33-232.ap-northeast-2.compute.amazonaws.com:8080/api/oauth2/code/kakao";
 
                         final _host = "https://kauth.kakao.com";
+
                         final _url =
                             "/oauth/authorize?client_id=${_REST_API_KEY}&redirect_uri=${_REDIRECT}&response_type=code";
 
                         await Navigator.of(context).push(MaterialPageRoute(
                             builder: (BuildContext context) => Scaffold(
-                              appBar: AppBar(
-                                backgroundColor: kPrimaryColor,
-                                elevation: 0,
-                                iconTheme: IconThemeData(
-                                  color: Colors.black, //색변경
-                                ),
-                              ),
-                              body: WebView(
-                                javascriptMode: JavascriptMode.unrestricted,
-                                initialUrl: _host + _url,
-                                onWebViewCreated:
-                                    (WebViewController webviewController) {
-                                  _controller = webviewController;
-                                },
-                                javascriptChannels: Set.from([
-                                  JavascriptChannel(
-                                      name: "JavaScriptChannel",
-                                      onMessageReceived:
-                                          (JavascriptMessage result) {
-                                        print(result.message);
+                                  appBar: AppBar(
+                                    backgroundColor: kPrimaryColor,
+                                    elevation: 0,
+                                    iconTheme: IconThemeData(
+                                      color: Colors.black, //색변경
+                                    ),
+                                  ),
+                                  body: WebView(
+                                    javascriptMode: JavascriptMode.unrestricted,
+                                    initialUrl: _host + _url,
+                                    onWebViewCreated:
+                                        (WebViewController webviewController) {
+                                      _controller = webviewController;
+                                    },
+                                    javascriptChannels: Set.from([
+                                      JavascriptChannel(
+                                          name: "JavaScriptChannel",
+                                          onMessageReceived:
+                                              (JavascriptMessage result) {
+                                            print(result.message);
 
-                                        if (result.message != null) {
-                                          Http_Presenter()
-                                              .set_token(result.message);
-                                          //http user get
+                                            if (result.message != null) {
+                                              Http_Presenter()
+                                                  .set_token(result.message);
+                                              //http user get
 
-                                          Navigator.of(context)
-                                              .pushAndRemoveUntil(
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      Profile_Setting(
-                                                        login_method:
-                                                        'kakao',
-                                                      )),
-                                                  (Route r) => false);
-                                          return;
-                                        }
-                                        Navigator.of(context).pop();
-                                        return;
-                                      }),
-                                ]),
-                              ),
-                            )));
-                      }else{
-                        return showAlertDialog(context, "알림", "이미 카카오톡으로 로그인했습니다.");
+                                              Navigator.of(context)
+                                                  .pushAndRemoveUntil(
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              Profile_Setting(
+                                                                login_method:
+                                                                    'kakao',
+                                                              )),
+                                                      (Route r) => false);
+                                              return;
+                                            }
+                                            Navigator.of(context).pop();
+                                            return;
+                                          }),
+                                    ]),
+                                  ),
+                                )));
+                      } else {
+                        return showAlertDialog(
+                            context, "알림", "이미 카카오톡으로 로그인했습니다.");
                       }
-
                     },
                     child: Container(
                       decoration: BoxDecoration(
@@ -209,24 +199,30 @@ class _Login_Oauth_Screen extends State<Login_Oauth_Screen> {
                     ),
                   ),
                 ),
-                Platform.isAndroid?Container():InkWell(
-                  onTap: () {
-                    signInWithApple();
-                  },
-                  child: Container(
-                    width: size.width * 0.7,
-                    height: size.height * 0.09,
-                    child: Image.asset("assets/images/apple_oauth.png"),
-                  ),
-                ),
-
+                Platform.isAndroid
+                    ? Container()
+                    : InkWell(
+                        onTap: () {
+                          if (check == null) {
+                            signInWithApple();
+                          } else {
+                            return showAlertDialog(
+                                context, "알림", "이미 소셜로그인을 진행했습니다.");
+                          }
+                        },
+                        child: Container(
+                          width: size.width * 0.7,
+                          height: size.height * 0.09,
+                          child: Image.asset("assets/images/apple_oauth.png"),
+                        ),
+                      ),
                 SizedBox(
                   height: size.height * 0.12,
                 ),
                 Text(
-                  "@copyright 2022 by comumu",
+                  "@copyright 2022 by Sso-young",
                   style: TextStyle(color: Colors.grey),
-                ),
+                )
               ],
             ),
           ),
@@ -244,32 +240,23 @@ class _Login_Oauth_Screen extends State<Login_Oauth_Screen> {
       ],
     );
 
-    print("${AppleIDAuthorizationScopes.fullName}");
-    print("${AppleIDAuthorizationScopes.values}");
-    //access token
-    print("FFFdd${appleCredential.authorizationCode}");
-    //idToken (JWT)
-    print("ㅎㅎㅎ${appleCredential.identityToken}");
+    var jwt_apple = await Http_Presenter().post_apple_token(
+        appleCredential.identityToken, appleCredential.authorizationCode);
 
+    if (jwt_apple != null) {
+      Http_Presenter().set_token(jwt_apple);
 
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(
+              builder: (context) => Profile_Setting(
+                    login_method: 'apple',
+                  )),
+          (Route r) => false);
 
+      return;
+    } else {
+      showAlertDialog(context, "로그인 실패", "다시 한번 시도해주세요");
+    }
 
-    // print("appleCredential");
-    // print(appleCredential);
-    //
-    // // Create an `OAuthCredential` from the credential returned by Apple.
-    // final oauthCredential = OAuthProvider("apple.com").credential(
-    //   idToken: appleCredential.identityToken,
-    //   accessToken: appleCredential.authorizationCode,
-    //
-    // );
-    // print("oauthCredential");
-    // print(oauthCredential.accessToken);
-    // print(oauthCredential.idToken);
-    // print(oauthCredential.token);
-    //
-    // // Sign in the user with Firebase. If the nonce we generated earlier does
-    // // not match the nonce in `appleCredential.identityToken`, sign in will fail.
-    // return await FirebaseAuth.instance.signInWithCredential(oauthCredential);
   }
 }

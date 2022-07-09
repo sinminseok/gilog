@@ -42,11 +42,12 @@ dependencies:
   page_transition: "^2.0.5"
   kakao_flutter_sdk: ^1.1.1
 
-  syncfusion_localizations: ^19.1.66
+  syncfusion_localizations: ^20.2.36
 
   carousel_slider: ^4.1.1
-  permission_handler: ^8.3.0
+  permission_handler: ^10.0.0
   image_picker: ^0.8.5+3
+  animated_text_kit: ^4.2.1
   sign_in_with_apple: ^4.0.0
   date_utils: ^0.2.0
 
@@ -55,10 +56,8 @@ dependencies:
   json_annotation: ^4.0.1
   platform: ^3.0.0
   package_info_plus: ^1.0.4
-  firebase_core: ^1.17.1
-  firebase_auth: ^3.3.19
-  smooth_page_indicator: ^1.0.0+2
 
+  smooth_page_indicator: ^1.0.0+2
   flutter_app_badger: ^1.4.0
   flutter_local_notifications: ^9.4.0
   grouped_list: ^5.1.2
@@ -139,6 +138,10 @@ flutter:
     - family: Numberfont
       fonts:
         - asset: assets/fonts/numberfont.otf
+          weight: 200
+    - family: Splahfont
+      fonts:
+        - asset: assets/fonts/splahfont.otf
           weight: 200
 
 

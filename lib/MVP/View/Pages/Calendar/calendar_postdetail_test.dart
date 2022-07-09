@@ -12,7 +12,8 @@ class Calendar_detail_frame extends StatefulWidget {
   int? month;
   int? year;
 
-  Calendar_detail_frame({required this.date_list, this.datetime, this.month, this.year});
+  Calendar_detail_frame(
+      {required this.date_list, this.datetime, this.month, this.year});
 
   @override
   _Calendar_detail_frame createState() => _Calendar_detail_frame();

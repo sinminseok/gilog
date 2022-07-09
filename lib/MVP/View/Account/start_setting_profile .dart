@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,8 +9,12 @@ import 'package:image_picker/image_picker.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
+import '../../../Local_DB/db.dart';
+import '../../../Local_DB/profile_local_db.dart';
 import '../../../Utils/constants.dart';
+import '../../Model/user_profile.dart';
 import '../../Presenter/Http/http_presenter.dart';
+import '../../Presenter/Http/user_http.dart';
 
 class Profile_Setting extends StatefulWidget {
   String? login_method;
@@ -27,15 +32,47 @@ class _Profile_SettingState extends State<Profile_Setting> {
   String? gender = "";
 
   PickedFile? _image;
-
+  var imim;
   //이미지 선택 함수
   Future getImageFromGallery() async {
     // for gallery
     var image =
-        await ImagePicker.platform.pickImage(source: ImageSource.gallery);
+    await ImagePicker.platform.pickImage(source: ImageSource.gallery);
     setState(() {
       _image = image!;
     });
+    imim = convert_img();
+  }
+
+  //이미지 Uint8 변환 함수
+  convert_img() async {
+    Uint8List test = await _image!.readAsBytes();
+    imim = test;
+    return test;
+  }
+
+  Future<void> savedb() async {
+    DB_USER_Helper sd = DB_USER_Helper();
+    sd.database;
+
+    if(imim == null){
+      print("imim null");
+      return;
+    }else{
+      print("imim not null");
+      var fido = User_profile_image(
+          id:1,
+          profile_image: imim
+      );
+
+      print(fido);
+
+      await sd.insertIMG(fido);
+    }
+
+
+
+
   }
 
   @override
@@ -242,10 +279,13 @@ class _Profile_SettingState extends State<Profile_Setting> {
                         showtoast("정보를 모두 입력해주세요");
                       } else {
 
+                        savedb();
+
                         var token = await Http_Presenter().read_token();
-                       await Http_Presenter().post_user_info(token, _username_controller.text, _age_controller.text,gender);
-                       await Provider.of<Http_Presenter>(context, listen: false).get_user_info(token);
+                       await User_Http().post_user_info(token, _username_controller.text, _age_controller.text,gender,context);
+                       await Provider.of<User_Http>(context, listen: false).get_user_info(token,context);
                         //Http 회원 정보 등록
+
                         Navigator.push(
                             context,
                             PageTransition(

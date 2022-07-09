@@ -5981,24 +5981,12 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                   ),
                   InkWell(
                       onTap: (){
-                        showAlertDialog(context, "선택한 요일", "${plus_book_page}");
+                       showAlertDialog(context, "선택한 요일", "${plus_book_page}");
                       },
                       child: Text("선택한 요일 : ${plus_book_page.length}",style: TextStyle(fontFamily: "gilogfont",fontSize: 21),)),
-                  // SingleChildScrollView(
-                  //     scrollDirection: Axis.horizontal,
-                  //     child: Row(
-                  //         children: <Widget>[
-                  //           Text('${plus_book_page}'),
-                  //
-                  //         ]
-                  //     )
-                  // ),
-                  SizedBox(height: size.height*0.01,),
-                  InkWell(onTap: (){
-                    test();
 
-                  },
-                  child: Text("das"),)
+                  SizedBox(height: size.height*0.01,),
+
 
                 ],
               ),
@@ -6027,7 +6015,7 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                 child: Container(
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(3),
-                      color: Colors.purple),
+                      color: kButtonColor),
                   width: size.width * 0.7,
                   height: size.height * 0.06,
                   child: Center(

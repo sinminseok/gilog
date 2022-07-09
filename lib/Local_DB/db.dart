@@ -1,4 +1,3 @@
-
 import 'package:http/http.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
@@ -22,14 +21,11 @@ class DBHelper {
       },
       version: 1,
     );
-
-    print(_db);
     return _db;
   }
 
   Future<void> insertPOST(POST post) async {
     final db = await database;
-
 
     await db.insert(
       TableName,
@@ -41,9 +37,7 @@ class DBHelper {
   Future<List<POST>> posts() async {
     final db = await database;
 
-
     final List<Map<String, dynamic>> maps = await db.query('POSTS');
-
 
     return List.generate(maps.length, (i) {
       return POST(
