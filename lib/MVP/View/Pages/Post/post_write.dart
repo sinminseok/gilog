@@ -292,7 +292,7 @@ class _Post_WriteState extends State<Post_Write> {
               type: PageTransitionType.fade,
               child: Frame_Screen(Login_method: null,)));
     }else{
-      showAlertDialog(context, "알림", "네트워크 오류");
+      showAlertDialog(context, "알림", "사진 용량이 너무 큽니다.");
     }
 
 

@@ -251,7 +251,7 @@ class _Setting_ProfileState extends State<Setting_Profile> {
                         controller: _username_controller,
                         decoration: InputDecoration(
                           labelText: '${widget.user.nickname}',
-                          hintText: '이름을 입력하세요!',
+                          hintText: '닉네임을 입력하세요!',
                           labelStyle: TextStyle(color: Colors.purple),
                           focusedBorder: OutlineInputBorder(
                             borderRadius:
@@ -318,39 +318,9 @@ class _Setting_ProfileState extends State<Setting_Profile> {
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      width: size.width * 0.7,
-                      child: TextField(
-                        controller: _age_controller,
-                        decoration: InputDecoration(
-                          labelText: '${widget.user.age}',
-                          hintText: '나이를 입력해주세요',
-                          labelStyle: TextStyle(color: Colors.purple),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.0)),
-                            borderSide:
-                                BorderSide(width: 1, color: Colors.purple),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.0)),
-                            borderSide:
-                                BorderSide(width: 1, color: Colors.purple),
-                          ),
-                          border: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.0)),
-                          ),
-                        ),
-                        keyboardType: TextInputType.emailAddress,
-                      ),
-                    ),
-                  ),
+
                   SizedBox(
-                    height: size.height * 0.1,
+                    height: size.height * 0.24,
                   ),
                   InkWell(
                     onTap: () async {

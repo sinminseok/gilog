@@ -36,6 +36,7 @@ class _Home_ScreenState extends State<Home_Screen> {
   Future? myFuture;
   double degrees = 90;
   String? token;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -46,8 +47,7 @@ class _Home_ScreenState extends State<Home_Screen> {
   }
 
   read_today_question() async {
-
-     token = await Http_Presenter().read_token();
+    token = await Http_Presenter().read_token();
     var check = await Check_Datetime().check_Today();
 
     final prefs = await SharedPreferences.getInstance();
@@ -57,24 +57,31 @@ class _Home_ScreenState extends State<Home_Screen> {
       // counter 키에 해당하는 데이터 읽기를 시도합니다. 만약 존재하지 않는 다면 0을 반환합니다.
       question_disk = prefs.getString('question');
 
-      if(question_disk == null){
+      if (question_disk == null) {
         question_disk = "질문을 만들어보세요!";
         return question_disk;
-      }
-      else{
+      } else {
         return question_disk;
       }
-
     } else {
       print("date change$token");
       //원래 있던 질문 삭제(어제 질문)
       prefs.remove('question');
       //디스크에 question 저장
-      http_get_question = await Http_Presenter().get_question(token,context);
+      http_get_question = await Http_Presenter().get_question(token, context);
 
-      prefs.setString('question', http_get_question!.question!);
-      question_disk = http_get_question!.question;
-      return question_disk;
+      print("http_get_question");
+      print(http_get_question);
+
+      if (http_get_question == null) {
+        prefs.setString('question', http_get_question!.question!);
+        question_disk = "질문을 만들어보세요!";
+        return question_disk;
+      } else {
+        prefs.setString('question', http_get_question!.question!);
+        question_disk = http_get_question!.question;
+        return question_disk;
+      }
     }
 
     return check;
@@ -186,7 +193,6 @@ class _Home_ScreenState extends State<Home_Screen> {
 
                         Permission_handler().requestCameraPermission(context);
                         getImageFromGallery();
-
                       },
                       child: Container(
                         decoration: BoxDecoration(
@@ -227,7 +233,7 @@ class _Home_ScreenState extends State<Home_Screen> {
                                   type: PageTransitionType.fade,
                                   child: Post_Write(
                                       question: '${question_disk}',
-                                      image_file:File(_image!.path),
+                                      image_file: File(_image!.path),
                                       image_url: imim)));
                         }
                       },
@@ -305,14 +311,13 @@ class _Home_ScreenState extends State<Home_Screen> {
                                       bottom_sheet_controller =
                                           !bottom_sheet_controller;
                                     } else {
-                                      print(
-                                          _question_controller.text);
+                                      print(_question_controller.text);
                                       setState(() {
-                                        question_disk = _question_controller.text;
+                                        question_disk =
+                                            _question_controller.text;
                                         bottom_sheet_controller =
-                                        !bottom_sheet_controller;
+                                            !bottom_sheet_controller;
                                       });
-
                                     }
                                   });
                                 },

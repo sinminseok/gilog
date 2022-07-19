@@ -8,7 +8,6 @@
 
    <application
         android:label="gilog"
-        android:name="기log"
         android:icon="@mipmap/ic_launcher"
        android:usesCleartextTraffic="true">
        <activity android:name="com.kakao.sdk.flutter.AuthCodeCustomTabsActivity"

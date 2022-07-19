@@ -167,8 +167,8 @@ class _Profile_SettingState extends State<Profile_Setting> {
                       child: TextField(
                         controller: _username_controller,
                         decoration: InputDecoration(
-                          labelText: '회원 이름',
-                          hintText: '이름을 입력하세요!',
+                          labelText: '닉네임',
+                          hintText: '어플에서 사용할 닉네임을 입력하세요!',
                           labelStyle: TextStyle(color: Colors.purple),
                           focusedBorder: OutlineInputBorder(
                             borderRadius:
@@ -236,44 +236,13 @@ class _Profile_SettingState extends State<Profile_Setting> {
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      width: size.width * 0.7,
-                      child: TextField(
-                        controller: _age_controller,
-                        decoration: InputDecoration(
-                          labelText: '나이',
-                          hintText: '나이를 입력해주세요 ex)23',
-                          labelStyle: TextStyle(color: Colors.purple),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.0)),
-                            borderSide:
-                                BorderSide(width: 1, color: Colors.purple),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.0)),
-                            borderSide:
-                                BorderSide(width: 1, color: Colors.purple),
-                          ),
-                          border: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.0)),
-                          ),
-                        ),
-                        keyboardType: TextInputType.emailAddress,
-                      ),
-                    ),
-                  ),
+
                   SizedBox(
-                    height: size.height * 0.05,
+                    height: size.height * 0.24,
                   ),
                   InkWell(
                     onTap: () async{
-                      if (_username_controller.text == "" ||
-                          _age_controller.text == "") {
+                      if (_username_controller.text == "") {
                         print(_age_controller.text);
 
                         showtoast("정보를 모두 입력해주세요");
@@ -282,7 +251,7 @@ class _Profile_SettingState extends State<Profile_Setting> {
                         savedb();
 
                         var token = await Http_Presenter().read_token();
-                       await User_Http().post_user_info(token, _username_controller.text, _age_controller.text,gender,context);
+                       await User_Http().post_user_info(token, _username_controller.text, _age_controller.text,"0",context);
                        await Provider.of<User_Http>(context, listen: false).get_user_info(token,context);
                         //Http 회원 정보 등록
 

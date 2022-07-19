@@ -13,12 +13,12 @@ if (flutterRoot == null) {
 
 def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
 if (flutterVersionCode == null) {
-    flutterVersionCode = '1'
+    flutterVersionCode = '2'
 }
 
 def flutterVersionName = localProperties.getProperty('flutter.versionName')
 if (flutterVersionName == null) {
-    flutterVersionName = '1.0'
+    flutterVersionName = '1.0.1'
 }
 
 apply plugin: 'com.android.application'
@@ -29,61 +29,54 @@ def keystoreProperties = new Properties()
 def keystorePropertiesFile = rootProject.file('key.properties')
 if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
-}
 
-android {
+    android {
+        compileSdkVersion 33
+        //flutter.compileSdkVersion
 
-    lintOptions {
-        disable 'InvalidPackage'
-        disable "Instantiatable"
-        checkReleaseBuilds false
-        abortOnError false
-    }
+        compileOptions {
+            sourceCompatibility JavaVersion.VERSION_1_8
+            targetCompatibility JavaVersion.VERSION_1_8
+        }
 
-    compileSdkVersion 33
-    //flutter.compileSdkVersion
+        kotlinOptions {
+            jvmTarget = '1.8'
+        }
 
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
+        sourceSets {
+            main.java.srcDirs += 'src/main/kotlin'
+        }
 
-    kotlinOptions {
-        jvmTarget = '1.8'
-    }
+        defaultConfig {
+            // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
+            applicationId "com.sooyoung.gilog"
+            minSdkVersion 21
+            targetSdkVersion flutter.targetSdkVersion
+            //flutter.targetSdkVersion
+            versionCode flutterVersionCode.toInteger()
+            versionName flutterVersionName
+        }
 
-    sourceSets {
-        main.java.srcDirs += 'src/main/kotlin'
-    }
-
-    defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.sooyoung.gilog"
-        minSdkVersion 21
-        targetSdkVersion flutter.targetSdkVersion
-        versionCode flutterVersionCode.toInteger()
-        versionName flutterVersionName
-    }
-
-    signingConfigs {
-        release {
-            keyAlias keystoreProperties['keyAlias']
-            keyPassword keystoreProperties['keyPassword']
-            storeFile file(keystoreProperties['storeFile'])
-            storePassword keystoreProperties['storePassword']
+        signingConfigs {
+            release {
+                keyAlias keystoreProperties['keyAlias']
+                keyPassword keystoreProperties['keyPassword']
+                storeFile file(keystoreProperties['storeFile'])
+                storePassword keystoreProperties['storePassword']
+            }
+        }
+        buildTypes {
+            release {
+                signingConfig signingConfigs.release
+            }
         }
     }
-    buildTypes {
-        release {
-            signingConfig signingConfigs.release
-        }
+
+    flutter {
+        source '../..'
     }
-}
 
-flutter {
-    source '../..'
-}
-
-dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    dependencies {
+        implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    }
 }

@@ -103,10 +103,6 @@ class Http_Presenter with ChangeNotifier {
 
     var response = await request.send();
 
-    print("H");
-    print(response.statusCode);
-
-
     if (response.statusCode == 200) {
       showtoast("기록 되었습니다!");
       return true;
@@ -120,7 +116,6 @@ class Http_Presenter with ChangeNotifier {
 
       return false;
     } else {
-      print("기록 실패");
       return false;
     }
   }

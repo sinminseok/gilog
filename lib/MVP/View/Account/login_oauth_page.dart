@@ -98,7 +98,9 @@ class _Login_Oauth_Screen extends State<Login_Oauth_Screen> {
                   padding: const EdgeInsets.only(top: 12.0),
                   child: InkWell(
                     onTap: () async {
+
                       if (check == null) {
+                        print("kakao oauth");
                         const String _REST_API_KEY =
                             "ee4ee61f1ea69f5a8d5f5924343083f7";
 
@@ -172,7 +174,7 @@ class _Login_Oauth_Screen extends State<Login_Oauth_Screen> {
                           borderRadius: BorderRadius.circular(10),
                           color: Colors.amber),
                       width: size.width * 0.7,
-                      height: size.height * 0.065,
+                      height: size.height * 0.05,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -185,7 +187,7 @@ class _Login_Oauth_Screen extends State<Login_Oauth_Screen> {
                           ),
                           Center(
                               child: Text(
-                            "Katalk으로 로그인",
+                            "카톡으로 등록",
                             style: TextStyle(
                               fontSize: 21,
                               color: Colors.black,
