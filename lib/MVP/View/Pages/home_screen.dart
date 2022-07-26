@@ -187,9 +187,6 @@ class _Home_ScreenState extends State<Home_Screen> {
                     ),
                     InkWell(
                       onTap: () async {
-                        // var token = await Http_Presenter().read_token();
-                        // print("FF$token");
-                        // Http_Presenter().get_question(token);
 
                         Permission_handler().requestCameraPermission(context);
                         getImageFromGallery();
@@ -249,7 +246,7 @@ class _Home_ScreenState extends State<Home_Screen> {
                                       borderRadius: BorderRadius.circular(10),
                                       color: kPrimaryColor),
                                   width: size.width * 0.9,
-                                  height: size.height * 0.1,
+                                  height: size.height * 0.12,
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: TextFormField(
@@ -261,7 +258,7 @@ class _Home_ScreenState extends State<Home_Screen> {
                                           hintStyle: TextStyle(
                                             color: Colors.grey,
                                             fontFamily: "gilogfont",
-                                            fontSize: 21,
+                                            fontSize: 17,
                                           )),
                                       controller: _question_controller,
                                     ),
@@ -279,15 +276,18 @@ class _Home_ScreenState extends State<Home_Screen> {
                                         borderRadius: BorderRadius.circular(10),
                                         color: kPrimaryColor),
                                     width: size.width * 0.9,
-                                    height: size.height * 0.1,
-                                    child: Center(
-                                        child: Text(
-                                      "${question_disk}",
-                                      style: TextStyle(
-                                          fontFamily: "gilogfont",
-                                          fontSize: 21,
-                                          color: Colors.black),
-                                    )),
+                                    height: size.height * 0.12,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Center(
+                                          child: Text(
+                                        "${question_disk}",
+                                        style: TextStyle(
+                                            fontFamily: "gilogfont",
+                                            fontSize: 17,
+                                            color: Colors.black),
+                                      )),
+                                    ),
                                   ),
                                 ),
                               ],

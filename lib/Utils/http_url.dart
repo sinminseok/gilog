@@ -5,6 +5,8 @@ class Http_URL{
 
   //질문 가져오는 URL
   final String get_question = "$endpoint/api/question";
+
+  final String update_gilog = "$endpoint/api/gi-log/edit";
  //기록 내용 보내는 URL
   final String post_gilog = "$endpoint/api/gi-log";
   //로그인후 해당 user 정보 가져오는 URL

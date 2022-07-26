@@ -1,8 +1,5 @@
-import 'package:http/http.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
-
 import '../MVP/Model/post.dart';
 
 final String TableName = 'POSTS';
@@ -53,7 +50,6 @@ class DBHelper {
   Future<void> updatePOST(POST post) async {
     final db = await database;
 
-    // 주어진 Memo를 수정합니다.
     await db.update(
       TableName,
       post.toMap(),
@@ -67,7 +63,6 @@ class DBHelper {
   Future<void> deletePOST(int id) async {
     final db = await database;
 
-    // 데이터베이스에서 Memo를 삭제합니다.
     await db.delete(
       TableName,
       // 특정 memo를 제거하기 위해 `where` 절을 사용하세요

@@ -42,11 +42,6 @@ class _Mypage_ScreenState extends State<Mypage_Screen> {
     DB_USER_Helper sd = DB_USER_Helper();
     sd.database;
     user_profile_image = await sd.user_img();
-    print("GFDSGDFHGDFH");
-    print(user_profile_image);
-    print(user_profile_image == null);
-    print(user_profile_image != null);
-    print( user_profile_image!.profile_image,);
 
     if (user_profile_image == null) {
       setState(() {
@@ -235,9 +230,6 @@ class _Mypage_ScreenState extends State<Mypage_Screen> {
                                                       final login_method =
                                                       await prefs.getString(
                                                           'login_method');
-
-                                                      print(login_method ==
-                                                          "apple");
 
                                                       if (login_method ==
                                                           "kakao") {

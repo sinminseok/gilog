@@ -88,6 +88,7 @@ class _Calendar_detail_frame extends State<Calendar_detail_frame> {
     final _controller = PageController(initialPage: check!);
     Size size = MediaQuery.of(context).size;
     return Scaffold(
+
       backgroundColor: kPrimaryColor,
       appBar: AppBar(
           backgroundColor: kPrimaryColor,
@@ -95,21 +96,23 @@ class _Calendar_detail_frame extends State<Calendar_detail_frame> {
           iconTheme: IconThemeData(
             color: Colors.black, //색변경
           )),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          SizedBox(
-            height: size.height * 0.75,
-            child: PageView.builder(
-              controller: _controller,
-              itemCount: widget.date_list.length,
-              itemBuilder: (BuildContext context, i) {
-                return Calendar_detail(
-                    date_time: widget.date_list[i]!.datetime);
-              },
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: size.height * 0.86,
+              child: PageView.builder(
+                controller: _controller,
+                itemCount: widget.date_list.length,
+                itemBuilder: (BuildContext context, i) {
+                  return Calendar_detail(
+                      date_time: widget.date_list[i]!.datetime);
+                },
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

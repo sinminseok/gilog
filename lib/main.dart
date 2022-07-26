@@ -1,17 +1,11 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
-
 import 'package:kakao_flutter_sdk_common/kakao_flutter_sdk_common.dart';
-import 'MVP/Presenter/Http/http_presenter.dart';
 import 'MVP/Presenter/Http/user_http.dart';
 import 'MVP/View/Account/login.dart';
 import 'MVP/View/Pages/ErrorScreen.dart';
 import 'MVP/View/Pages/splah.dart';
-import 'Utils/constants.dart';
 
 void main() async {
 
@@ -69,12 +63,10 @@ class Init {
   static final instance = Init._();
 
   Future<Widget?> initialize(BuildContext context) async {
+
     await Future.delayed(Duration(milliseconds: 4300));
-
-    // . . .
-    // 초기 로딩 작성
-    // . . .
-
     return Login_Screen();// 초기 로딩 완료 시 띄울 앱 첫 화면
+
+
   }
 }

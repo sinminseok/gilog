@@ -29,7 +29,6 @@ class Deliver_Http {
           'address': address
         }));
 
-    print(res.body);
 
     //statusCode 확인해볼것
     if (res.statusCode == 200) {
@@ -51,23 +50,17 @@ class Deliver_Http {
       },
     );
 
-    print("dff");
-    print(response.body);
-
     if (response.statusCode == 200) {
       //한글 깨지는거 인코딩으로 감싸줌
       final decodeData = utf8.decode(response.bodyBytes);
       final data = jsonDecode(decodeData);
 
-      print("${data[0]}");
       for (int i = 0; i < data.length; i++) {
         Deliver_list_item item;
         item = Deliver_list_item.fromJson(data[i]);
-        print("$i $item");
         data_list.add(item);
       }
 
-      // print(data_list);
       return data_list;
     }
     if (response.statusCode == 403) {
@@ -98,7 +91,9 @@ class Deliver_Http {
     final decodeData = utf8.decode(res.bodyBytes);
     final data = jsonDecode(decodeData);
 
-    print("data $data");
+
+
+
 
     //statusCode 확인해볼것
     if (res.statusCode == 200) {

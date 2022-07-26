@@ -98,7 +98,6 @@ class _Login_Oauth_Screen extends State<Login_Oauth_Screen> {
                   padding: const EdgeInsets.only(top: 12.0),
                   child: InkWell(
                     onTap: () async {
-
                       if (check == null) {
                         print("kakao oauth");
                         const String _REST_API_KEY =
@@ -259,6 +258,5 @@ class _Login_Oauth_Screen extends State<Login_Oauth_Screen> {
     } else {
       showAlertDialog(context, "로그인 실패", "다시 한번 시도해주세요");
     }
-
   }
 }

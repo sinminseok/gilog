@@ -69,10 +69,11 @@ class _Post_WriteState extends State<Post_Write> {
     // check_today_WRITE == true ? print("이미 기록함 ㅅㄱ") : sub_controller_text();
     super.dispose();
   }
-
+  bool? onTapPressed = false;
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+
 
     return Scaffold(
         backgroundColor: kPrimaryColor,
@@ -82,33 +83,37 @@ class _Post_WriteState extends State<Post_Write> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(
-                width: size.width * 0.1,
+                width: size.width * 0.03,
               ),
               Text(
                 datetime,
                 style: TextStyle(
-                    fontFamily: "gilogfont", fontSize: 32, color: Colors.black),
+                    fontFamily: "gilogfont", fontSize: 28, color: Colors.black),
               ),
               SizedBox(
-                width: size.width * 0.1,
+                width: size.width * 0.13,
               ),
               InkWell(
                 onTap: () {
                   check_today_WRITE == true
-                      ? print("이미 기록함 ㅅㄱ")
-                      : sub_controller_text(context);
+                      ? print("이미 기록했습니다.")
+                      : onTapPressed == true
+                          ? null
+                          : sub_controller_text(context);
                 },
                 child: Container(
-                  width: size.width * 0.2,
+                  width: size.width * 0.21,
                   height: size.height * 0.045,
                   decoration: BoxDecoration(
                       color: kButtonColor,
                       borderRadius: BorderRadius.circular(50)),
                   child: Center(
                       child: Text(
-                    "기록",
-                    style:
-                        TextStyle(fontFamily: "gilogfont", color: Colors.black),
+                    "기록 완료",
+                    style: TextStyle(
+                        fontFamily: "gilogfont",
+                        color: Colors.black,
+                        fontSize: 17),
                   )),
                 ),
               )
@@ -121,7 +126,6 @@ class _Post_WriteState extends State<Post_Write> {
         ),
         body: Column(
           children: [
-
             SizedBox(
               height: size.height * 0.02,
             ),
@@ -135,14 +139,17 @@ class _Post_WriteState extends State<Post_Write> {
                 ),
                 Container(
                   width: size.width * 0.7,
-                  height: size.height * 0.2,
+                  height: size.height * 0.15,
                   decoration: BoxDecoration(
                       color: kProfileColor,
                       borderRadius: BorderRadius.circular(20)),
-                  child: Center(
-                    child: Text(
-                      "${widget.question}",
-                      style: TextStyle(fontFamily: "gilogfont", fontSize: 18),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Center(
+                      child: Text(
+                        "${widget.question}",
+                        style: TextStyle(fontFamily: "gilogfont", fontSize: 17),
+                      ),
                     ),
                   ),
                 )
@@ -235,13 +242,16 @@ class _Post_WriteState extends State<Post_Write> {
     String test = "";
     print(messages.length);
 
+    setState(() {
+      onTapPressed = true;
+    });
+
     if (messages.length == 0) {
       return showAlertDialog(context, "알림", "내용을 입력해주세요");
     } else {
       for (var i = 0; messages.length > i; i++) {
         test += "${messages[i].text}\n";
       }
-      print(test);
       final_text = test;
       savedb(context);
     }
@@ -263,15 +273,15 @@ class _Post_WriteState extends State<Post_Write> {
 
   Future<void> savedb(BuildContext context) async {
 
-
+    //토큰 가져옴
     var token = await Http_Presenter().read_token();
+    //return value로 받아온 값을 담아 다음 요청에 이미지와 함께 보냄 영솔이가 이렇게 보내라함 난 모름 ㅋㅋ
     var return_value = await Http_Presenter()
-        .post_test_gilog(datetime, final_text, widget.question, token,context);
-    var check_return_bool =await Http_Presenter().post_gilog(widget.image_file, return_value, token,context);
+        .post_test_gilog(datetime, final_text, widget.question, token, context);
+    var check_return_bool = await Http_Presenter()
+        .post_gilog(widget.image_file, return_value, token, context);
 
-    print("return_value$return_value");
-
-    if(check_return_bool == true){
+    if (check_return_bool == true) {
       DBHelper sd = DBHelper();
       sd.database;
       check_id_fun();
@@ -290,11 +300,11 @@ class _Post_WriteState extends State<Post_Write> {
           context,
           PageTransition(
               type: PageTransitionType.fade,
-              child: Frame_Screen(Login_method: null,)));
-    }else{
+              child: Frame_Screen(
+                Login_method: null,
+              )));
+    } else {
       showAlertDialog(context, "알림", "사진 용량이 너무 큽니다.");
     }
-
-
   }
 }

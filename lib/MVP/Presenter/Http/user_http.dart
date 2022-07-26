@@ -56,13 +56,11 @@ class User_Http with ChangeNotifier {
       'Authorization': 'Bearer $token',
     });
 
-    print(res.bodyBytes);
-    print(res.body);
+
 
     final decodeData = utf8.decode(res.bodyBytes);
     final data = jsonDecode(decodeData);
 
-    print("get user_info $data");
 
     //statusCode 확인해볼것
     if (res.statusCode == 200) {
@@ -96,6 +94,9 @@ class User_Http with ChangeNotifier {
 
     final decodeData = utf8.decode(res.bodyBytes);
     final data = jsonDecode(decodeData);
+
+    print("data_GGG");
+    print(data);
 
     //statusCode 확인해볼것
     if (res.statusCode == 200) {

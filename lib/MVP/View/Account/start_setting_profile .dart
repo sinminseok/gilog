@@ -18,6 +18,7 @@ import '../../Presenter/Http/user_http.dart';
 
 class Profile_Setting extends StatefulWidget {
   String? login_method;
+
   Profile_Setting({required this.login_method});
 
   @override
@@ -33,11 +34,12 @@ class _Profile_SettingState extends State<Profile_Setting> {
 
   PickedFile? _image;
   var imim;
+
   //이미지 선택 함수
   Future getImageFromGallery() async {
     // for gallery
     var image =
-    await ImagePicker.platform.pickImage(source: ImageSource.gallery);
+        await ImagePicker.platform.pickImage(source: ImageSource.gallery);
     setState(() {
       _image = image!;
     });
@@ -55,24 +57,15 @@ class _Profile_SettingState extends State<Profile_Setting> {
     DB_USER_Helper sd = DB_USER_Helper();
     sd.database;
 
-    if(imim == null){
-      print("imim null");
+    if (imim == null) {
       return;
-    }else{
-      print("imim not null");
-      var fido = User_profile_image(
-          id:1,
-          profile_image: imim
-      );
+    } else {
+      var fido = User_profile_image(id: 1, profile_image: imim);
 
       print(fido);
 
       await sd.insertIMG(fido);
     }
-
-
-
-
   }
 
   @override
@@ -191,7 +184,6 @@ class _Profile_SettingState extends State<Profile_Setting> {
                       ),
                     ),
                   ),
-
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Container(
@@ -236,30 +228,32 @@ class _Profile_SettingState extends State<Profile_Setting> {
                       ),
                     ),
                   ),
-
                   SizedBox(
                     height: size.height * 0.24,
                   ),
                   InkWell(
-                    onTap: () async{
+                    onTap: () async {
                       if (_username_controller.text == "") {
                         print(_age_controller.text);
 
                         showtoast("정보를 모두 입력해주세요");
                       } else {
-
                         savedb();
 
                         var token = await Http_Presenter().read_token();
-                       await User_Http().post_user_info(token, _username_controller.text, _age_controller.text,"0",context);
-                       await Provider.of<User_Http>(context, listen: false).get_user_info(token,context);
+                        await User_Http().post_user_info(token,
+                            _username_controller.text, 10, gender, context);
+                        await Provider.of<User_Http>(context, listen: false)
+                            .get_user_info(token, context);
                         //Http 회원 정보 등록
 
                         Navigator.push(
                             context,
                             PageTransition(
                                 type: PageTransitionType.fade,
-                                child: Frame_Screen(Login_method: '${widget.login_method}',)));
+                                child: Frame_Screen(
+                                  Login_method: '${widget.login_method}',
+                                )));
                       }
                     },
                     child: Container(

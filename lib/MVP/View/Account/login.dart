@@ -43,7 +43,11 @@ class _Login_ScreenState extends State<Login_Screen> {
         appleCredential.identityToken, appleCredential.authorizationCode);
 
     if (jwt_apple != null) {
-      Http_Presenter().set_token(jwt_apple);
+      await Http_Presenter().set_token(jwt_apple);
+
+      var token = await Http_Presenter().read_token();
+      await Provider.of<User_Http>(context, listen: false)
+          .get_user_info(token, context);
 
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(
@@ -102,14 +106,6 @@ class _Login_ScreenState extends State<Login_Screen> {
                   ),
                   InkWell(
                     onTap: () async {
-                      // Navigator.push(
-                      //     context,
-                      //     PageTransition(
-                      //         type: PageTransitionType.fade,
-                      //         child: Frame_Screen(Login_method: null,)));
-
-                      //http user get
-
                       final prefs = await SharedPreferences.getInstance();
                       // counter 키에 해당하는 데이터 읽기를 시도합니다. 만약 존재하지 않는 다면 0을 반환합니다.
                       final login_check = prefs.getString('login_method');
@@ -117,9 +113,7 @@ class _Login_ScreenState extends State<Login_Screen> {
                       var return_logout_check =
                           await prefs.getString("logout_check");
 
-
                       if (return_logout_check == "kakao_logout") {
-
                         await prefs.remove("logout_check");
 
                         const String _REST_API_KEY =
@@ -178,16 +172,22 @@ class _Login_ScreenState extends State<Login_Screen> {
                                     ]),
                                   ),
                                 )));
+
+                        //추가된 코드
+                        var token = await Http_Presenter().read_token();
+                        await Provider.of<User_Http>(context, listen: false)
+                            .get_user_info(token, context);
                       }
                       if (return_logout_check == "apple_logout") {
                         await prefs.remove("logout_check");
 
-                        signInWithApple();
+                        await signInWithApple();
                       } else {
                         if (login_check == null) {
                           showtoast("소셜로그인을 진행해주세요");
                         }
                         if (login_check == "kakao") {
+                          print("HFDGHFG");
                           const String _REST_API_KEY =
                               "ee4ee61f1ea69f5a8d5f5924343083f7";
 
@@ -239,15 +239,17 @@ class _Login_ScreenState extends State<Login_Screen> {
                                       ]),
                                     ),
                                   )));
+
+                          //var token = await Http_Presenter().read_token();
+                          //await Provider.of<User_Http>(context, listen: false).get_user_info(token,context);
                         }
                         if (login_check == "apple") {
-                          print("자동로그인 애플");
-                          Navigator.of(context).pushAndRemoveUntil(
-                              MaterialPageRoute(
-                                  builder: (context) => Frame_Screen(
-                                        Login_method: 'apple',
-                                      )),
-                              (Route r) => false);
+                          signInWithApple();
+
+                          // var token = await Http_Presenter().read_token();
+                          // await Provider.of<User_Http>(context, listen: false).get_user_info(token,context);
+
+
                         } else {
                           return;
                         }

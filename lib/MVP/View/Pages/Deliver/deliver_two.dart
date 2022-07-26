@@ -90,7 +90,7 @@ class _Deliver_Two_Screen extends State<Deliver_Two_Screen> {
               height: size.height * 0.04,
             ),
             Text("기-록",style: TextStyle(fontFamily: "gilogfont",fontSize: 32),),
-            Text("갯수 (2주-4주)",style: TextStyle(fontFamily: "gilogfont",fontSize: 32),),
+            Text("개수 (2주-4주)",style: TextStyle(fontFamily: "gilogfont",fontSize: 32),),
             SizedBox(height: size.height*0.02,),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
