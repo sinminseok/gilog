@@ -246,8 +246,6 @@ class _Login_ScreenState extends State<Login_Screen> {
                         if (login_check == "apple") {
                           signInWithApple();
 
-                          // var token = await Http_Presenter().read_token();
-                          // await Provider.of<User_Http>(context, listen: false).get_user_info(token,context);
 
 
                         } else {

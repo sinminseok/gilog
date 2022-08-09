@@ -50,7 +50,6 @@ class _Calendar_Screen extends State<Calendar_Screen> {
   }
 
   //해당 날짜에 해당하는 날짜 가져오는 함수
-
   local_data_filter_year() async {
     DBHelper sd = DBHelper();
     sd.database;
@@ -59,7 +58,6 @@ class _Calendar_Screen extends State<Calendar_Screen> {
 
     for (var i = 0; i < data.length; i++) {
       has_data_all_POST.add(data[i]);
-      print("has_data_all_POST$has_data_all_POST");
     }
 
     for (var i = 0; i < has_data_all_POST.length; i++) {

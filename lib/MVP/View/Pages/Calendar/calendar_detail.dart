@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:gilog/MVP/Model/post.dart';
 import 'package:gilog/Utils/constants.dart';
 import 'package:gilog/Utils/toast.dart';
+import 'package:image_picker/image_picker.dart';
 import 'dart:math' as math;
 
 import '../../../../Local_DB/db.dart';
@@ -25,10 +26,32 @@ class _Calendar_detailState extends State<Calendar_detail> {
   bool check_update = false;
   TextEditingController _content_controller = TextEditingController();
 
+  PickedFile? _image;
+  bool bottom_sheet_controller = false;
+  var imim;
+
   @override
   void initState() {
     chekc_today_write();
     super.initState();
+  }
+
+  //이미지 선택 함수
+  Future getImageFromGallery() async {
+    // for gallery
+    var image =
+        await ImagePicker.platform.pickImage(source: ImageSource.gallery);
+    setState(() {
+      _image = image!;
+    });
+    imim = convert_img();
+  }
+
+  //이미지 Uint8 변환 함수
+  convert_img() async {
+    Uint8List test = await _image!.readAsBytes();
+    imim = test;
+    return test;
   }
 
   chekc_today_write() async {
@@ -76,14 +99,33 @@ class _Calendar_detailState extends State<Calendar_detail> {
                     "${widget.date_time} 기-록",
                     style: TextStyle(fontFamily: "gilogfont", fontSize: 24),
                   ),
-                  Container(
-                    width: size.width * 1,
-                    height: size.height * 0.4,
-                    child: Image.memory(
-                      this_post!.image_url as Uint8List,
-                      fit: BoxFit.fitWidth,
-                    ),
-                  ),
+                  check_update == true
+                      ? InkWell(
+                          onTap: () {
+                            getImageFromGallery();
+                          },
+                          child: _image != null
+                              ? Container(
+                                  width: size.width * 1,
+                                  height: size.height * 0.4,
+                                  child: Image.file(File(_image!.path)))
+                              : Container(
+                                  width: size.width * 1,
+                                  height: size.height * 0.4,
+                                  child: Image.memory(
+                                    this_post!.image_url as Uint8List,
+                                    fit: BoxFit.fitWidth,
+                                  ),
+                                ),
+                        )
+                      : Container(
+                          width: size.width * 1,
+                          height: size.height * 0.4,
+                          child: Image.memory(
+                            this_post!.image_url as Uint8List,
+                            fit: BoxFit.fitWidth,
+                          ),
+                        ),
                   InkWell(
                     onTap: () {
                       print(check_update);
@@ -185,47 +227,87 @@ class _Calendar_detailState extends State<Calendar_detail> {
                           onTap: () async {
                             //(datetime, content, question, token, context
 
-                            if(_content_controller.text == ""){
+                            //아무런 변경이 없을때
+                            if (_content_controller.text == "" &&
+                                _image == null) {
                               setState(() {
                                 check_update = !check_update;
                               });
-                            }else{
-                            var token = await Http_Presenter().read_token();
-                            var return_value = await Http_Presenter()
-                                .post_update_gilog(
-                                    this_post!.datetime,
-                                    _content_controller.text,
-                                    this_post!.question,
-                                    token,
-                                    context);
-
-                            // var check_return_bool = await Http_Presenter()
-                            //     .post_gilog(File.fromRawPath(this_post!.image_url!.sublist(0)), return_value, token, context);
-
-                            if (return_value != null) {
-                              DBHelper sd = DBHelper();
-                              sd.database;
-
-                              var fido = POST(
-                                id: this_post!.id,
-                                question: this_post!.question,
-                                datetime: this_post!.datetime,
-                                content: _content_controller.text,
-                                image_url: this_post!.image_url,
-                              );
-
-                              await sd.updatePOST(fido);
-
-                              chekc_today_write();
                             } else {
-                              showAlertDialog(context, "알림", "네트워크 오류");
+                              var token = await Http_Presenter().read_token();
+
+                              if (_image == null) {
+                                var return_value = await Http_Presenter()
+                                    .post_update_gilog(
+                                        this_post!.datetime,
+                                        _content_controller.text,
+                                        this_post!.question,
+                                        token,
+                                        context);
+
+                                if (return_value != null) {
+                                  DBHelper sd = DBHelper();
+                                  sd.database;
+
+                                  var fido = POST(
+                                    id: this_post!.id,
+                                    question: this_post!.question,
+                                    datetime: this_post!.datetime,
+                                    content: _content_controller.text,
+                                    image_url: this_post!.image_url,
+                                  );
+
+                                  await sd.updatePOST(fido);
+
+                                  chekc_today_write();
+                                } else {
+                                  showAlertDialog(context, "알림", "네트워크 오류");
+                                }
+
+                                setState(() {
+                                  check_update = !check_update;
+                                });
+                              }
+                              // 둘다 바뀌었을때 (사진 , 내용 )
+                              else {
+                                convert_img();
+
+                                var return_value = await Http_Presenter()
+                                    .post_update_gilog(
+                                        this_post!.datetime,
+                                        _content_controller.text,
+                                        this_post!.question,
+                                        token,
+                                        context);
+
+                                var check_return_bool = await Http_Presenter()
+                                    .post_gilog_imageData(File(_image!.path),
+                                        return_value, token, context);
+
+                                if (check_return_bool == true) {
+                                  DBHelper sd = DBHelper();
+                                  sd.database;
+
+                                  var fido = POST(
+                                    id: this_post!.id,
+                                    question: this_post!.question,
+                                    datetime: this_post!.datetime,
+                                    content: _content_controller.text,
+                                    image_url: imim,
+                                  );
+
+                                  await sd.updatePOST(fido);
+
+                                  chekc_today_write();
+                                } else {
+                                  showAlertDialog(context, "알림", "네트워크 오류");
+                                }
+
+                                setState(() {
+                                  check_update = !check_update;
+                                });
+                              }
                             }
-
-                            setState(() {
-                              check_update = !check_update;
-                            });}
-
-
                           },
                           child: Container(
                             decoration: BoxDecoration(

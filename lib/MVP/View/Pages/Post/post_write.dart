@@ -277,9 +277,9 @@ class _Post_WriteState extends State<Post_Write> {
     var token = await Http_Presenter().read_token();
     //return value로 받아온 값을 담아 다음 요청에 이미지와 함께 보냄 영솔이가 이렇게 보내라함 난 모름 ㅋㅋ
     var return_value = await Http_Presenter()
-        .post_test_gilog(datetime, final_text, widget.question, token, context);
+        .post_gilog_data(datetime, final_text, widget.question, token, context);
     var check_return_bool = await Http_Presenter()
-        .post_gilog(widget.image_file, return_value, token, context);
+        .post_gilog_imageData(widget.image_file, return_value, token, context);
 
     if (check_return_bool == true) {
       DBHelper sd = DBHelper();

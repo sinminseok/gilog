@@ -75,7 +75,7 @@ class Http_Presenter with ChangeNotifier {
   }
 
   //기록 등록
-  Future<bool> post_gilog(File? imageFile, id, token, context) async {
+  Future<bool> post_gilog_imageData(File? imageFile, id, token, context) async {
     var request =
         new http.MultipartRequest("POST", Uri.parse(Http_URL().post_gilog_img));
 
@@ -93,6 +93,9 @@ class Http_Presenter with ChangeNotifier {
         .add(await http.MultipartFile.fromPath('image', imageFile!.path));
 
     var response = await request.send();
+
+    print(response.statusCode);
+    print("GJGJ");
 
 
     if (response.statusCode == 200) {
@@ -113,7 +116,7 @@ class Http_Presenter with ChangeNotifier {
   }
 
   //
-  Future post_test_gilog(datetime, content, question, token, context) async {
+  Future post_gilog_data(datetime, content, question, token, context) async {
     var res = await http.post(Uri.parse(Http_URL().post_gilog),
         headers: {
           'Content-Type': 'application/json',

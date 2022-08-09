@@ -55,17 +55,12 @@ class _Deliver_Four_Screen extends State<Deliver_Four_Screen> {
 
   make_product() {
     product = "${widget.book_page}(${widget.post_or_write})";
-
-
   }
 
   String? test_string;
   filter_string(){
     final pos = widget.pick_datetime!.toString().length - 1;
-    print(widget.pick_datetime!.toString());
-    print(pos);
     test_string = widget.pick_datetime!.toString().substring(1,pos);
-    print("$test_string");
   }
 
   @override
