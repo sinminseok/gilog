@@ -151,6 +151,9 @@ class Http_Presenter with ChangeNotifier {
         body: json.encode(
             {'writeDate': datetime, 'request': content, 'question': question}));
 
+
+    print("post_update_gilog");
+    print(res.statusCode);
     //statusCode 확인해볼것
     if (res.statusCode == 200) {
       return res.body;

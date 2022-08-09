@@ -235,8 +235,45 @@ class _Calendar_detailState extends State<Calendar_detail> {
                               });
                             } else {
                               var token = await Http_Presenter().read_token();
+                              if(_image != null && _content_controller.text == ""){
+                                var return_value = await Http_Presenter()
+                                    .post_update_gilog(
+                                    this_post!.datetime,
+                                    this_post!.content,
+                                    this_post!.question,
+                                    token,
+                                    context);
 
-                              if (_image == null) {
+                                var check_return_bool = await Http_Presenter()
+                                    .post_gilog_imageData(File(_image!.path),
+                                    return_value, token, context);
+
+                                if (check_return_bool == true) {
+                                  DBHelper sd = DBHelper();
+                                  sd.database;
+
+                                  var fido = POST(
+                                    id: this_post!.id,
+                                    question: this_post!.question,
+                                    datetime: this_post!.datetime,
+                                    content: this_post!.content,
+                                    image_url: imim,
+                                  );
+
+                                  await sd.updatePOST(fido);
+
+                                  chekc_today_write();
+                                } else {
+                                  showAlertDialog(context, "알림", "네트워크 오류");
+                                }
+
+                                setState(() {
+                                  check_update = !check_update;
+                                });
+                              }
+
+                              //내용만 바뀌었을때
+                              if (_image == null ) {
                                 var return_value = await Http_Presenter()
                                     .post_update_gilog(
                                         this_post!.datetime,
@@ -270,7 +307,7 @@ class _Calendar_detailState extends State<Calendar_detail> {
                               }
                               // 둘다 바뀌었을때 (사진 , 내용 )
                               else {
-                                convert_img();
+
 
                                 var return_value = await Http_Presenter()
                                     .post_update_gilog(
