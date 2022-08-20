@@ -272,7 +272,6 @@ class _Post_WriteState extends State<Post_Write> {
   }
 
   Future<void> savedb(BuildContext context) async {
-
     //토큰 가져옴
     var token = await Http_Presenter().read_token();
     //return value로 받아온 값을 담아 다음 요청에 이미지와 함께 보냄 영솔이가 이렇게 보내라함 난 모름 ㅋㅋ

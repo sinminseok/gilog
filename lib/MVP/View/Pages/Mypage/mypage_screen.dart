@@ -802,7 +802,7 @@ class _Mypage_ScreenState extends State<Mypage_Screen> {
             Container(
               decoration: BoxDecoration(
                 border:
-                    Border(bottom: BorderSide(color: Colors.black, width: 0.1)),
+                Border(bottom: BorderSide(color: Colors.black, width: 0.1)),
               ),
               child: ListTile(
                 title: Row(
@@ -819,7 +819,7 @@ class _Mypage_ScreenState extends State<Mypage_Screen> {
                     Padding(
                       padding: const EdgeInsets.only(right: 15.0),
                       child: Text(
-                        "1.1.0",
+                        "1.2.1",
                         style: TextStyle(fontFamily: "gilogfont"),
                       ),
                     )
@@ -827,6 +827,7 @@ class _Mypage_ScreenState extends State<Mypage_Screen> {
                 ),
               ),
             ),
+
             SizedBox(
               height: size.height * 0.29,
             ),

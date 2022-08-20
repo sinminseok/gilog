@@ -63,6 +63,7 @@ class _Calendar_detailState extends State<Calendar_detail> {
         this_post = data[i];
       }
     }
+    _content_controller.text = this_post!.content.toString();
     return this_post;
   }
 
@@ -189,6 +190,7 @@ class _Calendar_detailState extends State<Calendar_detail> {
                                 children: [
                                   Container(
                                     child: TextField(
+
                                       maxLines: 5,
                                       controller: _content_controller,
                                       decoration: InputDecoration(
@@ -226,6 +228,8 @@ class _Calendar_detailState extends State<Calendar_detail> {
                       : InkWell(
                           onTap: () async {
                             //(datetime, content, question, token, context
+                            print(_image);
+                            print(_content_controller.text);
 
                             //아무런 변경이 없을때
                             if (_content_controller.text == "" &&
@@ -235,20 +239,26 @@ class _Calendar_detailState extends State<Calendar_detail> {
                               });
                             } else {
                               var token = await Http_Presenter().read_token();
-                              if(_image != null && _content_controller.text == ""){
+                              if(_content_controller.text == ""){
+                                return showtoast("내용을 입력해주세요");
+                              }
+                              //사진만 변경
+                              if (_image != null) {
                                 var return_value = await Http_Presenter()
                                     .post_update_gilog(
-                                    this_post!.datetime,
-                                    this_post!.content,
-                                    this_post!.question,
-                                    token,
-                                    context);
+                                        this_post!.datetime,
+                                        _content_controller.text,
+                                        this_post!.question,
+                                        token,
+                                        context);
 
                                 var check_return_bool = await Http_Presenter()
                                     .post_gilog_imageData(File(_image!.path),
-                                    return_value, token, context);
+                                        return_value, token, context);
+
 
                                 if (check_return_bool == true) {
+
                                   DBHelper sd = DBHelper();
                                   sd.database;
 
@@ -256,7 +266,7 @@ class _Calendar_detailState extends State<Calendar_detail> {
                                     id: this_post!.id,
                                     question: this_post!.question,
                                     datetime: this_post!.datetime,
-                                    content: this_post!.content,
+                                    content: _content_controller.text,
                                     image_url: imim,
                                   );
 
@@ -271,16 +281,17 @@ class _Calendar_detailState extends State<Calendar_detail> {
                                   check_update = !check_update;
                                 });
                               }
+                              if(_image == null ){
 
-                              //내용만 바뀌었을때
-                              if (_image == null ) {
                                 var return_value = await Http_Presenter()
                                     .post_update_gilog(
-                                        this_post!.datetime,
-                                        _content_controller.text,
-                                        this_post!.question,
-                                        token,
-                                        context);
+                                    this_post!.datetime,
+                                    _content_controller.text,
+                                    this_post!.question,
+                                    token,
+                                    context);
+
+
 
                                 if (return_value != null) {
                                   DBHelper sd = DBHelper();
@@ -305,45 +316,8 @@ class _Calendar_detailState extends State<Calendar_detail> {
                                   check_update = !check_update;
                                 });
                               }
-                              // 둘다 바뀌었을때 (사진 , 내용 )
-                              else {
 
 
-                                var return_value = await Http_Presenter()
-                                    .post_update_gilog(
-                                        this_post!.datetime,
-                                        _content_controller.text,
-                                        this_post!.question,
-                                        token,
-                                        context);
-
-                                var check_return_bool = await Http_Presenter()
-                                    .post_gilog_imageData(File(_image!.path),
-                                        return_value, token, context);
-
-                                if (check_return_bool == true) {
-                                  DBHelper sd = DBHelper();
-                                  sd.database;
-
-                                  var fido = POST(
-                                    id: this_post!.id,
-                                    question: this_post!.question,
-                                    datetime: this_post!.datetime,
-                                    content: _content_controller.text,
-                                    image_url: imim,
-                                  );
-
-                                  await sd.updatePOST(fido);
-
-                                  chekc_today_write();
-                                } else {
-                                  showAlertDialog(context, "알림", "네트워크 오류");
-                                }
-
-                                setState(() {
-                                  check_update = !check_update;
-                                });
-                              }
                             }
                           },
                           child: Container(

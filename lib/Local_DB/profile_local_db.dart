@@ -12,7 +12,9 @@ class DB_USER_Helper {
   var _db;
 
   Future<Database> get database async {
+
     if (_db != null) return _db;
+
     _db = openDatabase(
       join(await getDatabasesPath(), 'USER.db'),
       onCreate: (db, version) {
@@ -26,6 +28,7 @@ class DB_USER_Helper {
   }
 
   Future<void> insertIMG(User_profile_image user_profile_image) async {
+
     final db = await database;
 
     await db.insert(
@@ -33,6 +36,7 @@ class DB_USER_Helper {
       user_profile_image.toMap(),
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
+
   }
 
 
@@ -66,16 +70,16 @@ class DB_USER_Helper {
     );
   }
 //
-// Future<void> deletePOST(int id) async {
-//   final db = await database;
-//
-//   // 데이터베이스에서 Memo를 삭제합니다.
-//   await db.delete(
-//     TableName,
-//     // 특정 memo를 제거하기 위해 `where` 절을 사용하세요
-//     where: "id = ?",
-//     // Memo의 id를 where의 인자로 넘겨 SQL injection을 방지합니다.
-//     whereArgs: [id],
-//   );
-// }
+Future<void> deletePOST(int id) async {
+  final db = await database;
+
+  // 데이터베이스에서 Memo를 삭제합니다.
+  await db.delete(
+      TableName,
+      // 특정 memo를 제거하기 위해 `where` 절을 사용하세요
+      where: "id = ?",
+      // Memo의 id를 where의 인자로 넘겨 SQL injection을 방지합니다.
+      whereArgs: [id],
+    );
+  }
 }

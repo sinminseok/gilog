@@ -142,6 +142,12 @@ class Http_Presenter with ChangeNotifier {
   }
 
   Future post_update_gilog(datetime, content, question, token, context) async {
+    print("GGGGGG");
+    print(datetime);
+    print(content);
+    print(question);
+
+
     var res = await http.post(Uri.parse(Http_URL().update_gilog),
         headers: {
           'Content-Type': 'application/json',
@@ -152,9 +158,9 @@ class Http_Presenter with ChangeNotifier {
             {'writeDate': datetime, 'request': content, 'question': question}));
 
 
-    print("post_update_gilog");
-    print(res.statusCode);
+
     //statusCode 확인해볼것
+
     if (res.statusCode == 200) {
       return res.body;
     }
