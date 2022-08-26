@@ -16,6 +16,7 @@ import '../../Model/user_profile.dart';
 import '../../Presenter/Http/http_presenter.dart';
 import '../../Presenter/Http/user_http.dart';
 
+
 class Profile_Setting extends StatefulWidget {
   String? login_method;
 
@@ -206,7 +207,7 @@ class _Profile_SettingState extends State<Profile_Setting> {
                             borderRadius:
                                 BorderRadius.all(Radius.circular(10.0)),
                           ),
-                          labelText: '성별',
+                          labelText: '반쪽이의 성별',
                           floatingLabelBehavior: FloatingLabelBehavior.always,
                           labelStyle:
                               TextStyle(fontSize: 15, color: Colors.black),
@@ -228,8 +229,44 @@ class _Profile_SettingState extends State<Profile_Setting> {
                       ),
                     ),
                   ),
+
+
+                  //아이 생년월일 입력받기
+
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    width: size.width * 0.7,
+                    child: TextField(
+                      controller: _age_controller,
+                      decoration: InputDecoration(
+                        labelText: '반쪽이 생년월일',
+                        hintText: '200923',
+                        labelStyle: TextStyle(color: Colors.purple),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius:
+                          BorderRadius.all(Radius.circular(10.0)),
+                          borderSide:
+                          BorderSide(width: 1, color: Colors.purple),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius:
+                          BorderRadius.all(Radius.circular(10.0)),
+                          borderSide:
+                          BorderSide(width: 1, color: Colors.purple),
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius:
+                          BorderRadius.all(Radius.circular(10.0)),
+                        ),
+                      ),
+                      keyboardType: TextInputType.number,
+
+                    ),
+                  ),
+                ),
                   SizedBox(
-                    height: size.height * 0.24,
+                    height: size.height * 0.20,
                   ),
                   InkWell(
                     onTap: () async {
@@ -256,6 +293,9 @@ class _Profile_SettingState extends State<Profile_Setting> {
                                 )));
                       }
                     },
+
+
+
                     child: Container(
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(3),
