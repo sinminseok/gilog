@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:gilog/Utils/toast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
@@ -50,24 +51,13 @@ class _Setting_ProfileState extends State<Setting_Profile> {
     return test;
   }
 
-  // local_data_filter_year() async {
-  //   DB_USER_Helper sd = DB_USER_Helper();
-  //   sd.database;
-  //   data = await sd.user_img();
-  //   if(data == null){
-  //     return null;
-  //   }else{
-  //     return data;
-  //   }
-  //
-  // }
 
   local_data_filter_year() async {
-    print("ST");
+
     DB_USER_Helper sd = DB_USER_Helper();
     sd.database;
     data = await sd.user_img();
-    print(data);
+
     if(data == null){
       return "notrelode";
     }else{
@@ -82,17 +72,13 @@ class _Setting_ProfileState extends State<Setting_Profile> {
       return;
     } else {
       if (data == null) {
-        print("image insert");
         DB_USER_Helper sd = DB_USER_Helper();
         sd.database;
-
         var fido = User_profile_image(id: 1, profile_image: imim);
 
-        print(fido);
 
         await sd.insertIMG(fido);
       } else {
-        print("image update");
         DB_USER_Helper sd = DB_USER_Helper();
         sd.database;
 
@@ -106,38 +92,49 @@ class _Setting_ProfileState extends State<Setting_Profile> {
     }
   }
 
+  List<String> dropdownList = ['비공개','남자', '여자'];
+  String? selectedDropdown;
 
   @override
   void initState() {
     // TODO: implement initState
     _username_controller.text = widget.user.nickname!;
     gender = widget.user.gender;
+
+    //밑에 주석 코드가 초기 회원 성별 가져오는 로직 주석 지우면 초기 회원 성별 가져옴
+    // if(gender == "M" || gender=="남자"){
+    //   print("남자로 setstate");
+    //   setState(() {
+    //     selectedDropdown ="남자";
+    //   });
+    //
+    // }if(gender == "F" || gender=="여자"){
+    //   print("여자로 setstate");
+    //   setState(() {
+    //     selectedDropdown="여자";
+    //   });
+    //
+    // }if(gender == "비공"){
+    //   print("비공개");
+    //   setState(() {
+    //     selectedDropdown="비공개";
+    //   });
+    // }
+
     _age_controller.text = widget.user.age.toString();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-   // Gilog_User? user = Provider.of<User_Http>(context).gilog_user;
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: kPrimaryColor,
       appBar: AppBar(
         backgroundColor: kPrimaryColor,
-        title: InkWell(
-          onTap: () {
-            Navigator.push(
-                context,
-                PageTransition(
-                    type: PageTransitionType.rightToLeftWithFade,
-                    child: Profile_Setting(
-                      login_method: 'kakao',
-                    )));
-          },
-          child: Text(
-            "프로필 수정",
-            style: TextStyle(color: Colors.black, fontFamily: "gilogfont"),
-          ),
+        title:  Text(
+          "프로필 수정",
+          style: TextStyle(color: Colors.black, fontFamily: "gilogfont"),
         ),
         elevation: 0,
         iconTheme: IconThemeData(
@@ -250,7 +247,7 @@ class _Setting_ProfileState extends State<Setting_Profile> {
                       child: TextField(
                         controller: _username_controller,
                         decoration: InputDecoration(
-                          labelText: '${widget.user.nickname}',
+                          labelText: '닉네임',
                           hintText: '닉네임을 입력하세요!',
                           labelStyle: TextStyle(color: Colors.purple),
                           focusedBorder: OutlineInputBorder(
@@ -277,47 +274,44 @@ class _Setting_ProfileState extends State<Setting_Profile> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.purple),
+                          borderRadius: BorderRadius.all(Radius.circular(10))
+                      ),
                       width: size.width * 0.7,
-                      child: DropdownButtonFormField<String?>(
-                        decoration: InputDecoration(
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.0)),
-                            borderSide:
-                                BorderSide(width: 1, color: Colors.purple),
+                      height: size.height*0.07,
+
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: DropdownButton(
+                          isExpanded:true,
+                          icon: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Icon(Icons.keyboard_arrow_down_sharp),
                           ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.0)),
-                            borderSide:
-                                BorderSide(width: 1, color: Colors.purple),
-                          ),
-                          border: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.0)),
-                          ),
-                          labelText: '성별',
-                          floatingLabelBehavior: FloatingLabelBehavior.always,
-                          labelStyle:
-                              TextStyle(fontSize: 15, color: Colors.black),
+
+                          underline: SizedBox.shrink(),
+
+                          value: selectedDropdown,
+                          items: dropdownList.map((String item) {
+                            return DropdownMenuItem<String>(
+
+
+                              child: Text('$item'),
+                              value: item,
+                            );
+                          }).toList(),
+                          onChanged: (dynamic value) {
+                            setState(() {
+                              selectedDropdown = value;
+                              gender = value;
+                            });
+                          },
                         ),
-                        // underline: Container(height: 1.4, color: Color(0xffc0c0c0)),
-                        onChanged: (String? newValue) {
-                          print(newValue);
-                          setState(() {
-                            gender = newValue;
-                          });
-                        },
-                        items: [null, 'M', 'F']
-                            .map<DropdownMenuItem<String?>>((String? i) {
-                          return DropdownMenuItem<String?>(
-                            value: i,
-                            child: Text({'M': '남성', 'F': '여성'}[i] ?? '비공개'),
-                          );
-                        }).toList(),
                       ),
                     ),
                   ),
+
 
                   SizedBox(
                     height: size.height * 0.24,
@@ -326,21 +320,22 @@ class _Setting_ProfileState extends State<Setting_Profile> {
                     onTap: () async {
                      update_db();
 
-                     print(_username_controller.text);
-                     print( _age_controller.text);
-                     print(gender);
-
-
-
                       var token = await Http_Presenter().read_token();
-                      await User_Http().post_user_info(
+                      var gg = await User_Http().post_user_info(
                           token,
                           _username_controller.text,
                           _age_controller.text,
                           gender,
                           context);
-                      await Provider.of<User_Http>(context, listen: false)
-                          .get_user_info(token, context);
+                      if(gg != null){
+                        await Provider.of<User_Http>(context, listen: false)
+                            .get_user_info(token, context);
+                        Navigator.pop(context);
+                        showtoast("수정 되었습니다");
+                      }else{
+                        showtoast("수정 실패");
+                      }
+
                     },
                     child: Container(
                       decoration: BoxDecoration(

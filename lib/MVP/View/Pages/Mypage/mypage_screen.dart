@@ -20,6 +20,7 @@ import '../../../../Utils/toast.dart';
 import '../../../Model/user.dart';
 import '../../../Model/user_profile.dart';
 import '../../../Presenter/Http/user_http.dart';
+import '../../Account/start_setting_profile .dart';
 
 class Mypage_Screen extends StatefulWidget {
   const Mypage_Screen({Key? key}) : super(key: key);
@@ -30,12 +31,19 @@ class Mypage_Screen extends StatefulWidget {
 
 class _Mypage_ScreenState extends State<Mypage_Screen> {
   User_profile_image? user_profile_image;
+  WebViewController? _controller;
 
   @override
   void initState() {
     // TODO: implement initState
     // local_data_filter_year();
     super.initState();
+  }
+
+  @override
+  void dispose(){
+    _controller = null;
+    super.dispose();
   }
 
   local_data_filter_year() async {
@@ -55,7 +63,7 @@ class _Mypage_ScreenState extends State<Mypage_Screen> {
 
   @override
   Widget build(BuildContext context) {
-    WebViewController? _controller;
+
     Gilog_User? user = Provider.of<User_Http>(context).gilog_user;
     Size size = MediaQuery.of(context).size;
     return Scaffold(
@@ -97,13 +105,15 @@ class _Mypage_ScreenState extends State<Mypage_Screen> {
                           width: size.width * 0.05,
                         ),
                         Column(
+
                           children: [
                             SizedBox(
                               height: size.height * 0.06,
                             ),
                             Container(
-                              width: size.width * 0.35,
+                              width: size.width * 0.45,
                               child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     "${user!.nickname}",
@@ -199,7 +209,8 @@ class _Mypage_ScreenState extends State<Mypage_Screen> {
                                                                   .rightToLeftWithFade,
                                                               child:
                                                               Setting_Profile(
-                                                                user: user,
+
+                                                                 user: user,
                                                               )));
                                                     },
                                                   ),
@@ -293,6 +304,7 @@ class _Mypage_ScreenState extends State<Mypage_Screen> {
                                                                       ),
                                                                     )));
 
+
                                                         Navigator.push(
                                                             context,
                                                             PageTransition(
@@ -311,6 +323,7 @@ class _Mypage_ScreenState extends State<Mypage_Screen> {
                                                         if (return_value ==
                                                             true) {
                                                           showtoast("로그아웃");
+
                                                           Navigator.push(
                                                               context,
                                                               PageTransition(
@@ -390,6 +403,7 @@ class _Mypage_ScreenState extends State<Mypage_Screen> {
                                 radius: 45.0,
                                 backgroundImage: MemoryImage(
                                   user_profile_image!.profile_image,
+
                                 ), //here
                               ),
                         SizedBox(
@@ -401,16 +415,16 @@ class _Mypage_ScreenState extends State<Mypage_Screen> {
                               height: size.height * 0.06,
                             ),
                             Container(
-                              width: size.width * 0.35,
-                              child: Row(
-                                children: [
-                                  Text(
-                                    "${user!.nickname}",
-                                    style: TextStyle(
-                                        fontSize: 21, fontFamily: "gilogfont"),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
+                                  width: size.width * 0.55,
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        "${user!.nickname}",
+                                        style: TextStyle(
+                                            fontSize: 21, fontFamily: "gilogfont"),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(0.0),
                                     child: Text(
                                       "기로기",
                                       style: TextStyle(
@@ -530,8 +544,7 @@ class _Mypage_ScreenState extends State<Mypage_Screen> {
                                                           await prefs.getString(
                                                               'login_method');
 
-                                                      print(login_method ==
-                                                          "apple");
+
 
                                                       if (login_method ==
                                                           "kakao") {
@@ -680,6 +693,12 @@ class _Mypage_ScreenState extends State<Mypage_Screen> {
             ),
             InkWell(
               onTap: () {
+                // Navigator.push(
+                //     context,
+                //     PageTransition(
+                //         type: PageTransitionType.rightToLeftWithFade,
+                //         child: Profile_Setting(login_method: 'kakao',)));
+
                 Navigator.push(
                     context,
                     PageTransition(
@@ -819,7 +838,7 @@ class _Mypage_ScreenState extends State<Mypage_Screen> {
                     Padding(
                       padding: const EdgeInsets.only(right: 15.0),
                       child: Text(
-                        "1.2.1",
+                        "2.0.5",
                         style: TextStyle(fontFamily: "gilogfont"),
                       ),
                     )
@@ -829,7 +848,7 @@ class _Mypage_ScreenState extends State<Mypage_Screen> {
             ),
 
             SizedBox(
-              height: size.height * 0.29,
+              height: size.height * 0.19,
             ),
             Text(
               "@copyright 2022 by Sso-young",

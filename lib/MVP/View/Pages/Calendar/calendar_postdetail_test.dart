@@ -4,6 +4,7 @@ import 'package:gilog/MVP/Model/post.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../../../Utils/constants.dart';
+import '../../../Presenter/Http/http_presenter.dart';
 import 'calendar_detail.dart';
 
 class Calendar_detail_frame extends StatefulWidget {
@@ -13,7 +14,10 @@ class Calendar_detail_frame extends StatefulWidget {
   int? year;
 
   Calendar_detail_frame(
-      {required this.date_list, this.datetime, this.month, this.year});
+      {required this.date_list,
+      required this.datetime,
+      required this.month,
+      required this.year});
 
   @override
   _Calendar_detail_frame createState() => _Calendar_detail_frame();
@@ -22,6 +26,8 @@ class Calendar_detail_frame extends StatefulWidget {
 class _Calendar_detail_frame extends State<Calendar_detail_frame> {
   String? date_time;
   int? check;
+  var _controller;
+  var img_server;
 
   add_datetime() {
     //ex)1_9월
@@ -55,23 +61,30 @@ class _Calendar_detail_frame extends State<Calendar_detail_frame> {
             "${widget.datetime}";
       }
     }
-
-    print(date_time);
   }
 
-  _init() {
+  _init() async {
     for (var i = 0; i < widget.date_list.length; i++) {
       if (widget.date_list[i]!.datetime == date_time) {
         check = i;
       }
     }
+  // var token = await Http_Presenter().read_token();
+  //  img_server = await Http_Presenter().get_server_image2(token, context);
+    _controller = PageController(initialPage: check!);
+
+    // return img_server;
   }
+
+  // refresh(BuildContext context){
+  //   _init
+  // }
 
   @override
   void initState() {
     // TODO: implement initState
     add_datetime();
-    _init();
+   _init();
     super.initState();
   }
 
@@ -79,41 +92,43 @@ class _Calendar_detail_frame extends State<Calendar_detail_frame> {
   void dispose() {
     // TODO: implement dispose
     date_time = null;
+    _controller.dispose();
     check = null;
+
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final _controller = PageController(initialPage: check!);
-    Size size = MediaQuery.of(context).size;
-    return Scaffold(
+    // final _controller = PageController(initialPage: check!);
 
-      backgroundColor: kPrimaryColor,
-      appBar: AppBar(
-          backgroundColor: kPrimaryColor,
-          elevation: 0,
-          iconTheme: IconThemeData(
-            color: Colors.black, //색변경
-          )),
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            SizedBox(
-              height: size.height * 0.86,
-              child: PageView.builder(
-                controller: _controller,
-                itemCount: widget.date_list.length,
-                itemBuilder: (BuildContext context, i) {
-                  return Calendar_detail(
-                      date_time: widget.date_list[i]!.datetime);
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+    Size size = MediaQuery.of(context).size;
+
+    return Scaffold(
+        backgroundColor: kPrimaryColor,
+        appBar: AppBar(
+            backgroundColor: kPrimaryColor,
+            elevation: 0,
+
+            iconTheme: IconThemeData(
+              color: Colors.black, //색변경
+            )),
+        body: PageView.builder(
+          controller: _controller,
+          itemCount: widget.date_list.length,
+          itemBuilder: (BuildContext context, i) {
+            return Calendar_detail(
+
+              check: i,
+              //fun: refresh(context),
+             // img_obj: img_server[i],
+              date_time: widget.date_list[i]!.datetime,
+              remember_year: widget.year,
+              remember_date_list: widget.date_list,
+              remember_datetime: widget.datetime,
+              remember_month: widget.month,
+            );
+          },
+        ));
   }
 }

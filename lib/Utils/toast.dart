@@ -14,7 +14,7 @@ void showtoast(String message) async {
 
 showAlertDialog(BuildContext context, String title, String content) {
   // set up the AlertDialog
-  Widget okButton = FlatButton(
+  Widget okButton = TextButton(
     child: Text("확인"),
     onPressed: () {
       Navigator.pop(context);

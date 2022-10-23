@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:animated_check/animated_check.dart';
 import 'package:gilog/MVP/View/Pages/frame.dart';
 import 'package:gilog/Utils/constants.dart';
 import 'package:page_transition/page_transition.dart';
@@ -31,6 +30,7 @@ class _Deliver_Finish_ScreenState extends State<Deliver_Finish_Screen>  with Tic
 
   @override
   void dispose() {
+
     scaleController.dispose();
     checkController.dispose();
     super.dispose();
@@ -46,13 +46,17 @@ class _Deliver_Finish_ScreenState extends State<Deliver_Finish_Screen>  with Tic
 
       body: InkWell(
         onTap: (){
-          Navigator.push(
-              context,
-              PageTransition(
-                  type: PageTransitionType.fade,
-                  child: Frame_Screen(Login_method: null,
+         // Navigator.pushNamedAndRemoveUntil(context, '/frame', (route) => false);
+          Navigator.pushAndRemoveUntil(context,  MaterialPageRoute(builder: (context) => Frame_Screen(  Login_method: null)), (route) => false);
 
-                  )));
+
+          // Navigator.push(
+          //     context,
+          //     PageTransition(
+          //         type: PageTransitionType.fade,
+          //         child: Frame_Screen(Login_method: null,
+          //
+          //         )));
         },
         child: SingleChildScrollView(
           child: Column(

@@ -24,10 +24,99 @@ class Login_Screen extends StatefulWidget {
 }
 
 class _Login_ScreenState extends State<Login_Screen> {
+
+  WebViewController? _controller;
+
   @override
   void initState() {
     // TODO: implement initState
+    check_login();
     super.initState();
+  }
+
+  void check_login()async{
+    final prefs = await SharedPreferences.getInstance();
+    // counter 키에 해당하는 데이터 읽기를 시도합니다. 만약 존재하지 않는 다면 0을 반환합니다.
+    final login_check = prefs.getString('login_method');
+
+    var return_logout_check = await prefs.getString("logout_check");
+
+    if(return_logout_check == null){
+      if (login_check == "kakao") {
+        print("HFDGHFG");
+        const String _REST_API_KEY =
+            "ee4ee61f1ea69f5a8d5f5924343083f7";
+
+        const String _REDIRECT =
+            "http://ec2-43-200-33-232.ap-northeast-2.compute.amazonaws.com:8080/api/oauth2/code/kakao";
+
+        final _host = "https://kauth.kakao.com";
+        final _url =
+            "/oauth/authorize?client_id=${_REST_API_KEY}&redirect_uri=${_REDIRECT}&response_type=code";
+        await Navigator.of(context).push(MaterialPageRoute(
+            builder: (BuildContext context) => Scaffold(
+              body: WebView(
+                javascriptMode:
+                JavascriptMode.unrestricted,
+                initialUrl: _host + _url,
+                onWebViewCreated: (WebViewController
+                webviewController) {
+                  _controller = webviewController;
+                },
+                javascriptChannels: Set.from([
+                  JavascriptChannel(
+                      name: "JavaScriptChannel",
+                      onMessageReceived:
+                          (JavascriptMessage result) {
+                        print(result.message);
+
+                        if (result.message != null) {
+                          Http_Presenter()
+                              .set_token(result.message);
+                          Provider.of<User_Http>(context,
+                              listen: false)
+                              .get_user_info(
+                              result.message,
+                              context);
+                          Navigator.of(context)
+                              .pushAndRemoveUntil(
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      Frame_Screen(
+                                        Login_method:
+                                        'kakao',
+                                      )),
+                                  (Route r) => false);
+                          return;
+                        }
+                        Navigator.of(context).pop();
+                        return;
+                      }),
+                ]),
+              ),
+            )));
+
+        //var token = await Http_Presenter().read_token();
+        //await Provider.of<User_Http>(context, listen: false).get_user_info(token,context);
+      }
+      if (login_check == "apple") {
+        signInWithApple();
+
+
+
+      } else {
+        return;
+      }
+    }else{
+      return;
+
+    }
+
+
+
+
+
+
   }
 
   signInWithApple() async {
@@ -64,8 +153,6 @@ class _Login_ScreenState extends State<Login_Screen> {
 
   @override
   Widget build(BuildContext context) {
-    WebViewController? _controller;
-
     Size size = MediaQuery.of(context).size;
     return WillPopScope(
       onWillPop: () async => false,
@@ -153,7 +240,6 @@ class _Login_ScreenState extends State<Login_Screen> {
                                             if (result.message != null) {
                                               Http_Presenter()
                                                   .set_token(result.message);
-                                              //http user get
 
                                               Navigator.of(context)
                                                   .pushAndRemoveUntil(

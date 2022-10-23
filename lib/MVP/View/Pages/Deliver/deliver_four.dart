@@ -7,9 +7,12 @@ import 'package:gilog/MVP/View/Pages/frame.dart';
 import 'package:gilog/Utils/constants.dart';
 import 'package:gilog/Utils/toast.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:provider/provider.dart';
 
 import '../../../../Utils/calendar_utils/datetime.dart';
+import '../../../Model/user.dart';
 import '../../../Presenter/Http/deliver_http.dart';
+import '../../../Presenter/Http/user_http.dart';
 import 'deliver_finish.dart';
 
 class Deliver_Four_Screen extends StatefulWidget {
@@ -45,6 +48,12 @@ class _Deliver_Four_Screen extends State<Deliver_Four_Screen> {
     super.initState();
   }
 
+  @override
+  void dispose(){
+    _destination_controller.dispose();
+    super.dispose();
+  }
+
   Calculate_price() {
     if (widget.book_page == 14) {
       total_price = 4900 * (widget.book_count!.toInt());
@@ -66,6 +75,7 @@ class _Deliver_Four_Screen extends State<Deliver_Four_Screen> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    Gilog_User? user = Provider.of<User_Http>(context).gilog_user;
 
     return Scaffold(
       backgroundColor: kPrimaryColor,
@@ -158,7 +168,7 @@ class _Deliver_Four_Screen extends State<Deliver_Four_Screen> {
                   Padding(
                     padding: const EdgeInsets.only(left: 10.0, bottom: 10),
                     child: Text(
-                      "주문자: 쭈구밍",
+                      "주문자: ${user!.nickname}",
                       style: TextStyle(fontFamily: "gilogfont", fontSize: 21),
                     ),
                   ),
@@ -258,11 +268,12 @@ class _Deliver_Four_Screen extends State<Deliver_Four_Screen> {
               padding: const EdgeInsets.all(14.0),
               child: InkWell(
                 onTap: () async {
-                  print(_destination_controller.text == "");
+
                   if (_destination_controller.text == "") {
                     showAlertDialog(context, "알림", "배송지 정보를 입력해주세요");
                   } else {
                     filter_string();
+
                     var token = await Http_Presenter().read_token();
                     //  showAlertDialog(context,"주문이 완료 되었습니다.","주문 정보는 마이페이지 에서 확인할 수 있습니다.");
                     var test = await Deliver_Http().post_deliver_info(
@@ -273,14 +284,16 @@ class _Deliver_Four_Screen extends State<Deliver_Four_Screen> {
                         total_price,
                         _destination_controller.text,
                         token);
+
                     if (test == true) {
-                      print("성공");
+
                       Navigator.push(
                           context,
                           PageTransition(
                               type: PageTransitionType.fade,
                               child: Deliver_Finish_Screen()));
                     } else {
+                      showAlertDialog(context, "네트워크 오류", "알수 없는 오류");
                       print("실패");
                     }
                   }

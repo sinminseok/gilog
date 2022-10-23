@@ -6,6 +6,7 @@ import 'package:gilog/Utils/toast.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../../Local_DB/db.dart';
 import '../../../../Utils/constants.dart';
 import '../../../Presenter/Http/user_http.dart';
 import '../../Account/login.dart';
@@ -85,6 +86,14 @@ class _Resign_PageState extends State<Resign_Page> {
                       var return_value = await User_Http().resign(token, context);
 
                       await Http_Presenter().break_token();
+                      DBHelper sd = DBHelper();
+                      sd.database;
+                      var data = await sd.posts();
+                      // data.clear();
+                      // print(data);
+                      for(int i=0; i<data.length ;i++){
+                        sd.deletePOST(data[i].id);
+                      }
 
                       showtoast("회원 탈퇴가 완료 되었습니다.");
                       Navigator.push(

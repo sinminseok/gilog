@@ -15,6 +15,7 @@ import '../../../Utils/toast.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 import '../../Presenter/Http/http_presenter.dart';
+import '../../Presenter/Http/user_http.dart';
 import '../Pages/Deliver/deliver_finish.dart';
 import '../Pages/frame.dart';
 import 'login.dart';
@@ -42,6 +43,11 @@ class _Login_Oauth_Screen extends State<Login_Oauth_Screen> {
     // TODO: implement initState
     check_before_signup();
     super.initState();
+  }
+
+  @override
+  void dispose(){
+    super.dispose();
   }
 
   @override
@@ -131,24 +137,47 @@ class _Login_Oauth_Screen extends State<Login_Oauth_Screen> {
                                       JavascriptChannel(
                                           name: "JavaScriptChannel",
                                           onMessageReceived:
-                                              (JavascriptMessage result) {
-                                            print(result.message);
+                                              (JavascriptMessage result) async{
 
-                                            if (result.message != null) {
+
+                                            if (result.message != null){
                                               Http_Presenter()
                                                   .set_token(result.message);
-                                              //http user get
 
-                                              Navigator.of(context)
-                                                  .pushAndRemoveUntil(
-                                                      MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              Profile_Setting(
-                                                                login_method:
-                                                                    'kakao',
-                                                              )),
-                                                      (Route r) => false);
-                                              return;
+
+                                              var toekken =await Http_Presenter().read_token();
+
+                                              await Http_Presenter().get_server_data(result.message,context);
+
+
+
+                                              //http user get
+                                              var return_user = await Provider.of<User_Http>(context, listen: false)
+                                                  .get_user_info(result.message, context);
+                                              if(return_user == null){
+                                                Navigator.of(context)
+                                                    .pushAndRemoveUntil(
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            Profile_Setting(
+                                                              login_method:
+                                                              'kakao',
+                                                            )),
+                                                        (Route r) => false);
+                                                return;
+                                              }else{
+                                                Navigator.of(context)
+                                                    .pushAndRemoveUntil(
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            Frame_Screen(
+                                                            Login_method: 'kakao',
+                                                            )),
+                                                        (Route r) => false);
+                                                return;
+                                              }
+
+
                                             }
                                             Navigator.of(context).pop();
                                             return;
@@ -233,6 +262,8 @@ class _Login_Oauth_Screen extends State<Login_Oauth_Screen> {
   }
 
   signInWithApple() async {
+
+
     // Request credential for the currently signed in Apple account.
     final appleCredential = await SignInWithApple.getAppleIDCredential(
       scopes: [
@@ -246,15 +277,37 @@ class _Login_Oauth_Screen extends State<Login_Oauth_Screen> {
 
     if (jwt_apple != null) {
       Http_Presenter().set_token(jwt_apple);
+      var toekken =await Http_Presenter().read_token();
 
-      Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(
-              builder: (context) => Profile_Setting(
-                    login_method: 'apple',
-                  )),
-          (Route r) => false);
 
-      return;
+      var user_return = await Provider.of<User_Http>(context, listen: false)
+          .get_user_info(jwt_apple, context);
+
+
+
+      await Http_Presenter().get_server_data(jwt_apple,context);
+
+
+      if(user_return == null){
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(
+                builder: (context) => Profile_Setting(
+                  login_method: 'apple',
+                )),
+                (Route r) => false);
+
+        return;
+      }else{
+        Navigator.push(
+            context,
+            PageTransition(
+                type: PageTransitionType.fade,
+                child: Frame_Screen(
+                  Login_method: 'apple',
+                )));
+      }
+
+
     } else {
       showAlertDialog(context, "로그인 실패", "다시 한번 시도해주세요");
     }

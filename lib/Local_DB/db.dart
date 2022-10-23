@@ -9,15 +9,18 @@ class DBHelper {
 
   Future<Database> get database async {
     if (_db != null) return _db;
+
     _db = openDatabase(
       join(await getDatabasesPath(), 'POSTS.db'),
+      //Db에 테이블이 없으면 생성
       onCreate: (db, version) {
         return db.execute(
-          "CREATE TABLE POSTS(id INTEGER PRIMARY KEY,question TEXT,datetime TEXT,content TE XT,image_url BLOB)",
+          "CREATE TABLE POSTS(id INTEGER PRIMARY KEY,question TEXT,datetime TEXT,content TE XT,image_url String)",
         );
       },
       version: 1,
     );
+
     return _db;
   }
 
@@ -29,6 +32,9 @@ class DBHelper {
       post.toMap(),
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
+
+    print("success");
+
   }
 
   Future<List<POST>> posts() async {
@@ -60,7 +66,7 @@ class DBHelper {
     );
   }
 
-  Future<void> deletePOST(int id) async {
+  Future<void> deletePOST(int? id) async {
     final db = await database;
 
     await db.delete(

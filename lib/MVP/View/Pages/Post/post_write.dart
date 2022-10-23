@@ -24,7 +24,7 @@ import '../../../Model/message.dart';
 class Post_Write extends StatefulWidget {
   String? question;
   File? image_file;
-  Uint8List? image_url;
+  String? image_url;
 
   Post_Write({required this.question, this.image_file, this.image_url});
 
@@ -43,6 +43,7 @@ class _Post_WriteState extends State<Post_Write> {
   @override
   void initState() {
     datetime = DateTime.now().toString().substring(0, 10);
+    print(datetime);
     chekc_today_write();
     super.initState();
   }
@@ -65,15 +66,21 @@ class _Post_WriteState extends State<Post_Write> {
 
   @override
   void dispose() {
+    datetime = null;
+    _content_controller.dispose();
+    messages = [];
+    check_id = null;
+
     // TODO: implement dispose
     // check_today_WRITE == true ? print("이미 기록함 ㅅㄱ") : sub_controller_text();
     super.dispose();
   }
+
   bool? onTapPressed = false;
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-
 
     return Scaffold(
         backgroundColor: kPrimaryColor,
@@ -85,21 +92,25 @@ class _Post_WriteState extends State<Post_Write> {
               SizedBox(
                 width: size.width * 0.03,
               ),
-              Text(
-                datetime,
-                style: TextStyle(
-                    fontFamily: "gilogfont", fontSize: 28, color: Colors.black),
+              InkWell(
+                onTap: (){
+                  print(datetime);
+                },
+                child: Text(
+                  datetime,
+                  style: TextStyle(
+                      fontFamily: "gilogfont", fontSize: 28, color: Colors.black),
+                ),
               ),
               SizedBox(
                 width: size.width * 0.13,
               ),
               InkWell(
                 onTap: () {
-                  check_today_WRITE == true
-                      ? print("이미 기록했습니다.")
-                      : onTapPressed == true
-                          ? null
-                          : sub_controller_text(context);
+                  sub_controller_text(context);
+                  // check_today_WRITE == true
+                  //     ? showtoast("오늘은 이미 기록했습니다!")
+                  //     : sub_controller_text(context);
                 },
                 child: Container(
                   width: size.width * 0.21,
@@ -135,7 +146,7 @@ class _Post_WriteState extends State<Post_Write> {
                   padding: const EdgeInsets.all(8.0),
                   child: Container(
                       width: size.width * 0.15,
-                      child: Image.asset("assets/images/yellow_icon.psd")),
+                      child: Image.asset("assets/images/smile_png.png")),
                 ),
                 Container(
                   width: size.width * 0.7,
@@ -198,6 +209,8 @@ class _Post_WriteState extends State<Post_Write> {
                 ),
                 height: size.height * 0.08,
                 child: TextField(
+                  maxLines: 10,
+                  textInputAction: TextInputAction.done,
                   controller: _content_controller,
                   decoration: InputDecoration(
                     contentPadding: EdgeInsets.only(left: 20, top: 20),
@@ -239,12 +252,8 @@ class _Post_WriteState extends State<Post_Write> {
   }
 
   void sub_controller_text(context) {
-    String test = "";
-    print(messages.length);
 
-    setState(() {
-      onTapPressed = true;
-    });
+    String test = "";
 
     if (messages.length == 0) {
       return showAlertDialog(context, "알림", "내용을 입력해주세요");
@@ -252,6 +261,7 @@ class _Post_WriteState extends State<Post_Write> {
       for (var i = 0; messages.length > i; i++) {
         test += "${messages[i].text}\n";
       }
+
       final_text = test;
       savedb(context);
     }
@@ -277,12 +287,17 @@ class _Post_WriteState extends State<Post_Write> {
     //return value로 받아온 값을 담아 다음 요청에 이미지와 함께 보냄 영솔이가 이렇게 보내라함 난 모름 ㅋㅋ
     var return_value = await Http_Presenter()
         .post_gilog_data(datetime, final_text, widget.question, token, context);
+    if(return_value == null){
+       showtoast("오늘 이미 기록했습니다");
+    }
     var check_return_bool = await Http_Presenter()
         .post_gilog_imageData(widget.image_file, return_value, token, context);
-
     if (check_return_bool == true) {
+
       DBHelper sd = DBHelper();
+      //일단 지워보고 추후 다시 리백
       sd.database;
+
       check_id_fun();
 
       var fido = POST(
@@ -290,10 +305,10 @@ class _Post_WriteState extends State<Post_Write> {
         question: widget.question,
         datetime: datetime,
         content: final_text,
-        image_url: widget.image_url,
+        image_url: "data",
       );
 
-      await sd.insertPOST(fido);
+     await sd.insertPOST(fido);
 
       Navigator.push(
           context,

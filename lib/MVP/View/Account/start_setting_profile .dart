@@ -26,14 +26,24 @@ class Profile_Setting extends StatefulWidget {
 }
 
 class _Profile_SettingState extends State<Profile_Setting> {
-  final ImagePicker _picker = ImagePicker();
+ // final ImagePicker _picker = ImagePicker();
   final TextEditingController _username_controller = TextEditingController();
-  final TextEditingController _nickname_controller = TextEditingController();
+
   final TextEditingController _age_controller = TextEditingController();
   String? gender = "";
 
   PickedFile? _image;
   var imim;
+  List<String> dropdownList = [ '비공개','남자', '여자'];
+  String? selectedDropdown;
+
+  @override
+  void dispose(){
+    _image= null;
+    _username_controller.dispose();
+    _age_controller.dispose();
+    super.dispose();
+  }
 
   //이미지 선택 함수
   Future getImageFromGallery() async {
@@ -62,7 +72,6 @@ class _Profile_SettingState extends State<Profile_Setting> {
     } else {
       var fido = User_profile_image(id: 1, profile_image: imim);
 
-      print(fido);
 
       await sd.insertIMG(fido);
     }
@@ -187,44 +196,40 @@ class _Profile_SettingState extends State<Profile_Setting> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Container(
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Colors.purple),
+                          borderRadius: BorderRadius.all(Radius.circular(10))
+                      ),
                       width: size.width * 0.7,
-                      child: DropdownButtonFormField<String?>(
-                        decoration: InputDecoration(
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.0)),
-                            borderSide:
-                                BorderSide(width: 1, color: Colors.purple),
+                      height: size.height*0.07,
+
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: DropdownButton(
+                          isExpanded:true,
+                          icon: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Icon(Icons.keyboard_arrow_down_sharp),
                           ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.0)),
-                            borderSide:
-                                BorderSide(width: 1, color: Colors.purple),
-                          ),
-                          border: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.0)),
-                          ),
-                          labelText: '성별',
-                          floatingLabelBehavior: FloatingLabelBehavior.always,
-                          labelStyle:
-                              TextStyle(fontSize: 15, color: Colors.black),
+
+                          underline: SizedBox.shrink(),
+
+                          value: selectedDropdown,
+                          items: dropdownList.map((String item) {
+                            return DropdownMenuItem<String>(
+
+
+                              child: Text('$item'),
+                              value: item,
+                            );
+                          }).toList(),
+                          onChanged: (dynamic value) {
+                            setState(() {
+                              selectedDropdown = value;
+                              gender = value;
+                            });
+                          },
                         ),
-                        // underline: Container(height: 1.4, color: Color(0xffc0c0c0)),
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            gender = newValue;
-                          });
-                          print(newValue);
-                        },
-                        items: ["비공개", '남자', '여자']
-                            .map<DropdownMenuItem<String?>>((String? i) {
-                          return DropdownMenuItem<String?>(
-                            value: i,
-                            child: Text({'남자': '남성', '여자': '여성'}[i] ?? '비공개'),
-                          );
-                        }).toList(),
                       ),
                     ),
                   ),
@@ -233,18 +238,20 @@ class _Profile_SettingState extends State<Profile_Setting> {
                   ),
                   InkWell(
                     onTap: () async {
-                      if (_username_controller.text == "") {
+                      if (_username_controller.text == "" || selectedDropdown == null) {
                         print(_age_controller.text);
 
                         showtoast("정보를 모두 입력해주세요");
                       } else {
                         savedb();
+                        print(gender);
 
                         var token = await Http_Presenter().read_token();
                         await User_Http().post_user_info(token,
                             _username_controller.text, 10, gender, context);
                         await Provider.of<User_Http>(context, listen: false)
                             .get_user_info(token, context);
+
                         //Http 회원 정보 등록
 
                         Navigator.push(

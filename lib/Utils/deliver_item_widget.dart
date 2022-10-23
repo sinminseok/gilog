@@ -229,7 +229,7 @@ class _Deliver_ItemState extends State<Deliver_Item> {
                       Padding(
                         padding: const EdgeInsets.only(top: 10.0),
                         child: Center(
-                          child: RaisedButton(
+                          child: ElevatedButton(
                               onPressed: () {
                                 Navigator.of(context).pop();
                               },
@@ -237,7 +237,7 @@ class _Deliver_ItemState extends State<Deliver_Item> {
                                 "닫기",
                                 style: TextStyle(color: Colors.white),
                               ),
-                              color: Colors.grey),
+                              ),
                         ),
                       )
                     ],

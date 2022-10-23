@@ -26,6 +26,14 @@ class _Deliver_Two_Screen extends State<Deliver_Two_Screen> {
   bool check_count_four = false;
   bool check_count_five = false;
 
+  @override void dispose() {
+    // TODO: implement dispose
+    print("dispose deliver2");
+
+    super.dispose();
+  }
+
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;

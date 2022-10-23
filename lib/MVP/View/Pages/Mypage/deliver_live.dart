@@ -31,6 +31,12 @@ class _Deliver_liver_pageState extends State<Deliver_liver_page> {
     super.initState();
   }
 
+  @override
+  void dispose(){
+    data=[];
+    super.dispose();
+  }
+
   init_void() async {
     var token = await Http_Presenter().read_token();
     data = await Deliver_Http().get_item_list(token, context);
@@ -378,15 +384,20 @@ class _Deliver_liver_pageState extends State<Deliver_liver_page> {
                       width: size.width * 1,
                       height: size.height * 0.62,
                       color: Colors.grey.shade200,
-                      child: ListView.builder(
-                          itemCount: data!.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return Deliver_Item(
-                                id: data![index].id,
-                                prcie: data![index].price,
-                                datetime: data![index].orderDate,
-                            payState: data![index].payState,);
-                          })),
+                      child: Align(
+                        alignment: Alignment.topCenter,
+                        child: ListView.builder(
+                            shrinkWrap: true,
+                            reverse : true,
+                            itemCount: data!.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return Deliver_Item(
+                                  id: data![index].id,
+                                  prcie: data![index].price,
+                                  datetime: data![index].orderDate,
+                              payState: data![index].payState,);
+                            }),
+                      )),
                 ],
               );
             }

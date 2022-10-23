@@ -48,6 +48,8 @@ class User_Http with ChangeNotifier {
     }
   }
 
+
+
   //http userinformation 가져오기
   Future<Gilog_User?> get_user_info(token, context) async {
     var res = await http.get(Uri.parse(Http_URL().get_user_info), headers: {
@@ -56,17 +58,16 @@ class User_Http with ChangeNotifier {
       'Authorization': 'Bearer $token',
     });
 
-
-
     final decodeData = utf8.decode(res.bodyBytes);
     final data = jsonDecode(decodeData);
 
 
     //statusCode 확인해볼것
     if (res.statusCode == 200) {
+      if(data['nickname'] == null){
+        return null;
+      }
       _gilog_user = Gilog_User.fromJson(data);
-      print("G");
-      print(_gilog_user!.username);
       notifyListeners();
       return _gilog_user;
     }
@@ -84,6 +85,12 @@ class User_Http with ChangeNotifier {
 
   //http 사용자 정보 수정
   post_user_info(token, name, age, gender, context) async {
+
+
+    if(gender == "비공개"){
+      gender = "비공";
+    }
+
     var res = await http.post(Uri.parse(Http_URL().post_user_info),
         headers: {
           'Content-Type': 'application/json',
@@ -95,12 +102,10 @@ class User_Http with ChangeNotifier {
     final decodeData = utf8.decode(res.bodyBytes);
     final data = jsonDecode(decodeData);
 
-    print("data_GGG");
-    print(data);
 
     //statusCode 확인해볼것
     if (res.statusCode == 200) {
-      return showtoast("정보 등록 완료");
+      return "data";
     }
     if (res.statusCode == 403) {
       Navigator.push(
@@ -108,6 +113,7 @@ class User_Http with ChangeNotifier {
           PageTransition(
               type: PageTransitionType.rightToLeftWithFade,
               child: Login_Screen()));
+      return null;
     } else {
       return null;
     }
@@ -125,6 +131,7 @@ class User_Http with ChangeNotifier {
 
     final decodeData = utf8.decode(res.bodyBytes);
     final data = jsonDecode(decodeData);
+    print(data);
 
     //statusCode 확인해볼것
     if (res.statusCode == 200) {

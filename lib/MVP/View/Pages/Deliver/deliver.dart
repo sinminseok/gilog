@@ -15,15 +15,24 @@ class Deliver_Screen extends StatefulWidget {
 }
 
 class _Deliver_ScreenState extends State<Deliver_Screen> {
+
   bool check_photo = false;
   bool check_write = false;
 
   final List<String> images = <String>['review1.png','review2.png'];
 
+  @override void dispose() {
+    // TODO: implement dispose
+    print("dispose deliver1");
+
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
+
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: kPrimaryColor,

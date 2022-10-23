@@ -13,12 +13,12 @@ if (flutterRoot == null) {
 
 def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
 if (flutterVersionCode == null) {
-    flutterVersionCode = '1'
+    flutterVersionCode = '3'
 }
 
 def flutterVersionName = localProperties.getProperty('flutter.versionName')
 if (flutterVersionName == null) {
-    flutterVersionName = '1.2.1'
+    flutterVersionName = '2.0.5'
 }
 
 apply plugin: 'com.android.application'
@@ -38,6 +38,10 @@ if (keystorePropertiesFile.exists()) {
             sourceCompatibility JavaVersion.VERSION_1_8
             targetCompatibility JavaVersion.VERSION_1_8
         }
+        lintOptions {
+            checkReleaseBuilds false
+            abortOnError false
+        }
 
         kotlinOptions {
             jvmTarget = '1.8'
@@ -51,10 +55,10 @@ if (keystorePropertiesFile.exists()) {
             // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
             applicationId "com.sooyoung.gilog"
             minSdkVersion 21
-            targetSdkVersion flutter.targetSdkVersion
+            targetSdkVersion 30
             //flutter.targetSdkVersion
-            versionCode 4
-            versionName "1.2.1"
+            versionCode 13
+            versionName "2.0.5"
         }
 
         signingConfigs {

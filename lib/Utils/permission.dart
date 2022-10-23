@@ -13,7 +13,7 @@ class Permission_handler{
             return AlertDialog(
               content: Text("권한 설정을 확인해주세요."),
               actions: [
-                FlatButton(
+                TextButton(
                     onPressed: () {
                       openAppSettings(); // 앱 설정으로 이동
                     },
@@ -37,7 +37,7 @@ class Permission_handler{
             return AlertDialog(
               content: Text("권한 설정을 확인해주세요."),
               actions: [
-                FlatButton(
+                TextButton(
                     onPressed: () {
                       openAppSettings(); // 앱 설정으로 이동
                     },

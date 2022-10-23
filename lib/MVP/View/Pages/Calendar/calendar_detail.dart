@@ -1,21 +1,43 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
-import 'dart:convert';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:gilog/Local_DB/Utility.dart';
 import 'package:gilog/MVP/Model/post.dart';
+import 'package:gilog/MVP/View/Pages/Calendar/calendar_edit.dart';
 import 'package:gilog/Utils/constants.dart';
 import 'package:gilog/Utils/toast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:math' as math;
+import 'package:extended_image/extended_image.dart';
+import 'package:page_transition/page_transition.dart';
+import 'package:path/path.dart';
 
 import '../../../../Local_DB/db.dart';
 import '../../../Presenter/Http/http_presenter.dart';
 
 class Calendar_detail extends StatefulWidget {
+  int? check;
+ // var img_obj;
+   //Function? fun;
   String? date_time;
+  List<POST?> remember_date_list = [];
+  String? remember_datetime;
+  int? remember_month;
+  int? remember_year;
 
-  Calendar_detail({required this.date_time});
+  Calendar_detail(
+      {
+        required this.check,
+       // required this.fun,
+      //  required this.img_obj,
+        required this.date_time,
+      required this.remember_date_list,
+      required this.remember_datetime,
+      required this.remember_month,
+      required this.remember_year});
 
   @override
   _Calendar_detailState createState() => _Calendar_detailState();
@@ -23,48 +45,47 @@ class Calendar_detail extends StatefulWidget {
 
 class _Calendar_detailState extends State<Calendar_detail> {
   POST? this_post;
-  bool check_update = false;
-  TextEditingController _content_controller = TextEditingController();
 
-  PickedFile? _image;
-  bool bottom_sheet_controller = false;
-  var imim;
+  // Future? myFuture;
 
   @override
   void initState() {
-    chekc_today_write();
+    get_datetime_post();
     super.initState();
   }
 
-  //이미지 선택 함수
-  Future getImageFromGallery() async {
-    // for gallery
-    var image =
-        await ImagePicker.platform.pickImage(source: ImageSource.gallery);
+  @override
+  void dispose() {
+
+    super.dispose();
+  }
+
+  var token;
+  var img_server;
+
+  //디스크에 저장된 기록 가져오는 함수
+  get_datetime_post() async {
     setState(() {
-      _image = image!;
+    //  widget.img_obj;
     });
-    imim = convert_img();
-  }
 
-  //이미지 Uint8 변환 함수
-  convert_img() async {
-    Uint8List test = await _image!.readAsBytes();
-    imim = test;
-    return test;
-  }
 
-  chekc_today_write() async {
+    token = await Http_Presenter().read_token();
+    // _content_controller!.dispose();
     DBHelper sd = DBHelper();
     sd.database;
     var data = await sd.posts();
+
     for (var i = 0; i < data.length; i++) {
       if (data[i].datetime == widget.date_time) {
         this_post = data[i];
       }
     }
-    _content_controller.text = this_post!.content.toString();
-    return this_post;
+    img_server = await Http_Presenter().get_server_image2(token, context);
+
+    // token = await Http_Presenter().read_token();
+
+    return img_server;
   }
 
   double degrees = 90;
@@ -77,7 +98,7 @@ class _Calendar_detailState extends State<Calendar_detail> {
       backgroundColor: kPrimaryColor,
       body: SingleChildScrollView(
         child: FutureBuilder(
-          future: chekc_today_write(),
+          future: get_datetime_post(),
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             if (snapshot.connectionState == false) {
               return Center(child: CircularProgressIndicator());
@@ -85,7 +106,6 @@ class _Calendar_detailState extends State<Calendar_detail> {
             if (snapshot.hasData == false) {
               return Center(child: CircularProgressIndicator());
             }
-
             //error가 발생하게 될 경우 반환하게 되는 부분
             if (snapshot.hasError) {
               return Center(
@@ -96,42 +116,40 @@ class _Calendar_detailState extends State<Calendar_detail> {
             } else {
               return Column(
                 children: [
-                  Text(
-                    "${widget.date_time} 기-록",
-                    style: TextStyle(fontFamily: "gilogfont", fontSize: 24),
+                  InkWell(
+                    onTap: (){
+                      print(img_server);
+                    },
+                    child: Text(
+                      "${widget.date_time} 기-록",
+                      style: TextStyle(fontFamily: "gilogfont", fontSize: 24),
+                    ),
                   ),
-                  check_update == true
-                      ? InkWell(
-                          onTap: () {
-                            getImageFromGallery();
-                          },
-                          child: _image != null
-                              ? Container(
-                                  width: size.width * 1,
-                                  height: size.height * 0.4,
-                                  child: Image.file(File(_image!.path)))
-                              : Container(
-                                  width: size.width * 1,
-                                  height: size.height * 0.4,
-                                  child: Image.memory(
-                                    this_post!.image_url as Uint8List,
-                                    fit: BoxFit.fitWidth,
-                                  ),
-                                ),
-                        )
-                      : Container(
-                          width: size.width * 1,
-                          height: size.height * 0.4,
-                          child: Image.memory(
-                            this_post!.image_url as Uint8List,
-                            fit: BoxFit.fitWidth,
-                          ),
-                        ),
+                  Container(
+                      height: size.height*0.55,
+                      child: Utility.networkimg_detail(img_server[widget.check],token,size)),
+
                   InkWell(
                     onTap: () {
-                      print(check_update);
-                      setState(() {
-                        check_update = !check_update;
+
+
+                      Navigator.push(
+                          context,
+                          PageTransition(
+                              type: PageTransitionType.fade,
+                              child: Calendar_Edit(
+                                img_obj: img_server[widget.check],
+                                check:widget.check!,
+                                this_post: this_post,
+                                date_time: widget.date_time,
+                                remember_date_list: widget.remember_date_list,
+                                remember_datetime: widget.remember_datetime,
+                                remember_month: widget.remember_month,
+                                remember_year: widget.remember_year,
+                              ))).then((value) {
+                        setState(() {
+                          // refresh state of Page1
+                        });
                       });
                     },
                     child: Stack(
@@ -172,7 +190,7 @@ class _Calendar_detailState extends State<Calendar_detail> {
                               child: Container(
                                 width: size.width * 0.07,
                                 child: Image.asset(
-                                    "assets/images/yellow_pencil_icon.psd"),
+                                    "assets/images/pencil_yellowpng.png"),
                               ),
                             ),
                           ],
@@ -180,171 +198,23 @@ class _Calendar_detailState extends State<Calendar_detail> {
                       ],
                     ),
                   ),
-                  check_update == true
-                      ? Padding(
-                          padding: const EdgeInsets.all(15.0),
-                          child: SizedBox(
-                              width: size.width * 0.9,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    child: TextField(
-
-                                      maxLines: 5,
-                                      controller: _content_controller,
-                                      decoration: InputDecoration(
-                                        hintText: "${this_post!.content}",
-                                        hintStyle: TextStyle(
-                                            fontFamily: "gilogfont",
-                                            fontSize: 20),
-                                        border: InputBorder.none,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              )),
-                        )
-                      : Padding(
-                          padding: const EdgeInsets.all(15.0),
-                          child: SizedBox(
-                              width: size.width * 0.9,
-                              child: SingleChildScrollView(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "${this_post!.content}",
-                                      style: TextStyle(
-                                          fontFamily: "gilogfont",
-                                          fontSize: 20),
-                                    ),
-                                  ],
-                                ),
-                              )),
-                        ),
-                  check_update != true
-                      ? Container()
-                      : InkWell(
-                          onTap: () async {
-                            //(datetime, content, question, token, context
-                            print(_image);
-                            print(_content_controller.text);
-
-                            //아무런 변경이 없을때
-                            if (_content_controller.text == "" &&
-                                _image == null) {
-                              setState(() {
-                                check_update = !check_update;
-                              });
-                            } else {
-                              var token = await Http_Presenter().read_token();
-                              if(_content_controller.text == ""){
-                                return showtoast("내용을 입력해주세요");
-                              }
-                              //사진만 변경
-                              if (_image != null) {
-                                var return_value = await Http_Presenter()
-                                    .post_update_gilog(
-                                        this_post!.datetime,
-                                        _content_controller.text,
-                                        this_post!.question,
-                                        token,
-                                        context);
-
-                                var check_return_bool = await Http_Presenter()
-                                    .post_gilog_imageData(File(_image!.path),
-                                        return_value, token, context);
-
-
-                                if (check_return_bool == true) {
-
-                                  DBHelper sd = DBHelper();
-                                  sd.database;
-
-                                  var fido = POST(
-                                    id: this_post!.id,
-                                    question: this_post!.question,
-                                    datetime: this_post!.datetime,
-                                    content: _content_controller.text,
-                                    image_url: imim,
-                                  );
-
-                                  await sd.updatePOST(fido);
-
-                                  chekc_today_write();
-                                } else {
-                                  showAlertDialog(context, "알림", "네트워크 오류");
-                                }
-
-                                setState(() {
-                                  check_update = !check_update;
-                                });
-                              }
-                              if(_image == null ){
-
-                                var return_value = await Http_Presenter()
-                                    .post_update_gilog(
-                                    this_post!.datetime,
-                                    _content_controller.text,
-                                    this_post!.question,
-                                    token,
-                                    context);
-
-
-
-                                if (return_value != null) {
-                                  DBHelper sd = DBHelper();
-                                  sd.database;
-
-                                  var fido = POST(
-                                    id: this_post!.id,
-                                    question: this_post!.question,
-                                    datetime: this_post!.datetime,
-                                    content: _content_controller.text,
-                                    image_url: this_post!.image_url,
-                                  );
-
-                                  await sd.updatePOST(fido);
-
-                                  chekc_today_write();
-                                } else {
-                                  showAlertDialog(context, "알림", "네트워크 오류");
-                                }
-
-                                setState(() {
-                                  check_update = !check_update;
-                                });
-                              }
-
-
-                            }
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(0.3),
-                                    spreadRadius: 5,
-                                    blurRadius: 7,
-                                    offset: Offset(
-                                        0, 2), // changes position of shadow
-                                  ),
-                                ],
-                                color: kButtonColor),
-                            width: size.width * 0.3,
-                            height: size.height * 0.05,
-                            child: Center(
-                                child: Text(
-                              "수정하기",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontFamily: "numberfont",
-                                  fontWeight: FontWeight.bold),
-                            )),
+                  Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: SizedBox(
+                        width: size.width * 0.9,
+                        child: SingleChildScrollView(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "${this_post!.content}",
+                                style: TextStyle(
+                                    fontFamily: "gilogfont", fontSize: 20),
+                              ),
+                            ],
                           ),
-                        ),
+                        )),
+                  ),
                 ],
               );
             }

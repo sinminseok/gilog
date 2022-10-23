@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_badger/flutter_app_badger.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
 import '../../../../Utils/constants.dart';
@@ -19,17 +20,22 @@ class _Set_AlarmState extends State<Set_Alarm> with WidgetsBindingObserver {
   //기존 알림 설정 시간
   int set_hour = 8;
   int set_minute = 0;
+  bool check_alarm = false;
+
 
   final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
   @override
   void initState() {
+
     super.initState();
     Permission_handler().requestNotifcation(context);
     WidgetsBinding.instance!.addObserver(this);
     _init();
   }
+
+
 
   @override
   void dispose() {
@@ -51,6 +57,10 @@ class _Set_AlarmState extends State<Set_Alarm> with WidgetsBindingObserver {
 
   Future<void> _configureLocalTimeZone() async {
     tz.initializeTimeZones();
+  }
+
+  Future<void> cancelAllNotifications() async {
+    await _flutterLocalNotificationsPlugin.cancelAll();
   }
 
   Future<void> _initializeNotification() async {
@@ -101,11 +111,11 @@ class _Set_AlarmState extends State<Set_Alarm> with WidgetsBindingObserver {
       minutes,
     );
 
-    await _flutterLocalNotificationsPlugin.zonedSchedule(
+    await _flutterLocalNotificationsPlugin.showDailyAtTime(
       0,
       'GI_LOG',
       message,
-      scheduledDate,
+      Time(set_hour, set_minute, 0),
       NotificationDetails(
         android: AndroidNotificationDetails(
           'channel id',
@@ -120,10 +130,6 @@ class _Set_AlarmState extends State<Set_Alarm> with WidgetsBindingObserver {
           badgeNumber: 1,
         ),
       ),
-      androidAllowWhileIdle: true,
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.absoluteTime,
-      matchDateTimeComponents: DateTimeComponents.dateAndTime,
     );
   }
 
@@ -148,10 +154,14 @@ class _Set_AlarmState extends State<Set_Alarm> with WidgetsBindingObserver {
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Text("설정한 시간에 질문 알림을 받을 수 있어요!",style: TextStyle(fontSize: 18,fontFamily: "gilogfont"),),
+            child: Text(
+              "설정한 시간에 질문 알림을 받을 수 있어요!",
+              style: TextStyle(fontSize: 18, fontFamily: "gilogfont"),
+            ),
           ),
-          SizedBox(height: size.height*0.05,),
-
+          SizedBox(
+            height: size.height * 0.05,
+          ),
           Center(
             child: Container(
               height: size.height * 0.45,
@@ -169,7 +179,34 @@ class _Set_AlarmState extends State<Set_Alarm> with WidgetsBindingObserver {
             ),
           ),
           SizedBox(
-            height: size.height * 0.08,
+            height: size.height * 0.04,
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: InkWell(
+              onTap: () async {
+                setState(() {
+                  check_alarm = !check_alarm;
+                });
+                print(check_alarm);
+
+
+                await _cancelNotification();
+
+                showAlertDialog(context, "알림", "알림이 꺼졌습니다");
+              },
+              child: Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(3),
+                      color:check_alarm == false ? Colors.purple.shade200 : kButtonColor),
+                  width: size.width * 0.7,
+                  height: size.height * 0.06,
+                  child: Center(
+                      child: Text(
+                    "알림 끄기",
+                    style: TextStyle(fontSize: 21, color: Colors.white),
+                  ))),
+            ),
           ),
           InkWell(
             onTap: () async {
@@ -197,10 +234,7 @@ class _Set_AlarmState extends State<Set_Alarm> with WidgetsBindingObserver {
                 child: Center(
                     child: Text(
                   "설정 하기",
-                  style: TextStyle(
-                      fontSize: 21,
-
-                      color: Colors.white),
+                  style: TextStyle(fontSize: 21, color: Colors.white),
                 ))),
           )
         ],

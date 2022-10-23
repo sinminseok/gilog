@@ -5,14 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:gilog/Utils/constants.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 
-class SplashScreen extends StatefulWidget {
-  const SplashScreen({Key? key}) : super(key: key);
 
-  @override
-  _SplashScreenState createState() => _SplashScreenState();
-}
 
-class _SplashScreenState extends State<SplashScreen> {
+class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -26,12 +21,9 @@ class _SplashScreenState extends State<SplashScreen> {
           // Center(child: Text("당신의 일상을 기록해 보세요")),
           // Center(child: Text("기 Log",style: TextStyle(fontFamily: "gilogfont",fontSize: 43),)),
           Center(
-            child: SizedBox(
-              width: size.width*0.6,
+            child:DefaultTextStyle(
 
-              child: DefaultTextStyle(
-
-                style: TextStyle(fontFamily: "Splahfont",fontSize: 43,color: Colors.black),
+                style: TextStyle(fontFamily: "Splahfont",fontSize: 39,color: Colors.black),
                 child: Center(
                   child: AnimatedTextKit(
                     animatedTexts: [
@@ -40,10 +32,10 @@ class _SplashScreenState extends State<SplashScreen> {
                     ],
                   ),
                 ),
-              ),
+
             ),
           ),
-          SizedBox(height: size.height*0.44,),
+
 
 
         ],

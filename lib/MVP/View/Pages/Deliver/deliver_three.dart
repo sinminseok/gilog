@@ -9,9 +9,11 @@ import 'package:page_transition/page_transition.dart';
 
 import 'package:date_utils/date_utils.dart' as dt;
 
+import '../../../../Local_DB/Utility.dart';
 import '../../../../Local_DB/db.dart';
 import '../../../../Utils/toast.dart';
 import '../../../Model/post.dart';
+import '../../../Presenter/Http/http_presenter.dart';
 import '../Calendar/calendar_detail.dart';
 
 class Deliver_Three_Screen extends StatefulWidget {
@@ -77,7 +79,7 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
   List<String?> date_list = [];
 
   //로컬에 기록된 정보 img local url만 담을 함수
-  List<Uint8List?> img_list = [];
+  List<POST?> img_list = [];
 
   //로컬에 저장된 모든 POST 리스트
   List<POST?> has_data_all_POST = [];
@@ -101,12 +103,26 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
     }
   }
 
+  var token;
+  var final_list;
+
   //해당 날짜에 해당하는 날짜 가져오는 함수
 
   local_data_filter_year() async {
+    img_server = [];
+    token = await Http_Presenter().read_token();
+    img_server = await Http_Presenter()
+        .get_server_image(token, context, this_month, this_year);
+    // print(img_server);
+    // print("img_serverimg_server");
+    test_Data_list = [];
+
     DBHelper sd = DBHelper();
     sd.database;
     var data = await sd.posts();
+
+
+
     has_data_all_POST = [];
 
     for (var i = 0; i < data.length; i++) {
@@ -125,7 +141,7 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
         }
         //12,11,10
         else {
-          if (has_data_all_POST[i]!.datetime!.substring(6, 7) ==
+          if (has_data_all_POST[i]!.datetime!.substring(5, 7) ==
               this_month.toString()) {
             test_Data_list.add(has_data_all_POST[i]);
           }
@@ -135,7 +151,50 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
 
     get_date_list();
 
-    return test_Data_list;
+
+    final_list = [];
+    int j = 0;
+
+    String? filter_month;
+
+
+
+    if(this_month.toString().length == 1){
+      filter_month = "0"+this_month.toString();
+    }else{
+      filter_month = this_month.toString();
+    }
+
+    for(int i = 0 ;i < img_list.length;i++){
+      if(img_list[i]==null){
+
+      }else{
+        print(img_list[i]!.datetime);
+      }
+
+    }
+    print("HAHA");
+
+    for (int i = 0; i < img_list.length; i++) {
+
+      if (img_list[i] == null) {
+        final_list.add(null);
+      } else {
+        if (img_server!.length > j) {
+          final_list.add(img_server![j]);
+        } else {
+
+        }
+        j++;
+      }
+    }
+
+    print("GFDSGERWTE");
+    print(img_list.length);
+    print(final_list.length);
+
+
+    return final_list;
   }
 
   @override
@@ -151,6 +210,18 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
     super.initState();
   }
 
+  @override void dispose() {
+    // TODO: implement dispose
+    img_list = [];
+    has_data_all_POST = [];
+    test_Data_list = [];
+    date_list = [];
+    print("dispose deliver3");
+
+    super.dispose();
+  }
+
+
   get_datetime() {
     now = DateTime.now();
     daysinmonth = dt.DateUtils.daysInMonth(now!);
@@ -162,7 +233,9 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
   get_date_list() {
     img_list = [];
 
+
     for (var i = 0; i < daysinmonth.length; i++) {
+
       var this_date;
       this_date =
           filter_string_date(daysinmonth[i].toString().substring(8, 10));
@@ -171,11 +244,42 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
       if (test_Data_list.length == 0) {
         img_list.add(null);
       }
-
       for (var j = 0; j < test_Data_list.length; j++) {
+
         if (test_Data_list[j]!.datetime!.substring(8, 9) == "0") {
           if (this_date == test_Data_list[j]!.datetime!.substring(9, 10)) {
-            img_list.add(test_Data_list[j]!.image_url);
+            if(daysinmonth.length == 42){
+              if(0<=i && i<=7){
+                if(this_date=="26" || this_date=="27" || this_date=="28" || this_date=="29"||this_date=="30"||this_date=="31"){
+                  img_list.add(null);
+                  break;
+                }
+
+              }if(36<=i && i<=42){
+
+
+                if(this_date=="1" || this_date=="2" || this_date=="3" || this_date=="4"||this_date=="5"||this_date=="6"){
+                  img_list.add(null);
+                  break;
+                }
+              }
+            }if(daysinmonth.length == 35){
+
+              if(0<=i && i<=7){
+
+                if(this_date=="26" || this_date=="27" || this_date=="28" || this_date=="29"||this_date=="30"||this_date=="31"){
+                  img_list.add(null);
+                  break;
+                }
+
+              }if(29<=i && i<=35){
+                if(this_date=="1" || this_date=="2" || this_date=="3" || this_date=="4"||this_date=="5"||this_date=="6"){
+                  img_list.add(null);
+                  break;
+                }
+              }
+            }
+            img_list.add(test_Data_list[j]);
             break;
           } else {
             if (j == test_Data_list.length - 1) {
@@ -185,7 +289,40 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
           }
         } else {
           if (this_date == test_Data_list[j]!.datetime!.substring(8, 10)) {
-            img_list.add(test_Data_list[j]!.image_url);
+            if(daysinmonth.length == 42){
+              if(0<=i && i<=7){
+                if(i=="26" || i=="27" || i=="28" || i=="29"||i=="30"||i=="31"){
+                  img_list.add(null);
+                  break;
+                }
+
+              }if(36<=i && i<=42){
+                if(i=="1" || i=="2" || i=="3" || i=="4"||i=="5"||i=="6"){
+                  img_list.add(null);
+                  print("BBRESK");
+                  break;
+                }
+              }
+            }if(daysinmonth.length == 35){
+
+              if(0<=i && i<=7){
+
+
+                if(this_date=="26" || this_date=="27" || this_date=="28" || this_date=="29"||this_date=="30"||this_date=="31"){
+                  print("BREAK");
+                  img_list.add(null);
+                  break;
+                }
+
+              }if(29<=i && i<=35){
+                if(this_date=="1" || this_date=="2" || this_date=="3" || this_date=="4"||this_date=="5"||this_date=="6"){
+                  img_list.add(null);
+                  break;
+                }
+              }
+            }
+
+            img_list.add(test_Data_list[j]);
             break;
           } else {
             if (j == test_Data_list.length - 1) {
@@ -337,6 +474,7 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
     calendar_40 = false;
     calendar_41 = false;
   }
+  List? img_server;
 
   List<String?> filiter_list = [];
 
@@ -608,13 +746,12 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                                                                           : Container(
                                                                               width: size.width * 0.1,
                                                                               height: size.height * 0.07,
-                                                                              child: ClipRRect(
-                                                                                borderRadius: BorderRadius.circular(8.0),
-                                                                                child: Image.memory(
-                                                                                  img_list[0] as Uint8List,
-                                                                                  fit: BoxFit.cover,
-                                                                                ),
-                                                                              )),
+                                                                              child: Utility
+                                                                                  .networkimg(
+                                                                                  final_list[
+                                                                                  0],
+                                                                                  token,
+                                                                                  size)),
                                                                 ],
                                                               )),
                                                         )
@@ -685,13 +822,12 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                                                                           : Container(
                                                                               width: size.width * 0.1,
                                                                               height: size.height * 0.07,
-                                                                              child: ClipRRect(
-                                                                                borderRadius: BorderRadius.circular(8.0),
-                                                                                child: Image.memory(
-                                                                                  img_list[0] as Uint8List,
-                                                                                  fit: BoxFit.cover,
-                                                                                ),
-                                                                              )),
+                                                                              child: Utility
+                                                                                  .networkimg(
+                                                                                  final_list[
+                                                                                  0],
+                                                                                  token,
+                                                                                  size)),
                                                                 ],
                                                               )),
                                                         ),
@@ -749,13 +885,12 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                                                                           : Container(
                                                                               width: size.width * 0.1,
                                                                               height: size.height * 0.07,
-                                                                              child: ClipRRect(
-                                                                                borderRadius: BorderRadius.circular(8.0),
-                                                                                child: Image.memory(
-                                                                                  img_list[1] as Uint8List,
-                                                                                  fit: BoxFit.cover,
-                                                                                ),
-                                                                              )),
+                                                                              child: Utility
+                                                                                  .networkimg(
+                                                                                  final_list[
+                                                                                  1],
+                                                                                  token,
+                                                                                  size)),
                                                                 ],
                                                               )),
                                                         )
@@ -826,13 +961,12 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                                                                           : Container(
                                                                               width: size.width * 0.1,
                                                                               height: size.height * 0.07,
-                                                                              child: ClipRRect(
-                                                                                borderRadius: BorderRadius.circular(8.0),
-                                                                                child: Image.memory(
-                                                                                  img_list[1] as Uint8List,
-                                                                                  fit: BoxFit.cover,
-                                                                                ),
-                                                                              )),
+                                                                              child: Utility
+                                                                                  .networkimg(
+                                                                                  final_list[
+                                                                                  1],
+                                                                                  token,
+                                                                                  size)),
                                                                 ],
                                                               )),
                                                         ),
@@ -890,13 +1024,12 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                                                                           : Container(
                                                                               width: size.width * 0.1,
                                                                               height: size.height * 0.07,
-                                                                              child: ClipRRect(
-                                                                                borderRadius: BorderRadius.circular(8.0),
-                                                                                child: Image.memory(
-                                                                                  img_list[2] as Uint8List,
-                                                                                  fit: BoxFit.cover,
-                                                                                ),
-                                                                              )),
+                                                                              child: Utility
+                                                                                  .networkimg(
+                                                                                  final_list[
+                                                                                  2],
+                                                                                  token,
+                                                                                  size)),
                                                                 ],
                                                               )),
                                                         )
@@ -967,13 +1100,12 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                                                                           : Container(
                                                                               width: size.width * 0.1,
                                                                               height: size.height * 0.07,
-                                                                              child: ClipRRect(
-                                                                                borderRadius: BorderRadius.circular(8.0),
-                                                                                child: Image.memory(
-                                                                                  img_list[2] as Uint8List,
-                                                                                  fit: BoxFit.cover,
-                                                                                ),
-                                                                              )),
+                                                                              child: Utility
+                                                                                  .networkimg(
+                                                                                  final_list[
+                                                                                  2],
+                                                                                  token,
+                                                                                  size)),
                                                                 ],
                                                               )),
                                                         ),
@@ -1031,13 +1163,12 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                                                                           : Container(
                                                                               width: size.width * 0.1,
                                                                               height: size.height * 0.07,
-                                                                              child: ClipRRect(
-                                                                                borderRadius: BorderRadius.circular(8.0),
-                                                                                child: Image.memory(
-                                                                                  img_list[3] as Uint8List,
-                                                                                  fit: BoxFit.cover,
-                                                                                ),
-                                                                              )),
+                                                                              child:Utility
+                                                                                  .networkimg(
+                                                                                  final_list[
+                                                                                  3],
+                                                                                  token,
+                                                                                  size)),
                                                                 ],
                                                               )),
                                                         )
@@ -1108,13 +1239,12 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                                                                           : Container(
                                                                               width: size.width * 0.1,
                                                                               height: size.height * 0.07,
-                                                                              child: ClipRRect(
-                                                                                borderRadius: BorderRadius.circular(8.0),
-                                                                                child: Image.memory(
-                                                                                  img_list[3] as Uint8List,
-                                                                                  fit: BoxFit.cover,
-                                                                                ),
-                                                                              )),
+                                                                              child: Utility
+                                                                                  .networkimg(
+                                                                                  final_list[
+                                                                                  3],
+                                                                                  token,
+                                                                                  size)),
                                                                 ],
                                                               )),
                                                         ),
@@ -1172,13 +1302,12 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                                                                           : Container(
                                                                               width: size.width * 0.1,
                                                                               height: size.height * 0.07,
-                                                                              child: ClipRRect(
-                                                                                borderRadius: BorderRadius.circular(8.0),
-                                                                                child: Image.memory(
-                                                                                  img_list[4] as Uint8List,
-                                                                                  fit: BoxFit.cover,
-                                                                                ),
-                                                                              )),
+                                                                              child: Utility
+                                                                                  .networkimg(
+                                                                                  final_list[
+                                                                                  4],
+                                                                                  token,
+                                                                                  size)),
                                                                 ],
                                                               )),
                                                         )
@@ -1249,13 +1378,12 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                                                                           : Container(
                                                                               width: size.width * 0.1,
                                                                               height: size.height * 0.07,
-                                                                              child: ClipRRect(
-                                                                                borderRadius: BorderRadius.circular(8.0),
-                                                                                child: Image.memory(
-                                                                                  img_list[4] as Uint8List,
-                                                                                  fit: BoxFit.cover,
-                                                                                ),
-                                                                              )),
+                                                                              child:Utility
+                                                                                  .networkimg(
+                                                                                  final_list[
+                                                                                  4],
+                                                                                  token,
+                                                                                  size)),
                                                                 ],
                                                               )),
                                                         ),
@@ -1313,13 +1441,12 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                                                                           : Container(
                                                                               width: size.width * 0.1,
                                                                               height: size.height * 0.07,
-                                                                              child: ClipRRect(
-                                                                                borderRadius: BorderRadius.circular(8.0),
-                                                                                child: Image.memory(
-                                                                                  img_list[5] as Uint8List,
-                                                                                  fit: BoxFit.cover,
-                                                                                ),
-                                                                              )),
+                                                                              child:Utility
+                                                                                  .networkimg(
+                                                                                  final_list[
+                                                                                  5],
+                                                                                  token,
+                                                                                  size)),
                                                                 ],
                                                               )),
                                                         )
@@ -1390,13 +1517,12 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                                                                           : Container(
                                                                               width: size.width * 0.1,
                                                                               height: size.height * 0.07,
-                                                                              child: ClipRRect(
-                                                                                borderRadius: BorderRadius.circular(8.0),
-                                                                                child: Image.memory(
-                                                                                  img_list[5] as Uint8List,
-                                                                                  fit: BoxFit.cover,
-                                                                                ),
-                                                                              )),
+                                                                              child: Utility
+                                                                                  .networkimg(
+                                                                                  final_list[
+                                                                                  5],
+                                                                                  token,
+                                                                                  size)),
                                                                 ],
                                                               )),
                                                         ),
@@ -1454,13 +1580,12 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                                                                           : Container(
                                                                               width: size.width * 0.1,
                                                                               height: size.height * 0.07,
-                                                                              child: ClipRRect(
-                                                                                borderRadius: BorderRadius.circular(8.0),
-                                                                                child: Image.memory(
-                                                                                  img_list[6] as Uint8List,
-                                                                                  fit: BoxFit.cover,
-                                                                                ),
-                                                                              )),
+                                                                              child: Utility
+                                                                                  .networkimg(
+                                                                                  final_list[
+                                                                                  6],
+                                                                                  token,
+                                                                                  size)),
                                                                 ],
                                                               )),
                                                         )
@@ -1531,13 +1656,12 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                                                                           : Container(
                                                                               width: size.width * 0.1,
                                                                               height: size.height * 0.07,
-                                                                              child: ClipRRect(
-                                                                                borderRadius: BorderRadius.circular(8.0),
-                                                                                child: Image.memory(
-                                                                                  img_list[6] as Uint8List,
-                                                                                  fit: BoxFit.cover,
-                                                                                ),
-                                                                              )),
+                                                                              child:Utility
+                                                                                  .networkimg(
+                                                                                  final_list[
+                                                                                  6],
+                                                                                  token,
+                                                                                  size)),
                                                                 ],
                                                               )),
                                                         ),
@@ -1606,15 +1730,12 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                                                                           height: size.height *
                                                                               0.07,
                                                                           child:
-                                                                              ClipRRect(
-                                                                            borderRadius:
-                                                                                BorderRadius.circular(8.0),
-                                                                            child:
-                                                                                Image.memory(
-                                                                              img_list[0] as Uint8List,
-                                                                              fit: BoxFit.cover,
-                                                                            ),
-                                                                          )),
+                                                                          Utility
+                                                                              .networkimg(
+                                                                              final_list[
+                                                                              0],
+                                                                              token,
+                                                                              size)),
                                                             ],
                                                           )),
                                                     )
@@ -1693,15 +1814,12 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                                                                           height: size.height *
                                                                               0.07,
                                                                           child:
-                                                                              ClipRRect(
-                                                                            borderRadius:
-                                                                                BorderRadius.circular(8.0),
-                                                                            child:
-                                                                                Image.memory(
-                                                                              img_list[0] as Uint8List,
-                                                                              fit: BoxFit.cover,
-                                                                            ),
-                                                                          )),
+                                                                          Utility
+                                                                              .networkimg(
+                                                                              final_list[
+                                                                              0],
+                                                                              token,
+                                                                              size)),
                                                             ],
                                                           )),
                                                     ),
@@ -1764,15 +1882,12 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                                                                           height: size.height *
                                                                               0.07,
                                                                           child:
-                                                                              ClipRRect(
-                                                                            borderRadius:
-                                                                                BorderRadius.circular(8.0),
-                                                                            child:
-                                                                                Image.memory(
-                                                                              img_list[1] as Uint8List,
-                                                                              fit: BoxFit.cover,
-                                                                            ),
-                                                                          )),
+                                                                          Utility
+                                                                              .networkimg(
+                                                                              final_list[
+                                                                              1],
+                                                                              token,
+                                                                              size)),
                                                             ],
                                                           )),
                                                     )
@@ -1851,15 +1966,12 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                                                                           height: size.height *
                                                                               0.07,
                                                                           child:
-                                                                              ClipRRect(
-                                                                            borderRadius:
-                                                                                BorderRadius.circular(8.0),
-                                                                            child:
-                                                                                Image.memory(
-                                                                              img_list[1] as Uint8List,
-                                                                              fit: BoxFit.cover,
-                                                                            ),
-                                                                          )),
+                                                                          Utility
+                                                                              .networkimg(
+                                                                              final_list[
+                                                                              1],
+                                                                              token,
+                                                                              size)),
                                                             ],
                                                           )),
                                                     ),
@@ -1922,15 +2034,12 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                                                                           height: size.height *
                                                                               0.07,
                                                                           child:
-                                                                              ClipRRect(
-                                                                            borderRadius:
-                                                                                BorderRadius.circular(8.0),
-                                                                            child:
-                                                                                Image.memory(
-                                                                              img_list[2] as Uint8List,
-                                                                              fit: BoxFit.cover,
-                                                                            ),
-                                                                          )),
+                                                                          Utility
+                                                                              .networkimg(
+                                                                              final_list[
+                                                                              2],
+                                                                              token,
+                                                                              size)),
                                                             ],
                                                           )),
                                                     )
@@ -2009,15 +2118,12 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                                                                           height: size.height *
                                                                               0.07,
                                                                           child:
-                                                                              ClipRRect(
-                                                                            borderRadius:
-                                                                                BorderRadius.circular(8.0),
-                                                                            child:
-                                                                                Image.memory(
-                                                                              img_list[2] as Uint8List,
-                                                                              fit: BoxFit.cover,
-                                                                            ),
-                                                                          )),
+                                                                          Utility
+                                                                              .networkimg(
+                                                                              final_list[
+                                                                              2],
+                                                                              token,
+                                                                              size)),
                                                             ],
                                                           )),
                                                     ),
@@ -2080,15 +2186,12 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                                                                           height: size.height *
                                                                               0.07,
                                                                           child:
-                                                                              ClipRRect(
-                                                                            borderRadius:
-                                                                                BorderRadius.circular(8.0),
-                                                                            child:
-                                                                                Image.memory(
-                                                                              img_list[3] as Uint8List,
-                                                                              fit: BoxFit.cover,
-                                                                            ),
-                                                                          )),
+                                                                          Utility
+                                                                              .networkimg(
+                                                                              final_list[
+                                                                              3],
+                                                                              token,
+                                                                              size)),
                                                             ],
                                                           )),
                                                     )
@@ -2167,15 +2270,12 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                                                                           height: size.height *
                                                                               0.07,
                                                                           child:
-                                                                              ClipRRect(
-                                                                            borderRadius:
-                                                                                BorderRadius.circular(8.0),
-                                                                            child:
-                                                                                Image.memory(
-                                                                              img_list[3] as Uint8List,
-                                                                              fit: BoxFit.cover,
-                                                                            ),
-                                                                          )),
+                                                                          Utility
+                                                                              .networkimg(
+                                                                              final_list[
+                                                                              3],
+                                                                              token,
+                                                                              size)),
                                                             ],
                                                           )),
                                                     ),
@@ -2238,15 +2338,12 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                                                                           height: size.height *
                                                                               0.07,
                                                                           child:
-                                                                              ClipRRect(
-                                                                            borderRadius:
-                                                                                BorderRadius.circular(8.0),
-                                                                            child:
-                                                                                Image.memory(
-                                                                              img_list[4] as Uint8List,
-                                                                              fit: BoxFit.cover,
-                                                                            ),
-                                                                          )),
+                                                                          Utility
+                                                                              .networkimg(
+                                                                              final_list[
+                                                                              4],
+                                                                              token,
+                                                                              size)),
                                                             ],
                                                           )),
                                                     )
@@ -2325,15 +2422,12 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                                                                           height: size.height *
                                                                               0.07,
                                                                           child:
-                                                                              ClipRRect(
-                                                                            borderRadius:
-                                                                                BorderRadius.circular(8.0),
-                                                                            child:
-                                                                                Image.memory(
-                                                                              img_list[4] as Uint8List,
-                                                                              fit: BoxFit.cover,
-                                                                            ),
-                                                                          )),
+                                                                          Utility
+                                                                              .networkimg(
+                                                                              final_list[
+                                                                              4],
+                                                                              token,
+                                                                              size)),
                                                             ],
                                                           )),
                                                     ),
@@ -2396,16 +2490,13 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                                                                           height: size.height *
                                                                               0.07,
                                                                           child:
-                                                                              ClipRRect(
-                                                                            borderRadius:
-                                                                                BorderRadius.circular(8.0),
-                                                                            child:
-                                                                                Image.memory(
-                                                                              img_list[5] as Uint8List,
-                                                                              fit: BoxFit.cover,
-                                                                            ),
-                                                                          )),
-                                                            ],
+                                                                          Utility
+                                                                              .networkimg(
+                                                                              final_list[
+                                                                              5],
+                                                                              token,
+                                                                              size),
+                                                              )],
                                                           )),
                                                     )
                                                   : InkWell(
@@ -2483,15 +2574,12 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                                                                           height: size.height *
                                                                               0.07,
                                                                           child:
-                                                                              ClipRRect(
-                                                                            borderRadius:
-                                                                                BorderRadius.circular(8.0),
-                                                                            child:
-                                                                                Image.memory(
-                                                                              img_list[5] as Uint8List,
-                                                                              fit: BoxFit.cover,
-                                                                            ),
-                                                                          )),
+                                                                          Utility
+                                                                              .networkimg(
+                                                                              final_list[
+                                                                              5],
+                                                                              token,
+                                                                              size)),
                                                             ],
                                                           )),
                                                     ),
@@ -2554,15 +2642,12 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                                                                           height: size.height *
                                                                               0.07,
                                                                           child:
-                                                                              ClipRRect(
-                                                                            borderRadius:
-                                                                                BorderRadius.circular(8.0),
-                                                                            child:
-                                                                                Image.memory(
-                                                                              img_list[6] as Uint8List,
-                                                                              fit: BoxFit.cover,
-                                                                            ),
-                                                                          )),
+                                                                          Utility
+                                                                              .networkimg(
+                                                                              final_list[
+                                                                              6],
+                                                                              token,
+                                                                              size)),
                                                             ],
                                                           )),
                                                     )
@@ -2641,15 +2726,12 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                                                                           height: size.height *
                                                                               0.07,
                                                                           child:
-                                                                              ClipRRect(
-                                                                            borderRadius:
-                                                                                BorderRadius.circular(8.0),
-                                                                            child:
-                                                                                Image.memory(
-                                                                              img_list[6] as Uint8List,
-                                                                              fit: BoxFit.cover,
-                                                                            ),
-                                                                          )),
+                                                                          Utility
+                                                                              .networkimg(
+                                                                              final_list[
+                                                                              6],
+                                                                              token,
+                                                                              size)),
                                                             ],
                                                           )),
                                                     ),
@@ -2704,17 +2786,12 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                                                               size.width * 0.1,
                                                           height: size.height *
                                                               0.07,
-                                                          child: ClipRRect(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        8.0),
-                                                            child: Image.memory(
-                                                              img_list[7]
-                                                                  as Uint8List,
-                                                              fit: BoxFit.cover,
-                                                            ),
-                                                          )),
+                                                          child: Utility
+                                                              .networkimg(
+                                                              final_list[
+                                                              7],
+                                                              token,
+                                                              size)),
                                                 ],
                                               )),
                                         ),
@@ -2762,17 +2839,12 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                                                               size.width * 0.1,
                                                           height: size.height *
                                                               0.07,
-                                                          child: ClipRRect(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        8.0),
-                                                            child: Image.memory(
-                                                              img_list[8]
-                                                                  as Uint8List,
-                                                              fit: BoxFit.cover,
-                                                            ),
-                                                          )),
+                                                          child: Utility
+                                                              .networkimg(
+                                                              final_list[
+                                                              8],
+                                                              token,
+                                                              size)),
                                                 ],
                                               )),
                                         ),
@@ -2820,17 +2892,12 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                                                               size.width * 0.1,
                                                           height: size.height *
                                                               0.07,
-                                                          child: ClipRRect(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        8.0),
-                                                            child: Image.memory(
-                                                              img_list[9]
-                                                                  as Uint8List,
-                                                              fit: BoxFit.cover,
-                                                            ),
-                                                          )),
+                                                          child: Utility
+                                                              .networkimg(
+                                                              final_list[
+                                                              9],
+                                                              token,
+                                                              size)),
                                                 ],
                                               )),
                                         ),
@@ -2878,17 +2945,12 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                                                               size.width * 0.1,
                                                           height: size.height *
                                                               0.07,
-                                                          child: ClipRRect(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        8.0),
-                                                            child: Image.memory(
-                                                              img_list[10]
-                                                                  as Uint8List,
-                                                              fit: BoxFit.cover,
-                                                            ),
-                                                          )),
+                                                          child: Utility
+                                                              .networkimg(
+                                                              final_list[
+                                                              10],
+                                                              token,
+                                                              size)),
                                                 ],
                                               )),
                                         ),
@@ -2936,17 +2998,12 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                                                               size.width * 0.1,
                                                           height: size.height *
                                                               0.07,
-                                                          child: ClipRRect(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        8.0),
-                                                            child: Image.memory(
-                                                              img_list[11]
-                                                                  as Uint8List,
-                                                              fit: BoxFit.cover,
-                                                            ),
-                                                          )),
+                                                          child:Utility
+                                                              .networkimg(
+                                                              final_list[
+                                                              11],
+                                                              token,
+                                                              size)),
                                                 ],
                                               )),
                                         ),
@@ -2994,17 +3051,12 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                                                               size.width * 0.1,
                                                           height: size.height *
                                                               0.07,
-                                                          child: ClipRRect(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        8.0),
-                                                            child: Image.memory(
-                                                              img_list[12]
-                                                                  as Uint8List,
-                                                              fit: BoxFit.cover,
-                                                            ),
-                                                          )),
+                                                          child: Utility
+                                                              .networkimg(
+                                                              final_list[
+                                                              12],
+                                                              token,
+                                                              size)),
                                                 ],
                                               )),
                                         ),
@@ -3052,17 +3104,12 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                                                               size.width * 0.1,
                                                           height: size.height *
                                                               0.07,
-                                                          child: ClipRRect(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        8.0),
-                                                            child: Image.memory(
-                                                              img_list[13]
-                                                                  as Uint8List,
-                                                              fit: BoxFit.cover,
-                                                            ),
-                                                          )),
+                                                          child: Utility
+                                                              .networkimg(
+                                                              final_list[
+                                                              13],
+                                                              token,
+                                                              size)),
                                                 ],
                                               )),
                                         ),
@@ -3116,17 +3163,12 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                                                               size.width * 0.1,
                                                           height: size.height *
                                                               0.07,
-                                                          child: ClipRRect(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        8.0),
-                                                            child: Image.memory(
-                                                              img_list[14]
-                                                                  as Uint8List,
-                                                              fit: BoxFit.cover,
-                                                            ),
-                                                          )),
+                                                          child:Utility
+                                                              .networkimg(
+                                                              final_list[
+                                                              14],
+                                                              token,
+                                                              size)),
                                                 ],
                                               )),
                                         ),
@@ -3174,17 +3216,12 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                                                               size.width * 0.1,
                                                           height: size.height *
                                                               0.07,
-                                                          child: ClipRRect(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        8.0),
-                                                            child: Image.memory(
-                                                              img_list[15]
-                                                                  as Uint8List,
-                                                              fit: BoxFit.cover,
-                                                            ),
-                                                          )),
+                                                          child: Utility
+                                                              .networkimg(
+                                                              final_list[
+                                                              15],
+                                                              token,
+                                                              size)),
                                                 ],
                                               )),
                                         ),
@@ -3232,17 +3269,12 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                                                               size.width * 0.1,
                                                           height: size.height *
                                                               0.07,
-                                                          child: ClipRRect(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        8.0),
-                                                            child: Image.memory(
-                                                              img_list[16]
-                                                                  as Uint8List,
-                                                              fit: BoxFit.cover,
-                                                            ),
-                                                          )),
+                                                          child: Utility
+                                                              .networkimg(
+                                                              final_list[
+                                                              16],
+                                                              token,
+                                                              size)),
                                                 ],
                                               )),
                                         ),
@@ -3290,17 +3322,12 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                                                               size.width * 0.1,
                                                           height: size.height *
                                                               0.07,
-                                                          child: ClipRRect(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        8.0),
-                                                            child: Image.memory(
-                                                              img_list[17]
-                                                                  as Uint8List,
-                                                              fit: BoxFit.cover,
-                                                            ),
-                                                          )),
+                                                          child: Utility
+                                                              .networkimg(
+                                                              final_list[
+                                                              17],
+                                                              token,
+                                                              size)),
                                                 ],
                                               )),
                                         ),
@@ -3348,17 +3375,12 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                                                               size.width * 0.1,
                                                           height: size.height *
                                                               0.07,
-                                                          child: ClipRRect(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        8.0),
-                                                            child: Image.memory(
-                                                              img_list[18]
-                                                                  as Uint8List,
-                                                              fit: BoxFit.cover,
-                                                            ),
-                                                          )),
+                                                          child: Utility
+                                                              .networkimg(
+                                                              final_list[
+                                                              18],
+                                                              token,
+                                                              size)),
                                                 ],
                                               )),
                                         ),
@@ -3406,17 +3428,12 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                                                               size.width * 0.1,
                                                           height: size.height *
                                                               0.07,
-                                                          child: ClipRRect(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        8.0),
-                                                            child: Image.memory(
-                                                              img_list[19]
-                                                                  as Uint8List,
-                                                              fit: BoxFit.cover,
-                                                            ),
-                                                          )),
+                                                          child: Utility
+                                                              .networkimg(
+                                                              final_list[
+                                                              19],
+                                                              token,
+                                                              size)),
                                                 ],
                                               )),
                                         ),
@@ -3464,17 +3481,12 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                                                               size.width * 0.1,
                                                           height: size.height *
                                                               0.07,
-                                                          child: ClipRRect(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        8.0),
-                                                            child: Image.memory(
-                                                              img_list[20]
-                                                                  as Uint8List,
-                                                              fit: BoxFit.cover,
-                                                            ),
-                                                          )),
+                                                          child: Utility
+                                                              .networkimg(
+                                                              final_list[
+                                                              20],
+                                                              token,
+                                                              size)),
                                                 ],
                                               )),
                                         ),
@@ -3528,17 +3540,12 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                                                               size.width * 0.1,
                                                           height: size.height *
                                                               0.07,
-                                                          child: ClipRRect(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        8.0),
-                                                            child: Image.memory(
-                                                              img_list[21]
-                                                                  as Uint8List,
-                                                              fit: BoxFit.cover,
-                                                            ),
-                                                          )),
+                                                          child: Utility
+                                                              .networkimg(
+                                                              final_list[
+                                                              21],
+                                                              token,
+                                                              size)),
                                                 ],
                                               )),
                                         ),
@@ -3586,17 +3593,12 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                                                               size.width * 0.1,
                                                           height: size.height *
                                                               0.07,
-                                                          child: ClipRRect(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        8.0),
-                                                            child: Image.memory(
-                                                              img_list[22]
-                                                                  as Uint8List,
-                                                              fit: BoxFit.cover,
-                                                            ),
-                                                          )),
+                                                          child: Utility
+                                                              .networkimg(
+                                                              final_list[
+                                                              22],
+                                                              token,
+                                                              size)),
                                                 ],
                                               )),
                                         ),
@@ -3644,17 +3646,12 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                                                               size.width * 0.1,
                                                           height: size.height *
                                                               0.07,
-                                                          child: ClipRRect(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        8.0),
-                                                            child: Image.memory(
-                                                              img_list[23]
-                                                                  as Uint8List,
-                                                              fit: BoxFit.cover,
-                                                            ),
-                                                          )),
+                                                          child: Utility
+                                                              .networkimg(
+                                                              final_list[
+                                                              23],
+                                                              token,
+                                                              size)),
                                                 ],
                                               )),
                                         ),
@@ -3702,17 +3699,12 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                                                               size.width * 0.1,
                                                           height: size.height *
                                                               0.07,
-                                                          child: ClipRRect(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        8.0),
-                                                            child: Image.memory(
-                                                              img_list[24]
-                                                                  as Uint8List,
-                                                              fit: BoxFit.cover,
-                                                            ),
-                                                          )),
+                                                          child: Utility
+                                                              .networkimg(
+                                                              final_list[
+                                                              24],
+                                                              token,
+                                                              size)),
                                                 ],
                                               )),
                                         ),
@@ -3760,17 +3752,12 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                                                               size.width * 0.1,
                                                           height: size.height *
                                                               0.07,
-                                                          child: ClipRRect(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        8.0),
-                                                            child: Image.memory(
-                                                              img_list[25]
-                                                                  as Uint8List,
-                                                              fit: BoxFit.cover,
-                                                            ),
-                                                          )),
+                                                          child: Utility
+                                                              .networkimg(
+                                                              final_list[
+                                                              25],
+                                                              token,
+                                                              size)),
                                                 ],
                                               )),
                                         ),
@@ -3818,17 +3805,12 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                                                               size.width * 0.1,
                                                           height: size.height *
                                                               0.07,
-                                                          child: ClipRRect(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        8.0),
-                                                            child: Image.memory(
-                                                              img_list[26]
-                                                                  as Uint8List,
-                                                              fit: BoxFit.cover,
-                                                            ),
-                                                          )),
+                                                          child: Utility
+                                                              .networkimg(
+                                                              final_list[
+                                                              26],
+                                                              token,
+                                                              size)),
                                                 ],
                                               )),
                                         ),
@@ -3876,17 +3858,12 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                                                               size.width * 0.1,
                                                           height: size.height *
                                                               0.07,
-                                                          child: ClipRRect(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        8.0),
-                                                            child: Image.memory(
-                                                              img_list[27]
-                                                                  as Uint8List,
-                                                              fit: BoxFit.cover,
-                                                            ),
-                                                          )),
+                                                          child:Utility
+                                                              .networkimg(
+                                                              final_list[
+                                                              27],
+                                                              token,
+                                                              size)),
                                                 ],
                                               )),
                                         ),
@@ -3944,19 +3921,12 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                                                                     height: size
                                                                             .height *
                                                                         0.07,
-                                                                    child: ClipRRect(
-                                                                        borderRadius: BorderRadius.circular(8.0),
-                                                                        child: ClipRRect(
-                                                                          borderRadius:
-                                                                              BorderRadius.circular(8.0),
-                                                                          child:
-                                                                              Image.memory(
-                                                                            img_list[28]
-                                                                                as Uint8List,
-                                                                            fit:
-                                                                                BoxFit.cover,
-                                                                          ),
-                                                                        ))),
+                                                                    child: Utility
+                                                                        .networkimg(
+                                                                        final_list[
+                                                                        28],
+                                                                        token,
+                                                                        size)),
                                                       ],
                                                     )),
                                               )
@@ -4025,18 +3995,12 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                                                                             .height *
                                                                         0.07,
                                                                     child:
-                                                                        ClipRRect(
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(
-                                                                              8.0),
-                                                                      child: Image
-                                                                          .memory(
-                                                                        img_list[28]
-                                                                            as Uint8List,
-                                                                        fit: BoxFit
-                                                                            .cover,
-                                                                      ),
-                                                                    )),
+                                                                    Utility
+                                                                        .networkimg(
+                                                                        final_list[
+                                                                        28],
+                                                                        token,
+                                                                        size)),
                                                       ],
                                                     )),
                                               ),
@@ -4089,18 +4053,12 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                                                                             .height *
                                                                         0.07,
                                                                     child:
-                                                                        ClipRRect(
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(
-                                                                              8.0),
-                                                                      child: Image
-                                                                          .memory(
-                                                                        img_list[29]
-                                                                            as Uint8List,
-                                                                        fit: BoxFit
-                                                                            .cover,
-                                                                      ),
-                                                                    )),
+                                                                    Utility
+                                                                        .networkimg(
+                                                                        final_list[
+                                                                        29],
+                                                                        token,
+                                                                        size)),
                                                       ],
                                                     )),
                                               )
@@ -4169,18 +4127,12 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                                                                             .height *
                                                                         0.07,
                                                                     child:
-                                                                        ClipRRect(
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(
-                                                                              8.0),
-                                                                      child: Image
-                                                                          .memory(
-                                                                        img_list[29]
-                                                                            as Uint8List,
-                                                                        fit: BoxFit
-                                                                            .cover,
-                                                                      ),
-                                                                    )),
+                                                                    Utility
+                                                                        .networkimg(
+                                                                        final_list[
+                                                                        29],
+                                                                        token,
+                                                                        size)),
                                                       ],
                                                     )),
                                               ),
@@ -4233,18 +4185,12 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                                                                             .height *
                                                                         0.07,
                                                                     child:
-                                                                        ClipRRect(
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(
-                                                                              8.0),
-                                                                      child: Image
-                                                                          .memory(
-                                                                        img_list[30]
-                                                                            as Uint8List,
-                                                                        fit: BoxFit
-                                                                            .cover,
-                                                                      ),
-                                                                    )),
+                                                                    Utility
+                                                                        .networkimg(
+                                                                        final_list[
+                                                                        30],
+                                                                        token,
+                                                                        size)),
                                                       ],
                                                     )),
                                               )
@@ -4313,18 +4259,12 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                                                                             .height *
                                                                         0.07,
                                                                     child:
-                                                                        ClipRRect(
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(
-                                                                              8.0),
-                                                                      child: Image
-                                                                          .memory(
-                                                                        img_list[30]
-                                                                            as Uint8List,
-                                                                        fit: BoxFit
-                                                                            .cover,
-                                                                      ),
-                                                                    )),
+                                                                    Utility
+                                                                        .networkimg(
+                                                                        final_list[
+                                                                        30],
+                                                                        token,
+                                                                        size)),
                                                       ],
                                                     )),
                                               ),
@@ -4377,18 +4317,12 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                                                                             .height *
                                                                         0.07,
                                                                     child:
-                                                                        ClipRRect(
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(
-                                                                              8.0),
-                                                                      child: Image
-                                                                          .memory(
-                                                                        img_list[31]
-                                                                            as Uint8List,
-                                                                        fit: BoxFit
-                                                                            .cover,
-                                                                      ),
-                                                                    )),
+                                                                    Utility
+                                                                        .networkimg(
+                                                                        final_list[
+                                                                        31],
+                                                                        token,
+                                                                        size)),
                                                       ],
                                                     )),
                                               )
@@ -4457,18 +4391,12 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                                                                             .height *
                                                                         0.07,
                                                                     child:
-                                                                        ClipRRect(
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(
-                                                                              8.0),
-                                                                      child: Image
-                                                                          .memory(
-                                                                        img_list[31]
-                                                                            as Uint8List,
-                                                                        fit: BoxFit
-                                                                            .cover,
-                                                                      ),
-                                                                    )),
+                                                                    Utility
+                                                                        .networkimg(
+                                                                        final_list[
+                                                                        31],
+                                                                        token,
+                                                                        size)),
                                                       ],
                                                     )),
                                               ),
@@ -4521,18 +4449,12 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                                                                             .height *
                                                                         0.07,
                                                                     child:
-                                                                        ClipRRect(
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(
-                                                                              8.0),
-                                                                      child: Image
-                                                                          .memory(
-                                                                        img_list[32]
-                                                                            as Uint8List,
-                                                                        fit: BoxFit
-                                                                            .cover,
-                                                                      ),
-                                                                    )),
+                                                                    Utility
+                                                                        .networkimg(
+                                                                        final_list[
+                                                                        32],
+                                                                        token,
+                                                                        size)),
                                                       ],
                                                     )),
                                               )
@@ -4601,18 +4523,12 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                                                                             .height *
                                                                         0.07,
                                                                     child:
-                                                                        ClipRRect(
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(
-                                                                              8.0),
-                                                                      child: Image
-                                                                          .memory(
-                                                                        img_list[32]
-                                                                            as Uint8List,
-                                                                        fit: BoxFit
-                                                                            .cover,
-                                                                      ),
-                                                                    )),
+                                                                    Utility
+                                                                        .networkimg(
+                                                                        final_list[
+                                                                        32],
+                                                                        token,
+                                                                        size)),
                                                       ],
                                                     )),
                                               ),
@@ -4665,18 +4581,12 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                                                                             .height *
                                                                         0.07,
                                                                     child:
-                                                                        ClipRRect(
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(
-                                                                              8.0),
-                                                                      child: Image
-                                                                          .memory(
-                                                                        img_list[33]
-                                                                            as Uint8List,
-                                                                        fit: BoxFit
-                                                                            .cover,
-                                                                      ),
-                                                                    )),
+                                                                    Utility
+                                                                        .networkimg(
+                                                                        final_list[
+                                                                        33],
+                                                                        token,
+                                                                        size)),
                                                       ],
                                                     )),
                                               )
@@ -4745,18 +4655,12 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                                                                             .height *
                                                                         0.07,
                                                                     child:
-                                                                        ClipRRect(
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(
-                                                                              8.0),
-                                                                      child: Image
-                                                                          .memory(
-                                                                        img_list[33]
-                                                                            as Uint8List,
-                                                                        fit: BoxFit
-                                                                            .cover,
-                                                                      ),
-                                                                    )),
+                                                                    Utility
+                                                                        .networkimg(
+                                                                        final_list[
+                                                                        33],
+                                                                        token,
+                                                                        size)),
                                                       ],
                                                     )),
                                               ),
@@ -4809,18 +4713,12 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                                                                             .height *
                                                                         0.07,
                                                                     child:
-                                                                        ClipRRect(
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(
-                                                                              8.0),
-                                                                      child: Image
-                                                                          .memory(
-                                                                        img_list[34]
-                                                                            as Uint8List,
-                                                                        fit: BoxFit
-                                                                            .cover,
-                                                                      ),
-                                                                    )),
+                                                                    Utility
+                                                                        .networkimg(
+                                                                        final_list[
+                                                                        34],
+                                                                        token,
+                                                                        size)),
                                                       ],
                                                     )),
                                               )
@@ -4889,18 +4787,12 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                                                                             .height *
                                                                         0.07,
                                                                     child:
-                                                                        ClipRRect(
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(
-                                                                              8.0),
-                                                                      child: Image
-                                                                          .memory(
-                                                                        img_list[34]
-                                                                            as Uint8List,
-                                                                        fit: BoxFit
-                                                                            .cover,
-                                                                      ),
-                                                                    )),
+                                                                    Utility
+                                                                        .networkimg(
+                                                                        final_list[
+                                                                        34],
+                                                                        token,
+                                                                        size)),
                                                       ],
                                                     )),
                                               ),
@@ -4966,15 +4858,12 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                                                                           height: size.height *
                                                                               0.07,
                                                                           child:
-                                                                              ClipRRect(
-                                                                            borderRadius:
-                                                                                BorderRadius.circular(8.0),
-                                                                            child:
-                                                                                Image.memory(
-                                                                              img_list[35] as Uint8List,
-                                                                              fit: BoxFit.cover,
-                                                                            ),
-                                                                          )),
+                                                                          Utility
+                                                                              .networkimg(
+                                                                              final_list[
+                                                                              35],
+                                                                              token,
+                                                                              size)),
                                                             ],
                                                           )),
                                                     )
@@ -5050,15 +4939,12 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                                                                           height: size.height *
                                                                               0.07,
                                                                           child:
-                                                                              ClipRRect(
-                                                                            borderRadius:
-                                                                                BorderRadius.circular(8.0),
-                                                                            child:
-                                                                                Image.memory(
-                                                                              img_list[35] as Uint8List,
-                                                                              fit: BoxFit.cover,
-                                                                            ),
-                                                                          )),
+                                                                          Utility
+                                                                              .networkimg(
+                                                                              final_list[
+                                                                              35],
+                                                                              token,
+                                                                              size)),
                                                             ],
                                                           )),
                                                     ),
@@ -5117,15 +5003,12 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                                                                           height: size.height *
                                                                               0.07,
                                                                           child:
-                                                                              ClipRRect(
-                                                                            borderRadius:
-                                                                                BorderRadius.circular(8.0),
-                                                                            child:
-                                                                                Image.memory(
-                                                                              img_list[36] as Uint8List,
-                                                                              fit: BoxFit.cover,
-                                                                            ),
-                                                                          )),
+                                                                          Utility
+                                                                              .networkimg(
+                                                                              final_list[
+                                                                              36],
+                                                                              token,
+                                                                              size)),
                                                             ],
                                                           )),
                                                     )
@@ -5201,15 +5084,12 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                                                                           height: size.height *
                                                                               0.07,
                                                                           child:
-                                                                              ClipRRect(
-                                                                            borderRadius:
-                                                                                BorderRadius.circular(8.0),
-                                                                            child:
-                                                                                Image.memory(
-                                                                              img_list[36] as Uint8List,
-                                                                              fit: BoxFit.cover,
-                                                                            ),
-                                                                          )),
+                                                                          Utility
+                                                                              .networkimg(
+                                                                              final_list[
+                                                                              36],
+                                                                              token,
+                                                                              size)),
                                                             ],
                                                           )),
                                                     ),
@@ -5268,15 +5148,12 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                                                                           height: size.height *
                                                                               0.07,
                                                                           child:
-                                                                              ClipRRect(
-                                                                            borderRadius:
-                                                                                BorderRadius.circular(8.0),
-                                                                            child:
-                                                                                Image.memory(
-                                                                              img_list[37] as Uint8List,
-                                                                              fit: BoxFit.cover,
-                                                                            ),
-                                                                          )),
+                                                                          Utility
+                                                                              .networkimg(
+                                                                              final_list[
+                                                                              37],
+                                                                              token,
+                                                                              size)),
                                                             ],
                                                           )),
                                                     )
@@ -5352,15 +5229,12 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                                                                           height: size.height *
                                                                               0.07,
                                                                           child:
-                                                                              ClipRRect(
-                                                                            borderRadius:
-                                                                                BorderRadius.circular(8.0),
-                                                                            child:
-                                                                                Image.memory(
-                                                                              img_list[37] as Uint8List,
-                                                                              fit: BoxFit.cover,
-                                                                            ),
-                                                                          )),
+                                                                          Utility
+                                                                              .networkimg(
+                                                                              final_list[
+                                                                              37],
+                                                                              token,
+                                                                              size)),
                                                             ],
                                                           )),
                                                     ),
@@ -5419,15 +5293,12 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                                                                           height: size.height *
                                                                               0.07,
                                                                           child:
-                                                                              ClipRRect(
-                                                                            borderRadius:
-                                                                                BorderRadius.circular(8.0),
-                                                                            child:
-                                                                                Image.memory(
-                                                                              img_list[38] as Uint8List,
-                                                                              fit: BoxFit.cover,
-                                                                            ),
-                                                                          )),
+                                                                          Utility
+                                                                              .networkimg(
+                                                                              final_list[
+                                                                              38],
+                                                                              token,
+                                                                              size)),
                                                             ],
                                                           )),
                                                     )
@@ -5503,15 +5374,12 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                                                                           height: size.height *
                                                                               0.07,
                                                                           child:
-                                                                              ClipRRect(
-                                                                            borderRadius:
-                                                                                BorderRadius.circular(8.0),
-                                                                            child:
-                                                                                Image.memory(
-                                                                              img_list[38] as Uint8List,
-                                                                              fit: BoxFit.cover,
-                                                                            ),
-                                                                          )),
+                                                                          Utility
+                                                                              .networkimg(
+                                                                              final_list[
+                                                                              38],
+                                                                              token,
+                                                                              size)),
                                                             ],
                                                           )),
                                                     ),
@@ -5570,15 +5438,12 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                                                                           height: size.height *
                                                                               0.07,
                                                                           child:
-                                                                              ClipRRect(
-                                                                            borderRadius:
-                                                                                BorderRadius.circular(8.0),
-                                                                            child:
-                                                                                Image.memory(
-                                                                              img_list[39] as Uint8List,
-                                                                              fit: BoxFit.cover,
-                                                                            ),
-                                                                          )),
+                                                                          Utility
+                                                                              .networkimg(
+                                                                              final_list[
+                                                                              39],
+                                                                              token,
+                                                                              size)),
                                                             ],
                                                           )),
                                                     )
@@ -5654,15 +5519,12 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                                                                           height: size.height *
                                                                               0.07,
                                                                           child:
-                                                                              ClipRRect(
-                                                                            borderRadius:
-                                                                                BorderRadius.circular(8.0),
-                                                                            child:
-                                                                                Image.memory(
-                                                                              img_list[39] as Uint8List,
-                                                                              fit: BoxFit.cover,
-                                                                            ),
-                                                                          )),
+                                                                          Utility
+                                                                              .networkimg(
+                                                                              final_list[
+                                                                              39],
+                                                                              token,
+                                                                              size)),
                                                             ],
                                                           )),
                                                     ),
@@ -5721,15 +5583,12 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                                                                           height: size.height *
                                                                               0.07,
                                                                           child:
-                                                                              ClipRRect(
-                                                                            borderRadius:
-                                                                                BorderRadius.circular(8.0),
-                                                                            child:
-                                                                                Image.memory(
-                                                                              img_list[40] as Uint8List,
-                                                                              fit: BoxFit.cover,
-                                                                            ),
-                                                                          )),
+                                                                          Utility
+                                                                              .networkimg(
+                                                                              final_list[
+                                                                              40],
+                                                                              token,
+                                                                              size)),
                                                             ],
                                                           )),
                                                     )
@@ -5805,15 +5664,12 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                                                                           height: size.height *
                                                                               0.07,
                                                                           child:
-                                                                              ClipRRect(
-                                                                            borderRadius:
-                                                                                BorderRadius.circular(8.0),
-                                                                            child:
-                                                                                Image.memory(
-                                                                              img_list[40] as Uint8List,
-                                                                              fit: BoxFit.cover,
-                                                                            ),
-                                                                          )),
+                                                                          Utility
+                                                                              .networkimg(
+                                                                              final_list[
+                                                                              40],
+                                                                              token,
+                                                                              size)),
                                                             ],
                                                           )),
                                                     ),
@@ -5872,15 +5728,12 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                                                                           height: size.height *
                                                                               0.07,
                                                                           child:
-                                                                              ClipRRect(
-                                                                            borderRadius:
-                                                                                BorderRadius.circular(8.0),
-                                                                            child:
-                                                                                Image.memory(
-                                                                              img_list[41] as Uint8List,
-                                                                              fit: BoxFit.cover,
-                                                                            ),
-                                                                          )),
+                                                                          Utility
+                                                                              .networkimg(
+                                                                              final_list[
+                                                                              41],
+                                                                              token,
+                                                                              size)),
                                                             ],
                                                           )),
                                                     )
@@ -5956,15 +5809,12 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                                                                           height: size.height *
                                                                               0.07,
                                                                           child:
-                                                                              ClipRRect(
-                                                                            borderRadius:
-                                                                                BorderRadius.circular(8.0),
-                                                                            child:
-                                                                                Image.memory(
-                                                                              img_list[41] as Uint8List,
-                                                                              fit: BoxFit.cover,
-                                                                            ),
-                                                                          )),
+                                                                          Utility
+                                                                              .networkimg(
+                                                                              final_list[
+                                                                              41],
+                                                                              token,
+                                                                              size)),
                                                             ],
                                                           )),
                                                     ),
