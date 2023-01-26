@@ -69,16 +69,10 @@ class _Calendar_detail_frame extends State<Calendar_detail_frame> {
         check = i;
       }
     }
-  // var token = await Http_Presenter().read_token();
-  //  img_server = await Http_Presenter().get_server_image2(token, context);
     _controller = PageController(initialPage: check!);
 
-    // return img_server;
   }
 
-  // refresh(BuildContext context){
-  //   _init
-  // }
 
   @override
   void initState() {
@@ -100,9 +94,7 @@ class _Calendar_detail_frame extends State<Calendar_detail_frame> {
 
   @override
   Widget build(BuildContext context) {
-    // final _controller = PageController(initialPage: check!);
 
-    Size size = MediaQuery.of(context).size;
 
     return Scaffold(
         backgroundColor: kPrimaryColor,

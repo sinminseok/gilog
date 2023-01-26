@@ -1,7 +1,12 @@
 
 final String endpoint = "http://ec2-43-200-33-232.ap-northeast-2.compute.amazonaws.com:8080";
 
+
 class Http_URL{
+
+  final REST_API_KEY = "ee4ee61f1ea69f5a8d5f5924343083f7";
+
+  final REDIRECT_URL = "$endpoint/api/oauth2/code/kakao";
 
   //질문 가져오는 URL
   final String get_question = "$endpoint/api/question";

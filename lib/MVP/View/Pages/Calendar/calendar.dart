@@ -30,17 +30,21 @@ class _Calendar_Screen extends State<Calendar_Screen> {
   //로컬에 기록된 정보 img local url만 담을 함수
   List<POST?> img_list = [];
 
-  //로컬에 저장된 모든 POST 리스트
+  //요일을 담을 변수(해당요일에 기록이 없으면 list에 null,기록이 있으면 POST객체를 담는다)
   List<POST?> has_data_all_POST = [];
-
   DateTime? now;
   var daysinmonth;
 
   //init에서 가져올 현재 날짜에 해당하는 달,월
   var this_month;
   var this_year;
+
+  //서버에 저장된 이미지 담을 list
   List? img_server;
+
   List<POST?> test_Data_list = [];
+  List final_list = [];
+  var token;
 
   @override
   void dispose() {
@@ -59,33 +63,35 @@ class _Calendar_Screen extends State<Calendar_Screen> {
     }
   }
 
-  var token;
 
-  //해당 날짜에 해당하는 날짜 가져오는 함수
-   local_data_filter_year() async {
+
+  //현재 달력에 표시된 기록들을 불러오는 함수 ,서버,sqllite 둘다 호출
+  local_data_filter_year() async {
+    //호출될때 마다 초기화
     img_server = [];
+    test_Data_list = [];
+
     token = await Http_Presenter().read_token();
+    //서버에 저장된 현재 달력에 표시된 이미지 주소 불러오는 함수
     img_server = await Http_Presenter()
         .get_server_image(token, context, this_month, this_year);
 
-    test_Data_list = [];
-
+    //로컬(sqllite에 저장된 기록)에 저장된 기록 질문,답변을 불러오는 함수
     DBHelper sd = DBHelper();
     sd.database;
     var data = await sd.posts();
-
-
-
     has_data_all_POST = [];
 
     for (var i = 0; i < data.length; i++) {
       has_data_all_POST.add(data[i]);
     }
 
+
+
     for (var i = 0; i < has_data_all_POST.length; i++) {
       if (has_data_all_POST[i]!.datetime!.substring(0, 4) ==
           this_year.toString()) {
-        //03,04~~
+        //03,04~~09월까지
         if (has_data_all_POST[i]!.datetime!.substring(5, 6) == "0") {
           if (has_data_all_POST[i]!.datetime!.substring(6, 7) ==
               this_month.toString()) {
@@ -94,6 +100,7 @@ class _Calendar_Screen extends State<Calendar_Screen> {
         }
         //12,11,10
         else {
+
           if (has_data_all_POST[i]!.datetime!.substring(5, 7) ==
               this_month.toString()) {
             test_Data_list.add(has_data_all_POST[i]);
@@ -102,59 +109,34 @@ class _Calendar_Screen extends State<Calendar_Screen> {
       }
     }
 
-    get_date_list();
 
+    get_date_list();
 
     final_list = [];
     int j = 0;
 
-    String? filter_month;
-
-
-
-    if(this_month.toString().length == 1){
-      filter_month = "0"+this_month.toString();
-    }else{
-      filter_month = this_month.toString();
-    }
-
-    for(int i = 0 ;i < img_list.length;i++){
-      if(img_list[i]==null){
-
-      }else{
-        // print(img_list[i]!.datetime);
-      }
-
-    }
-
-
     for (int i = 0; i < img_list.length; i++) {
-
       if (img_list[i] == null) {
         final_list.add(null);
       } else {
         if (img_server!.length > j) {
           final_list.add(img_server![j]);
-        } else {
-
-        }
+        } else {}
         j++;
       }
     }
-    //
-    // print("GFDSGERWTE");
-    // print(final_list);
-    // print("ALALAL");
-
+    print(img_list);
+    print(final_list);
+    print("final_listfinal_list");
 
     return final_list;
   }
 
-  List final_list = [];
 
-  filter_img() async{
+
+  filter_img() async {
     var tokenn = await Http_Presenter().read_token();
-    Http_Presenter().get_server_data2(context,tokenn);
+    Http_Presenter().get_server_data2(context, tokenn);
   }
 
   @override
@@ -181,9 +163,7 @@ class _Calendar_Screen extends State<Calendar_Screen> {
   get_date_list() {
     img_list = [];
 
-
     for (var i = 0; i < daysinmonth.length; i++) {
-
       var this_date;
       this_date =
           filter_string_date(daysinmonth[i].toString().substring(8, 10));
@@ -193,35 +173,55 @@ class _Calendar_Screen extends State<Calendar_Screen> {
         img_list.add(null);
       }
       for (var j = 0; j < test_Data_list.length; j++) {
-
         if (test_Data_list[j]!.datetime!.substring(8, 9) == "0") {
           if (this_date == test_Data_list[j]!.datetime!.substring(9, 10)) {
-            if(daysinmonth.length == 42){
-              if(0<=i && i<=7){
-                if(this_date=="26" || this_date=="27" || this_date=="28" || this_date=="29"||this_date=="30"||this_date=="31"){
-                  img_list.add(null);
-                  break;
-                }
-
-              }if(36<=i && i<=42){
-
-
-                if(this_date=="1" || this_date=="2" || this_date=="3" || this_date=="4"||this_date=="5"||this_date=="6"){
+            if (daysinmonth.length == 42) {
+              if (0 <= i && i <= 7) {
+                if (
+                this_date == "25" ||
+                this_date == "26" ||
+                    this_date == "27" ||
+                    this_date == "28" ||
+                    this_date == "29" ||
+                    this_date == "30" ||
+                    this_date == "31") {
                   img_list.add(null);
                   break;
                 }
               }
-            }if(daysinmonth.length == 35){
-
-              if(0<=i && i<=7){
-
-                if(this_date=="26" || this_date=="27" || this_date=="28" || this_date=="29"||this_date=="30"||this_date=="31"){
+              if (36 <= i && i <= 42) {
+                if (this_date == "1" ||
+                    this_date == "2" ||
+                    this_date == "3" ||
+                    this_date == "4" ||
+                    this_date == "5" ||
+                    this_date == "6") {
                   img_list.add(null);
                   break;
                 }
-
-              }if(29<=i && i<=35){
-                if(this_date=="1" || this_date=="2" || this_date=="3" || this_date=="4"||this_date=="5"||this_date=="6"){
+              }
+            }
+            if (daysinmonth.length == 35) {
+              if (0 <= i && i <= 7) {
+                if (
+                this_date == "25" ||
+                this_date == "26" ||
+                    this_date == "27" ||
+                    this_date == "28" ||
+                    this_date == "29" ||
+                    this_date == "30" ||
+                    this_date == "31") {
+                  img_list.add(null);
+                  break;
+                }
+              }
+              if (29 <= i && i <= 35) {
+                if (this_date == "1" ||
+                    this_date == "2" ||
+                    this_date == "3" ||
+                    this_date == "4" ||
+                    this_date == "5" ||
+                    this_date == "6") {
                   img_list.add(null);
                   break;
                 }
@@ -237,33 +237,52 @@ class _Calendar_Screen extends State<Calendar_Screen> {
           }
         } else {
           if (this_date == test_Data_list[j]!.datetime!.substring(8, 10)) {
-            if(daysinmonth.length == 42){
-              if(0<=i && i<=7){
-                if(i=="26" || i=="27" || i=="28" || i=="29"||i=="30"||i=="31"){
+            if (daysinmonth.length == 42) {
+              if (0 <= i && i <= 7) {
+                if (
+                this_date=='25'||
+                    this_date == "26" ||
+                    this_date == "27" ||
+                    this_date == "28" ||
+                    this_date == "29" ||
+                    this_date == "30" ||
+                    this_date == "31") {
                   img_list.add(null);
-                  break;
-                }
-
-              }if(36<=i && i<=42){
-                if(i=="1" || i=="2" || i=="3" || i=="4"||i=="5"||i=="6"){
-                  img_list.add(null);
-                  print("BBRESK");
                   break;
                 }
               }
-            }if(daysinmonth.length == 35){
-
-              if(0<=i && i<=7){
-
-
-                if(this_date=="26" || this_date=="27" || this_date=="28" || this_date=="29"||this_date=="30"||this_date=="31"){
-                  print("BREAK");
+              if (36 <= i && i <= 42) {
+                if (this_date == "1" ||
+                    this_date == "2" ||
+                    this_date == "3" ||
+                    this_date == "4" ||
+                    this_date == "5" ||
+                    this_date == "6") {
                   img_list.add(null);
                   break;
                 }
+              }
+            }
+            if (daysinmonth.length == 35) {
+              if (0 <= i && i <= 7) {
+                if (this_date == "26" ||
+                    this_date == "27" ||
+                    this_date == "28" ||
+                    this_date == "29" ||
+                    this_date == "30" ||
+                    this_date == "31") {
 
-              }if(29<=i && i<=35){
-                if(this_date=="1" || this_date=="2" || this_date=="3" || this_date=="4"||this_date=="5"||this_date=="6"){
+                  img_list.add(null);
+                  break;
+                }
+              }
+              if (29 <= i && i <= 35) {
+                if (this_date == "1" ||
+                    this_date == "2" ||
+                    this_date == "3" ||
+                    this_date == "4" ||
+                    this_date == "5" ||
+                    this_date == "6") {
                   img_list.add(null);
                   break;
                 }
@@ -308,7 +327,6 @@ class _Calendar_Screen extends State<Calendar_Screen> {
         date_list.add(this_date);
       }
     });
-
     local_data_filter_year();
   }
 
@@ -2214,23 +2232,23 @@ class _Calendar_Screen extends State<Calendar_Screen> {
                                           children: [
                                             Text("${date_list[31]}"),
                                             date_list[31] == "1" ||
-                                                    date_list[31] == "2" ||
-                                                    date_list[31] == "3" ||
-                                                    date_list[31] == "4" ||
-                                                    date_list[31] == "5" ||
-                                                    date_list[31] == "6"
+                                                date_list[31] == "2" ||
+                                                date_list[31] == "3" ||
+                                                date_list[31] == "4" ||
+                                                date_list[31] == "5" ||
+                                                date_list[31] == "6"
                                                 ? Container()
                                                 : img_list[31] == null
-                                                    ? Container()
-                                                    : Container(
-                                                        width: size.width * 0.1,
-                                                        height:
-                                                            size.height * 0.07,
-                                                        child:
-                                                            Utility.networkimg(
-                                                                final_list[31],
-                                                                token,
-                                                                size)),
+                                                ? Container()
+                                                : Container(
+                                                width: size.width * 0.1,
+                                                height:
+                                                size.height * 0.07,
+                                                child:
+                                                Utility.networkimg(
+                                                    final_list[31],
+                                                    token,
+                                                    size)),
                                           ],
                                         )),
                                   ),

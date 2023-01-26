@@ -218,19 +218,12 @@ class _Home_ScreenState extends State<Home_Screen> {
                     // ),
 
 
-                    InkWell(
-                      onTap: ()async{
-                        var token =  await Http_Presenter().read_token();
-                        Image_Controller().download(token);
-                      },
-
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          "오늘의 기-록",
-                          style:
-                          TextStyle(fontSize: 30, fontFamily: "Gilogfont"),
-                        ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        "오늘의 기-록",
+                        style:
+                        TextStyle(fontSize: 30, fontFamily: "Gilogfont"),
                       ),
                     ),
                     SizedBox(height: size.height*0.03,),

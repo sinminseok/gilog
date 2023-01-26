@@ -18,7 +18,6 @@ class _Deliver_ScreenState extends State<Deliver_Screen> {
 
   bool check_photo = false;
   bool check_write = false;
-
   final List<String> images = <String>['review1.png','review2.png'];
 
   @override void dispose() {

@@ -45,7 +45,8 @@ class Calendar_detail extends StatefulWidget {
 
 class _Calendar_detailState extends State<Calendar_detail> {
   POST? this_post;
-
+  var token;
+  var img_server;
   // Future? myFuture;
 
   @override
@@ -54,14 +55,6 @@ class _Calendar_detailState extends State<Calendar_detail> {
     super.initState();
   }
 
-  @override
-  void dispose() {
-
-    super.dispose();
-  }
-
-  var token;
-  var img_server;
 
   //디스크에 저장된 기록 가져오는 함수
   get_datetime_post() async {
@@ -82,8 +75,6 @@ class _Calendar_detailState extends State<Calendar_detail> {
       }
     }
     img_server = await Http_Presenter().get_server_image2(token, context);
-
-    // token = await Http_Presenter().read_token();
 
     return img_server;
   }
@@ -118,7 +109,7 @@ class _Calendar_detailState extends State<Calendar_detail> {
                 children: [
                   InkWell(
                     onTap: (){
-                      print(img_server);
+
                     },
                     child: Text(
                       "${widget.date_time} 기-록",
@@ -131,8 +122,6 @@ class _Calendar_detailState extends State<Calendar_detail> {
 
                   InkWell(
                     onTap: () {
-
-
                       Navigator.push(
                           context,
                           PageTransition(

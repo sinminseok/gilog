@@ -10,6 +10,7 @@ import 'package:webview_flutter/webview_flutter.dart';
 
 import '../../../Utils/calendar_utils/check_datetime.dart';
 import '../../../Utils/constants.dart';
+import '../../../Utils/http_url.dart';
 import '../../../Utils/toast.dart';
 
 import '../../Presenter/Http/user_http.dart';
@@ -43,12 +44,10 @@ class _Login_ScreenState extends State<Login_Screen> {
 
     if(return_logout_check == null){
       if (login_check == "kakao") {
-        print("HFDGHFG");
-        const String _REST_API_KEY =
-            "ee4ee61f1ea69f5a8d5f5924343083f7";
+         String _REST_API_KEY = Http_URL().REST_API_KEY;
 
-        const String _REDIRECT =
-            "http://ec2-43-200-33-232.ap-northeast-2.compute.amazonaws.com:8080/api/oauth2/code/kakao";
+         String _REDIRECT =
+             Http_URL().REDIRECT_URL;
 
         final _host = "https://kauth.kakao.com";
         final _url =
@@ -68,8 +67,6 @@ class _Login_ScreenState extends State<Login_Screen> {
                       name: "JavaScriptChannel",
                       onMessageReceived:
                           (JavascriptMessage result) {
-                        print(result.message);
-
                         if (result.message != null) {
                           Http_Presenter()
                               .set_token(result.message);
@@ -235,7 +232,6 @@ class _Login_ScreenState extends State<Login_Screen> {
                                           name: "JavaScriptChannel",
                                           onMessageReceived:
                                               (JavascriptMessage result) {
-                                            print(result.message);
 
                                             if (result.message != null) {
                                               Http_Presenter()
@@ -273,7 +269,7 @@ class _Login_ScreenState extends State<Login_Screen> {
                           showtoast("소셜로그인을 진행해주세요");
                         }
                         if (login_check == "kakao") {
-                          print("HFDGHFG");
+
                           const String _REST_API_KEY =
                               "ee4ee61f1ea69f5a8d5f5924343083f7";
 
@@ -298,7 +294,7 @@ class _Login_ScreenState extends State<Login_Screen> {
                                             name: "JavaScriptChannel",
                                             onMessageReceived:
                                                 (JavascriptMessage result) {
-                                              print(result.message);
+
 
                                               if (result.message != null) {
                                                 Http_Presenter()

@@ -14,12 +14,8 @@ import 'package:gilog/Utils/toast.dart';
 import 'package:http/http.dart' as http;
 import 'package:page_transition/page_transition.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_image_compress/flutter_image_compress.dart';
 import '../../../Local_DB/db.dart';
-import '../../Model/deliver_item.dart';
-import '../../Model/deliver_list_item.dart';
 import '../../Model/post.dart';
-import '../../Model/user.dart';
 import '../../View/Account/login.dart';
 
 class Http_Presenter with ChangeNotifier {
@@ -115,18 +111,6 @@ class Http_Presenter with ChangeNotifier {
     });
     final decodeData = utf8.decode(res.bodyBytes);
     final data = jsonDecode(decodeData);
-    print(data);
-    print("datadatadata");
-
-
-    for(int i=0;i<data.length;i++){
-      print(data[i]);
-      print("check_id");
-
-
-
-
-    }
 
   }
 
@@ -139,17 +123,10 @@ class Http_Presenter with ChangeNotifier {
     });
     final decodeData = utf8.decode(res.bodyBytes);
     final data = jsonDecode(decodeData);
-    print(data);
-    print("datadatadata");
 
-    for(int i=0;i<data.length;i++){
-      print(data[i]['writeDate']);
-    }
 
 
     for(int i=0;i<data.length;i++){
-      print(check_id);
-      print("check_id");
 
       var return_id = await check_id_fun();
 
@@ -244,8 +221,7 @@ class Http_Presenter with ChangeNotifier {
 
     var response = await request.send();
 
-    print("이미지 변경 서버전송");
-    print(response.statusCode);
+
 
     if (response.statusCode == 200) {
       showtoast("기록 되었습니다!");
@@ -276,9 +252,6 @@ class Http_Presenter with ChangeNotifier {
         body: json.encode(
             {'writeDate': datetime, 'request': content, 'question': question}));
 
-    //statusCode 확인해볼것
-    print(res.body);
-    print("GGG");
     if (res.statusCode == 200) {
       return res.body;
     }
@@ -304,9 +277,6 @@ class Http_Presenter with ChangeNotifier {
         },
         body: json.encode(
             {'writeDate': datetime, 'request': content, 'question': question}));
-
-    print("FGASGFASG");
-    print(res.body);
 
     //statusCode 확인해볼것
 
