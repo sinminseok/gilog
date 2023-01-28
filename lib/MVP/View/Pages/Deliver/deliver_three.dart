@@ -109,30 +109,31 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
   //해당 날짜에 해당하는 날짜 가져오는 함수
 
   local_data_filter_year() async {
+    //호출될때 마다 초기화
     img_server = [];
-    token = await Http_Presenter().read_token();
-    img_server = await Http_Presenter()
-        .get_server_image(token, context, this_month, this_year);
-    // print(img_server);
-    // print("img_serverimg_server");
     test_Data_list = [];
 
+    token = await Http_Presenter().read_token();
+    //서버에 저장된 현재 달력에 표시된 이미지 주소 불러오는 함수
+    img_server = await Http_Presenter()
+        .get_server_image(token, context, this_month, this_year);
+
+    //로컬(sqllite에 저장된 기록)에 저장된 기록 질문,답변을 불러오는 함수
     DBHelper sd = DBHelper();
     sd.database;
     var data = await sd.posts();
-
-
-
     has_data_all_POST = [];
 
     for (var i = 0; i < data.length; i++) {
       has_data_all_POST.add(data[i]);
     }
 
+
+
     for (var i = 0; i < has_data_all_POST.length; i++) {
       if (has_data_all_POST[i]!.datetime!.substring(0, 4) ==
           this_year.toString()) {
-        //03,04~~
+        //03,04~~09월까지
         if (has_data_all_POST[i]!.datetime!.substring(5, 6) == "0") {
           if (has_data_all_POST[i]!.datetime!.substring(6, 7) ==
               this_month.toString()) {
@@ -141,6 +142,7 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
         }
         //12,11,10
         else {
+
           if (has_data_all_POST[i]!.datetime!.substring(5, 7) ==
               this_month.toString()) {
             test_Data_list.add(has_data_all_POST[i]);
@@ -149,50 +151,25 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
       }
     }
 
-    get_date_list();
 
+    get_date_list();
 
     final_list = [];
     int j = 0;
 
-    String? filter_month;
-
-
-
-    if(this_month.toString().length == 1){
-      filter_month = "0"+this_month.toString();
-    }else{
-      filter_month = this_month.toString();
-    }
-
-    for(int i = 0 ;i < img_list.length;i++){
-      if(img_list[i]==null){
-
-      }else{
-        print(img_list[i]!.datetime);
-      }
-
-    }
-    print("HAHA");
-
     for (int i = 0; i < img_list.length; i++) {
-
       if (img_list[i] == null) {
         final_list.add(null);
       } else {
         if (img_server!.length > j) {
           final_list.add(img_server![j]);
-        } else {
-
-        }
+        } else {}
         j++;
       }
     }
-
-    print("GFDSGERWTE");
     print(img_list.length);
     print(final_list.length);
-
+    print("final_listfinal_list");
 
     return final_list;
   }
@@ -204,8 +181,8 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
     test_Data_list = [];
     date_list = [];
     get_datetime();
-    get_date_list();
-    local_data_filter_year();
+    // get_date_list();
+    // local_data_filter_year();
 
     super.initState();
   }
@@ -233,9 +210,7 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
   get_date_list() {
     img_list = [];
 
-
     for (var i = 0; i < daysinmonth.length; i++) {
-
       var this_date;
       this_date =
           filter_string_date(daysinmonth[i].toString().substring(8, 10));
@@ -245,35 +220,55 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
         img_list.add(null);
       }
       for (var j = 0; j < test_Data_list.length; j++) {
-
         if (test_Data_list[j]!.datetime!.substring(8, 9) == "0") {
           if (this_date == test_Data_list[j]!.datetime!.substring(9, 10)) {
-            if(daysinmonth.length == 42){
-              if(0<=i && i<=7){
-                if(this_date=="26" || this_date=="27" || this_date=="28" || this_date=="29"||this_date=="30"||this_date=="31"){
-                  img_list.add(null);
-                  break;
-                }
-
-              }if(36<=i && i<=42){
-
-
-                if(this_date=="1" || this_date=="2" || this_date=="3" || this_date=="4"||this_date=="5"||this_date=="6"){
+            if (daysinmonth.length == 42) {
+              if (0 <= i && i <= 7) {
+                if (
+                this_date == "25" ||
+                    this_date == "26" ||
+                    this_date == "27" ||
+                    this_date == "28" ||
+                    this_date == "29" ||
+                    this_date == "30" ||
+                    this_date == "31") {
                   img_list.add(null);
                   break;
                 }
               }
-            }if(daysinmonth.length == 35){
-
-              if(0<=i && i<=7){
-
-                if(this_date=="26" || this_date=="27" || this_date=="28" || this_date=="29"||this_date=="30"||this_date=="31"){
+              if (36 <= i && i <= 42) {
+                if (this_date == "1" ||
+                    this_date == "2" ||
+                    this_date == "3" ||
+                    this_date == "4" ||
+                    this_date == "5" ||
+                    this_date == "6") {
                   img_list.add(null);
                   break;
                 }
-
-              }if(29<=i && i<=35){
-                if(this_date=="1" || this_date=="2" || this_date=="3" || this_date=="4"||this_date=="5"||this_date=="6"){
+              }
+            }
+            if (daysinmonth.length == 35) {
+              if (0 <= i && i <= 7) {
+                if (
+                this_date == "25" ||
+                    this_date == "26" ||
+                    this_date == "27" ||
+                    this_date == "28" ||
+                    this_date == "29" ||
+                    this_date == "30" ||
+                    this_date == "31") {
+                  img_list.add(null);
+                  break;
+                }
+              }
+              if (29 <= i && i <= 35) {
+                if (this_date == "1" ||
+                    this_date == "2" ||
+                    this_date == "3" ||
+                    this_date == "4" ||
+                    this_date == "5" ||
+                    this_date == "6") {
                   img_list.add(null);
                   break;
                 }
@@ -289,33 +284,52 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
           }
         } else {
           if (this_date == test_Data_list[j]!.datetime!.substring(8, 10)) {
-            if(daysinmonth.length == 42){
-              if(0<=i && i<=7){
-                if(i=="26" || i=="27" || i=="28" || i=="29"||i=="30"||i=="31"){
+            if (daysinmonth.length == 42) {
+              if (0 <= i && i <= 7) {
+                if (
+                this_date=='25'||
+                    this_date == "26" ||
+                    this_date == "27" ||
+                    this_date == "28" ||
+                    this_date == "29" ||
+                    this_date == "30" ||
+                    this_date == "31") {
                   img_list.add(null);
-                  break;
-                }
-
-              }if(36<=i && i<=42){
-                if(i=="1" || i=="2" || i=="3" || i=="4"||i=="5"||i=="6"){
-                  img_list.add(null);
-                  print("BBRESK");
                   break;
                 }
               }
-            }if(daysinmonth.length == 35){
-
-              if(0<=i && i<=7){
-
-
-                if(this_date=="26" || this_date=="27" || this_date=="28" || this_date=="29"||this_date=="30"||this_date=="31"){
-                  print("BREAK");
+              if (36 <= i && i <= 42) {
+                if (this_date == "1" ||
+                    this_date == "2" ||
+                    this_date == "3" ||
+                    this_date == "4" ||
+                    this_date == "5" ||
+                    this_date == "6") {
                   img_list.add(null);
                   break;
                 }
+              }
+            }
+            if (daysinmonth.length == 35) {
+              if (0 <= i && i <= 7) {
+                if (this_date == "26" ||
+                    this_date == "27" ||
+                    this_date == "28" ||
+                    this_date == "29" ||
+                    this_date == "30" ||
+                    this_date == "31") {
 
-              }if(29<=i && i<=35){
-                if(this_date=="1" || this_date=="2" || this_date=="3" || this_date=="4"||this_date=="5"||this_date=="6"){
+                  img_list.add(null);
+                  break;
+                }
+              }
+              if (29 <= i && i <= 35) {
+                if (this_date == "1" ||
+                    this_date == "2" ||
+                    this_date == "3" ||
+                    this_date == "4" ||
+                    this_date == "5" ||
+                    this_date == "6") {
                   img_list.add(null);
                   break;
                 }
@@ -4400,6 +4414,7 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                                                       ],
                                                     )),
                                               ),
+
                                         date_list[32] == "1" ||
                                                 date_list[32] == "2" ||
                                                 date_list[32] == "3" ||

@@ -125,8 +125,8 @@ class _Calendar_Screen extends State<Calendar_Screen> {
         j++;
       }
     }
-    print(img_list);
-    print(final_list);
+    print(img_list.length);
+    print(final_list.length);
     print("final_listfinal_list");
 
     return final_list;
