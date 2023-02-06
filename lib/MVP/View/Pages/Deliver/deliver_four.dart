@@ -128,7 +128,7 @@ class _Deliver_Four_Screen extends State<Deliver_Four_Screen> {
                     width: size.width * 0.1,
                     decoration: BoxDecoration(
                       border: Border(
-                          bottom: BorderSide(color: Colors.purple, width: 5)),
+                          bottom: BorderSide(color: Color(0xfff76707), width: 5)),
                     ),
                   ),
                 ),
@@ -145,6 +145,9 @@ class _Deliver_Four_Screen extends State<Deliver_Four_Screen> {
                 "추억을 집 앞에 잘 배송하기 위해",
                 style: TextStyle(fontFamily: "gilogfont", fontSize: 23),
               ),
+            ),
+            SizedBox(
+              height: size.height * 0.01,
             ),
             Text(
               "다음 사항을 꼭 확인해주세요",
@@ -216,53 +219,57 @@ class _Deliver_Four_Screen extends State<Deliver_Four_Screen> {
                       controller: _destination_controller,
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 10.0, top: 20),
-                    child: Text(
-                      "주문 금액: ${total_price}",
-                      style: TextStyle(fontFamily: "gilogfont", fontSize: 21),
-                    ),
-                  )
+                  //Padding(
+                    //padding: const EdgeInsets.only(left: 10.0, top: 20),
+                    //child: Text(
+                      //"주문 금액: ${total_price}",
+                      //style: TextStyle(fontFamily: "gilogfont", fontSize: 21),
+                    //),
+                  //)
                 ],
               ),
             ),
             Padding(
               padding: const EdgeInsets.only(top: 15.0),
               child: Text(
-                "110-445-151150(신한)심소연으로",
+                "네이버 스마트스토어 기로그에서 선결제를 해주셔야 합니다!",
                 style: TextStyle(
                     fontFamily: "gilogfont",
-                    fontSize: 18,
-                    color: Colors.deepPurple),
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xfff76707)),
               ),
             ),
-            Text(
-              "입급금액을 주문자명으로 1시간이내에",
-              style: TextStyle(
-                  fontFamily: "gilogfont",
-                  fontSize: 18,
-                  color: Colors.deepPurple),
+            SizedBox(
+              height: size.height * 0.01,
             ),
             Text(
-              "입금해주세요!",
+              "네이버에 '기로그 육아일기'로 검색해주세요 :)",
               style: TextStyle(
                   fontFamily: "gilogfont",
-                  fontSize: 18,
-                  color: Colors.deepPurple),
+                  fontSize: 15,
+                  color: Colors.black),
+            ),
+            SizedBox(
+              height: size.height * 0.01,
             ),
             Text(
-              "입금이 되지 않으면 자동 취소 됩니다ㅜㅜ",
+              "배송 메모에 어플 닉네임을 꼭 적어주세요!",
               style: TextStyle(
                   fontFamily: "gilogfont",
-                  fontSize: 18,
-                  color: Colors.deepPurple),
+                  fontSize: 15,
+                  color: Colors.black),
             ),
+            SizedBox(
+              height: size.height * 0.01,
+            ),
+
             Text(
-              "주문 현황은 마이페이지에서 확인할 수 있습니다!",
+              "* 주문 현황은 마이페이지에서 확인할 수 있습니다.",
               style: TextStyle(
                   fontFamily: "gilogfont",
-                  fontSize: 18,
-                  color: Colors.deepPurple),
+                  fontSize: 13,
+                  color: Colors.black),
             ),
             Padding(
               padding: const EdgeInsets.all(14.0),

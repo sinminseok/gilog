@@ -15,9 +15,9 @@ class Calendar_detail_frame extends StatefulWidget {
 
   Calendar_detail_frame(
       {required this.date_list,
-      required this.datetime,
-      required this.month,
-      required this.year});
+        required this.datetime,
+        required this.month,
+        required this.year});
 
   @override
   _Calendar_detail_frame createState() => _Calendar_detail_frame();
@@ -78,7 +78,7 @@ class _Calendar_detail_frame extends State<Calendar_detail_frame> {
   void initState() {
     // TODO: implement initState
     add_datetime();
-   _init();
+    _init();
     super.initState();
   }
 
@@ -113,7 +113,7 @@ class _Calendar_detail_frame extends State<Calendar_detail_frame> {
 
               check: i,
               //fun: refresh(context),
-             // img_obj: img_server[i],
+              // img_obj: img_server[i],
               date_time: widget.date_list[i]!.datetime,
               remember_year: widget.year,
               remember_date_list: widget.date_list,

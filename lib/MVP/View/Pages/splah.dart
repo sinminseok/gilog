@@ -17,7 +17,7 @@ class SplashScreen extends StatelessWidget {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          SizedBox(height: size.height*0.3,),
+          SizedBox(height: size.height*0.425,),
           // Center(child: Text("당신의 일상을 기록해 보세요")),
           // Center(child: Text("기 Log",style: TextStyle(fontFamily: "gilogfont",fontSize: 43),)),
           Center(

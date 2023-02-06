@@ -1,6 +1,9 @@
-
+import 'package:http/http.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
+
+import '../MVP/Model/post.dart';
 import '../MVP/Model/user_profile.dart';
 
 final String TableName = 'USER';

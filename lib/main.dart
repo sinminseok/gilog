@@ -8,6 +8,14 @@ import 'MVP/View/Pages/ErrorScreen.dart';
 import 'MVP/View/Pages/splah.dart';
 
 void main() async {
+
+  //KakaoSdk.init(nativeAppKey: 'c4ddd110fec9eaab625667112de706fb');
+
+  // WidgetsFlutterBinding.ensureInitialized();
+  // await Firebase.initializeApp();
+
+
+
   runApp(
     ChangeNotifierProvider(
       create: (context) => User_Http(),
@@ -35,6 +43,11 @@ class MyApp extends StatelessWidget {
           home: ErrorScreen()); // 초기 로딩 에러 시 Error Screen
         } else {
           return MaterialApp(
+            // routes: {
+            //   // "/" Route로 이동하면, FirstScreen 위젯을 생성합니다.
+            //   '/frame': (context) => Frame_Screen(Login_method: null),
+            //
+            // },
             debugShowCheckedModeBanner: false,
             title: 'Flutter',
             theme: ThemeData(primarySwatch: Colors.blue),

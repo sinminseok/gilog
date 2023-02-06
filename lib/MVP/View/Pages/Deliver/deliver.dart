@@ -18,6 +18,7 @@ class _Deliver_ScreenState extends State<Deliver_Screen> {
 
   bool check_photo = false;
   bool check_write = false;
+
   final List<String> images = <String>['review1.png','review2.png'];
 
   @override void dispose() {
@@ -89,7 +90,7 @@ class _Deliver_ScreenState extends State<Deliver_Screen> {
                             check_photo == true
                                 ? Icon(
                                     Icons.check,
-                                    color: Colors.purple,
+                                    color: Color(0xfff76707),
                                   )
                                 : Container()
                           ],
@@ -196,7 +197,7 @@ class _Deliver_ScreenState extends State<Deliver_Screen> {
               },
               child: Container(
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(3),
+                    borderRadius: BorderRadius.circular(100),
                     color: kButtonColor),
                 width: size.width * 0.7,
                 height: size.height * 0.06,

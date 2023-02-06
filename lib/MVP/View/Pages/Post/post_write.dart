@@ -99,7 +99,7 @@ class _Post_WriteState extends State<Post_Write> {
                 child: Text(
                   datetime,
                   style: TextStyle(
-                      fontFamily: "gilogfont", fontSize: 28, color: Colors.black),
+                      fontFamily: "gilogfont", fontSize: 25, color: Colors.black),
                 ),
               ),
               SizedBox(
@@ -123,7 +123,7 @@ class _Post_WriteState extends State<Post_Write> {
                     "기록 완료",
                     style: TextStyle(
                         fontFamily: "gilogfont",
-                        color: Colors.black,
+                        color: Colors.white,
                         fontSize: 17),
                   )),
                 ),
@@ -138,28 +138,28 @@ class _Post_WriteState extends State<Post_Write> {
         body: Column(
           children: [
             SizedBox(
-              height: size.height * 0.02,
+              height: size.height * 0.04,
             ),
             Row(
               children: [
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Container(
-                      width: size.width * 0.15,
+                      width: size.width * 0.10,
                       child: Image.asset("assets/images/smile_png.png")),
                 ),
                 Container(
                   width: size.width * 0.7,
-                  height: size.height * 0.15,
+                  height: size.height * 0.10,
                   decoration: BoxDecoration(
-                      color: kProfileColor,
+                      color: Color(0xffF1E2DB),
                       borderRadius: BorderRadius.circular(20)),
                   child: Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.all(10.0),
                     child: Center(
                       child: Text(
                         "${widget.question}",
-                        style: TextStyle(fontFamily: "gilogfont", fontSize: 17),
+                        style: TextStyle(fontFamily: "gilogfont", fontSize: 17, height:1.5),
                       ),
                     ),
                   ),
@@ -180,19 +180,19 @@ class _Post_WriteState extends State<Post_Write> {
                     ? Alignment.centerRight
                     : Alignment.centerLeft,
                 child: Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(10.0),
                   child: Container(
                     width: size.width * 0.6,
                     decoration: BoxDecoration(
-                        color: kProfileColor,
+                        color: Color(0xffFFD7C6),
                         borderRadius: BorderRadius.circular(20)),
                     child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.all(10.0),
                       child: Center(
                         child: Text(
                           "${message.text}",
                           style:
-                              TextStyle(fontFamily: "gilogfont", fontSize: 18),
+                              TextStyle(fontFamily: "gilogfont", fontSize: 17, height:1.5),
                         ),
                       ),
                     ),
@@ -202,7 +202,7 @@ class _Post_WriteState extends State<Post_Write> {
             )),
             Container(
                 decoration: BoxDecoration(
-                  color: Colors.purple.shade100,
+                  color: kBackgroundColor,
                   borderRadius: BorderRadius.only(
                       topRight: Radius.circular(30),
                       topLeft: Radius.circular(30)),
@@ -215,7 +215,7 @@ class _Post_WriteState extends State<Post_Write> {
                   decoration: InputDecoration(
                     contentPadding: EdgeInsets.only(left: 20, top: 20),
                     hintText: "내용을 입력하세요",
-                    hintStyle: TextStyle(fontFamily: "gilogfont", fontSize: 21),
+                    hintStyle: TextStyle(fontFamily: "gilogfont", fontSize: 17),
                     border: InputBorder.none,
                     suffixIcon: Padding(
                       padding: const EdgeInsets.only(top: 10.0, right: 10),
@@ -241,7 +241,7 @@ class _Post_WriteState extends State<Post_Write> {
                         },
                         icon: Icon(
                           Icons.send,
-                          color: Colors.black,
+                          color: Color(0xfff76707),
                         ),
                       ),
                     ),

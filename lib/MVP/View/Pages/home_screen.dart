@@ -193,7 +193,7 @@ class _Home_ScreenState extends State<Home_Screen> {
                     //   fit: BoxFit.cover,
                     //
                     // ),
-                    SizedBox(height: size.height*0.08,),
+                    SizedBox(height: size.height*0.15,),
 
                     Container(
 
@@ -201,7 +201,7 @@ class _Home_ScreenState extends State<Home_Screen> {
                           child: Text(
                             "${today}",
                             style: TextStyle(
-                              fontSize: 42,
+                              fontSize: 35,
                               fontFamily: "gilogfont",
                             ),
                           )),
@@ -218,15 +218,22 @@ class _Home_ScreenState extends State<Home_Screen> {
                     // ),
 
 
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        "오늘의 기-록",
-                        style:
-                        TextStyle(fontSize: 30, fontFamily: "Gilogfont"),
+                    InkWell(
+                      onTap: ()async{
+                        var token =  await Http_Presenter().read_token();
+                        Image_Controller().download(token);
+                      },
+
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Text(
+                          "오늘의 기록",
+                          style:
+                          TextStyle(fontSize: 25, fontFamily: "Gilogfont"),
+                        ),
                       ),
                     ),
-                    SizedBox(height: size.height*0.03,),
+                    SizedBox(height: size.height*0.025,),
 
 
                     Container(
@@ -242,7 +249,7 @@ class _Home_ScreenState extends State<Home_Screen> {
                         child: image_picked == null
                             ? Image.asset(
                           "assets/images/photo_null_image.png",
-                          width: size.width * 0.6,
+                          width: size.width * 0.5,
                         )
                             : Container(
                           height: size.height*0.35,
@@ -257,19 +264,18 @@ class _Home_ScreenState extends State<Home_Screen> {
                             ),
                       ),
                     ),
-                    SizedBox(height: size.height*0.05,),
+                    SizedBox(height: size.height*0.02,),
 
 
 
                     InkWell(
                       onTap: () async {
-
                         Permission_handler().requestCameraPermission(context);
                         getImageFromGallery();
                       },
                       child: Container(
                         decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
+                            borderRadius: BorderRadius.circular(100),
                             boxShadow: [
                               BoxShadow(
                                 color: Colors.grey.withOpacity(0.3),

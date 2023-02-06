@@ -131,6 +131,7 @@ class User_Http with ChangeNotifier {
 
     final decodeData = utf8.decode(res.bodyBytes);
     final data = jsonDecode(decodeData);
+    print(data);
 
     //statusCode 확인해볼것
     if (res.statusCode == 200) {

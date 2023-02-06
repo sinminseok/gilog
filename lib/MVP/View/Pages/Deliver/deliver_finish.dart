@@ -77,7 +77,7 @@ class _Deliver_Finish_ScreenState extends State<Deliver_Finish_Screen>  with Tic
                   height: circleSize,
                   width: circleSize,
                   decoration: BoxDecoration(
-                    color: Colors.purple,
+                    color: Color(0xfff76707),
                     shape: BoxShape.circle,
                   ),
                   child: SizeTransition(

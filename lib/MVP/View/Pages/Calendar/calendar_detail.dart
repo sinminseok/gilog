@@ -45,8 +45,7 @@ class Calendar_detail extends StatefulWidget {
 
 class _Calendar_detailState extends State<Calendar_detail> {
   POST? this_post;
-  var token;
-  var img_server;
+
   // Future? myFuture;
 
   @override
@@ -55,6 +54,14 @@ class _Calendar_detailState extends State<Calendar_detail> {
     super.initState();
   }
 
+  @override
+  void dispose() {
+
+    super.dispose();
+  }
+
+  var token;
+  var img_server;
 
   //디스크에 저장된 기록 가져오는 함수
   get_datetime_post() async {
@@ -75,6 +82,8 @@ class _Calendar_detailState extends State<Calendar_detail> {
       }
     }
     img_server = await Http_Presenter().get_server_image2(token, context);
+
+    // token = await Http_Presenter().read_token();
 
     return img_server;
   }
@@ -109,10 +118,10 @@ class _Calendar_detailState extends State<Calendar_detail> {
                 children: [
                   InkWell(
                     onTap: (){
-
+                      print(img_server);
                     },
                     child: Text(
-                      "${widget.date_time} 기-록",
+                      "${widget.date_time}의 기록",
                       style: TextStyle(fontFamily: "gilogfont", fontSize: 24),
                     ),
                   ),
@@ -122,6 +131,8 @@ class _Calendar_detailState extends State<Calendar_detail> {
 
                   InkWell(
                     onTap: () {
+
+
                       Navigator.push(
                           context,
                           PageTransition(
@@ -152,10 +163,10 @@ class _Calendar_detailState extends State<Calendar_detail> {
                                       color: Colors.black,
                                       style: BorderStyle.solid,
                                       width: 3),
-                                  borderRadius: BorderRadius.circular(10),
+                                  borderRadius: BorderRadius.circular(50),
                                   color: Colors.white),
                               width: size.width * 0.9,
-                              height: size.height * 0.13,
+                              height: size.height * 0.10,
                               child: Padding(
                                 padding: const EdgeInsets.only(
                                     right: 22.0, left: 20.0),
@@ -165,7 +176,7 @@ class _Calendar_detailState extends State<Calendar_detail> {
                                   style: TextStyle(
                                       color: Colors.black,
                                       fontFamily: "gilogfont",
-                                      fontSize: 18),
+                                      fontSize: 16),
                                 )),
                               ),
                             ),
@@ -198,7 +209,7 @@ class _Calendar_detailState extends State<Calendar_detail> {
                               Text(
                                 "${this_post!.content}",
                                 style: TextStyle(
-                                    fontFamily: "gilogfont", fontSize: 20),
+                                    fontFamily: "gilogfont", fontSize: 15, height:1.5),
                               ),
                             ],
                           ),
