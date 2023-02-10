@@ -139,10 +139,11 @@ flutter:
       fonts:
         - asset: assets/fonts/numberfont.otf
           weight: 200
-    - family: Splahfont
-      fonts:
-        - asset: assets/fonts/splahfont.otf
-          weight: 200
+
+  #  - family: Splahfont
+   #   fonts:
+  #    - asset: assets/fonts/splahfont.otf
+   #       weight: 200
 
 
   #         style: italic

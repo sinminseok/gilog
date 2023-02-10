@@ -90,7 +90,7 @@ class _Post_WriteState extends State<Post_Write> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(
-                width: size.width * 0.03,
+                width: size.width * 0.17,
               ),
               InkWell(
                 onTap: (){
@@ -99,12 +99,15 @@ class _Post_WriteState extends State<Post_Write> {
                 child: Text(
                   datetime,
                   style: TextStyle(
-                      fontFamily: "gilogfont", fontSize: 25, color: Colors.black),
+                      fontFamily: "gilogfont", fontSize: 20, color: Colors.black),
                 ),
               ),
+
               SizedBox(
                 width: size.width * 0.13,
               ),
+
+
               InkWell(
                 onTap: () {
                   sub_controller_text(context);
@@ -113,18 +116,18 @@ class _Post_WriteState extends State<Post_Write> {
                   //     : sub_controller_text(context);
                 },
                 child: Container(
-                  width: size.width * 0.21,
+                  width: size.width * 0.17,
                   height: size.height * 0.045,
                   decoration: BoxDecoration(
                       color: kButtonColor,
                       borderRadius: BorderRadius.circular(50)),
                   child: Center(
                       child: Text(
-                    "기록 완료",
+                    "저장",
                     style: TextStyle(
                         fontFamily: "gilogfont",
                         color: Colors.white,
-                        fontSize: 17),
+                        fontSize: 15),
                   )),
                 ),
               )
@@ -132,34 +135,45 @@ class _Post_WriteState extends State<Post_Write> {
           ),
           elevation: 0,
           iconTheme: IconThemeData(
-            color: Colors.black, //색변경
+            color: kButtonColor, //색변경
           ),
         ),
-        body: Column(
+        body:
+        Column(
           children: [
             SizedBox(
-              height: size.height * 0.04,
+              height: size.height * 0.01,
             ),
+            Text(
+              "사진 제목 / 질문 답변 / (일상기록-선택) 순으로 보내주세요!",
+              style: TextStyle(fontFamily: "gilogfont2", fontSize: 12, height:1.5),
+
+            ),
+            SizedBox(
+              height: size.height * 0.02,
+            ),
+
             Row(
               children: [
                 Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(10.0),
                   child: Container(
                       width: size.width * 0.10,
                       child: Image.asset("assets/images/smile_png.png")),
                 ),
+
                 Container(
                   width: size.width * 0.7,
                   height: size.height * 0.10,
                   decoration: BoxDecoration(
-                      color: Color(0xffF1E2DB),
+                      color: Colors.white,
                       borderRadius: BorderRadius.circular(20)),
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Center(
                       child: Text(
                         "${widget.question}",
-                        style: TextStyle(fontFamily: "gilogfont", fontSize: 17, height:1.5),
+                        style: TextStyle(fontFamily: "gilogfont", fontSize: 15, height:1.5),
                       ),
                     ),
                   ),
@@ -213,10 +227,18 @@ class _Post_WriteState extends State<Post_Write> {
                   textInputAction: TextInputAction.done,
                   controller: _content_controller,
                   decoration: InputDecoration(
-                    contentPadding: EdgeInsets.only(left: 20, top: 20),
+                    contentPadding: EdgeInsets.only(left: 20, top: 35),
+                    filled: true,
+                    fillColor: Colors.white,
                     hintText: "내용을 입력하세요",
-                    hintStyle: TextStyle(fontFamily: "gilogfont", fontSize: 17),
-                    border: InputBorder.none,
+                    hintStyle: TextStyle(fontFamily: "gilogfont", fontSize: 15),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(50),
+                      borderSide: BorderSide(
+                        width: 0,
+                        style: BorderStyle.none,
+                      ),
+                    ),
                     suffixIcon: Padding(
                       padding: const EdgeInsets.only(top: 10.0, right: 10),
                       child: IconButton(
@@ -248,7 +270,9 @@ class _Post_WriteState extends State<Post_Write> {
                   ),
                 ))
           ],
-        ));
+        ),
+
+    );
   }
 
   void sub_controller_text(context) {

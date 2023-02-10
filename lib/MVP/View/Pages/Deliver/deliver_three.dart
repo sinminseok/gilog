@@ -545,9 +545,13 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                       onTap: () {
                         Navigator.pop(context);
                       },
-                      child: Icon(
-                        Icons.chevron_left,
-                        size: 40,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Icon(
+                          Icons.chevron_left,
+                          color : kButtonColor,
+                          size: 40,
+                        ),
                       )),
                   SizedBox(
                     width: size.width * 0.12,
@@ -555,6 +559,7 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
+                      /*
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Container(
@@ -599,6 +604,8 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                           ),
                         ),
                       ),
+
+                       */
                     ],
                   ),
                 ],
@@ -5846,9 +5853,9 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                   ),
                   InkWell(
                       onTap: (){
-                        showAlertDialog(context, "선택한 요일", "${plus_book_page}");
+                        showAlertDialog(context, "선택한 날짜", "${plus_book_page}");
                       },
-                      child: Text("선택한 요일 : ${plus_book_page.length}",style: TextStyle(fontFamily: "gilogfont",fontSize: 21),)),
+                      child: Text("선택한 날짜 : ${plus_book_page.length}",style: TextStyle(fontFamily: "gilogfont",fontSize: 21),)),
 
                   SizedBox(height: size.height*0.01,),
 
@@ -5879,7 +5886,7 @@ class _Deliver_Three_Screen extends State<Deliver_Three_Screen> {
                 },
                 child: Container(
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(3),
+                      borderRadius: BorderRadius.circular(50),
                       color: kButtonColor),
                   width: size.width * 0.7,
                   height: size.height * 0.06,

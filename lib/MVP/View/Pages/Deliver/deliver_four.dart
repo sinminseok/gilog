@@ -83,7 +83,7 @@ class _Deliver_Four_Screen extends State<Deliver_Four_Screen> {
         backgroundColor: kPrimaryColor,
         elevation: 0,
         iconTheme: IconThemeData(
-          color: Colors.black, //색변경
+          color: kButtonColor, //색변경
         ),
       ),
       body: SingleChildScrollView(
@@ -92,6 +92,7 @@ class _Deliver_Four_Screen extends State<Deliver_Four_Screen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                /*
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Container(
@@ -102,6 +103,7 @@ class _Deliver_Four_Screen extends State<Deliver_Four_Screen> {
                     ),
                   ),
                 ),
+
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Container(
@@ -132,6 +134,8 @@ class _Deliver_Four_Screen extends State<Deliver_Four_Screen> {
                     ),
                   ),
                 ),
+
+                 */
               ],
             ),
             SizedBox(
@@ -142,8 +146,8 @@ class _Deliver_Four_Screen extends State<Deliver_Four_Screen> {
                 filter_string();
               },
               child: Text(
-                "추억을 집 앞에 잘 배송하기 위해",
-                style: TextStyle(fontFamily: "gilogfont", fontSize: 23),
+                "추억을 집으로 잘 받아볼 수 있도록",
+                style: TextStyle(fontFamily: "gilogfont", fontSize: 20),
               ),
             ),
             SizedBox(
@@ -151,56 +155,56 @@ class _Deliver_Four_Screen extends State<Deliver_Four_Screen> {
             ),
             Text(
               "다음 사항을 꼭 확인해주세요",
-              style: TextStyle(fontFamily: "gilogfont", fontSize: 23),
+              style: TextStyle(fontFamily: "gilogfont", fontSize: 20),
             ),
             SizedBox(
               height: size.height * 0.03,
             ),
             Container(
-              width: size.width * 0.9,
-              height: size.height * 0.47,
+              width: size.width * 0.87,
+              height: size.height * 0.45,
               decoration: BoxDecoration(
-                border: Border.all(),
                 borderRadius: BorderRadius.circular(10),
+                color: Colors.white,
               ),
               child: ListView(
                 children: [
                   SizedBox(
-                    height: size.height * 0.02,
+                    height: size.height * 0.05,
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(left: 10.0, bottom: 10),
+                    padding: const EdgeInsets.only(left: 15.0, bottom: 30),
                     child: Text(
                       "주문자: ${user!.nickname}",
-                      style: TextStyle(fontFamily: "gilogfont", fontSize: 21),
+                      style: TextStyle(fontFamily: "gilogfont2", fontSize: 19),
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(left: 10.0, bottom: 30),
+                    padding: const EdgeInsets.only(left: 15.0, bottom: 30),
                     child: Text(
-                      "주문일시: $datetime",
-                      style: TextStyle(fontFamily: "gilogfont", fontSize: 21),
+                      "주문 일시: $datetime",
+                      style: TextStyle(fontFamily: "gilogfont2", fontSize: 19),
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(left: 10.0, bottom: 10),
+                    padding: const EdgeInsets.only(left: 15.0, bottom: 10),
                     child: Text(
-                      "주문사항",
-                      style: TextStyle(fontFamily: "gilogfont", fontSize: 21),
+                      "주문 내역",
+                      style: TextStyle(fontFamily: "gilogfont2", fontSize: 19),
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(left: 10.0, bottom: 10),
+                    padding: const EdgeInsets.only(left: 18.0, bottom: 20),
                     child: Text(
-                      "${widget.post_or_write} - ${widget.book_count}권 - ${widget.book_page}일치 기록",
-                      style: TextStyle(fontFamily: "gilogfont", fontSize: 21),
+                      ": ${widget.post_or_write} - ${widget.book_count}권 - ${widget.book_page}일치 기록",
+                      style: TextStyle(fontFamily: "gilogfont2", fontSize: 19),
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(left: 10.0, top: 20.0),
                     child: Text(
                       "배송지 정보",
-                      style: TextStyle(fontFamily: "gilogfont", fontSize: 23),
+                      style: TextStyle(fontFamily: "gilogfont2", fontSize: 19),
                     ),
                   ),
                   Padding(
@@ -210,10 +214,10 @@ class _Deliver_Four_Screen extends State<Deliver_Four_Screen> {
                       decoration: InputDecoration(
                           border: InputBorder.none,
                           contentPadding: EdgeInsets.zero,
-                          hintText: "배송지를 상세 주소 까지 입력해주세요!",
+                          hintText: "배송지를 상세 주소까지 입력해주세요!",
                           hintStyle: TextStyle(
                             color: Colors.grey,
-                            fontFamily: "gilogfont",
+                            fontFamily: "gilogfont2",
                             fontSize: 18,
                           )),
                       controller: _destination_controller,
@@ -232,11 +236,11 @@ class _Deliver_Four_Screen extends State<Deliver_Four_Screen> {
             Padding(
               padding: const EdgeInsets.only(top: 15.0),
               child: Text(
-                "네이버 스마트스토어 기로그에서 선결제를 해주셔야 합니다!",
+                "기로그 네이버 스마트스토어 선결제를 해주셔야 합니다!",
                 style: TextStyle(
-                    fontFamily: "gilogfont",
+                    fontFamily: "gilogfont2",
                     fontSize: 15,
-                    fontWeight: FontWeight.bold,
+                    //fontWeight: FontWeight.bold,
                     color: Color(0xfff76707)),
               ),
             ),
@@ -271,6 +275,10 @@ class _Deliver_Four_Screen extends State<Deliver_Four_Screen> {
                   fontSize: 13,
                   color: Colors.black),
             ),
+            SizedBox(
+              height: size.height * 0.01,
+            ),
+
             Padding(
               padding: const EdgeInsets.all(14.0),
               child: InkWell(
@@ -307,13 +315,13 @@ class _Deliver_Four_Screen extends State<Deliver_Four_Screen> {
                 },
                 child: Container(
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(3),
+                      borderRadius: BorderRadius.circular(50),
                       color: kButtonColor),
                   width: size.width * 0.7,
                   height: size.height * 0.06,
                   child: Center(
                       child: Text(
-                    "완료!",
+                    "주문 완료",
                     style: TextStyle(
                         color: Colors.white,
                         fontFamily: "numberfont",

@@ -23,11 +23,11 @@ class SplashScreen extends StatelessWidget {
           Center(
             child:DefaultTextStyle(
 
-                style: TextStyle(fontFamily: "Splahfont",fontSize: 39,color: Colors.black),
+                style: TextStyle(fontFamily: "gilogfont",fontSize: 30,color: Colors.black),
                 child: Center(
                   child: AnimatedTextKit(
                     animatedTexts: [
-                      TypewriterAnimatedText('당신의 일상을 \n기록해 보세요 \n      기 log', speed: const Duration(milliseconds: 100),),
+                      TypewriterAnimatedText('일상의 기록이 \n\n쉬워지는 방법 \n\n     기로그', speed: const Duration(milliseconds: 100),),
 
                     ],
                   ),

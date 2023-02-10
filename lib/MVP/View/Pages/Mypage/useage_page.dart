@@ -19,9 +19,9 @@ class _Useage_page extends State<Useage_page> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-        backgroundColor: kPrimaryColor,
+        backgroundColor: Colors.white,
         appBar: AppBar(
-          backgroundColor: kPrimaryColor,
+          backgroundColor: Colors.white,
           elevation: 0,
           iconTheme: IconThemeData(
             color: Colors.black, //색변경

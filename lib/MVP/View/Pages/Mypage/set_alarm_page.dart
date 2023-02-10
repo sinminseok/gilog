@@ -143,19 +143,23 @@ class _Set_AlarmState extends State<Set_Alarm> with WidgetsBindingObserver {
         backgroundColor: kPrimaryColor,
         elevation: 0,
         iconTheme: IconThemeData(
-          color: Colors.black, //색변경
+          color: kButtonColor, //색변경
         ),
       ),
       body: Column(
         children: [
+          SizedBox(
+            height: size.height * 0.04,
+          ),
+
           Text(
-            "기-록 알림 받기",
-            style: TextStyle(fontFamily: "gilogfont", fontSize: 32),
+            "기록 알림 받기",
+            style: TextStyle(fontFamily: "gilogfont", fontSize: 30),
           ),
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(10.0),
             child: Text(
-              "설정한 시간에 질문 알림을 받을 수 있어요!",
+              "설정한 시간에 질문 알림을 받을 수 있어요:)",
               style: TextStyle(fontSize: 18, fontFamily: "gilogfont"),
             ),
           ),
@@ -197,8 +201,8 @@ class _Set_AlarmState extends State<Set_Alarm> with WidgetsBindingObserver {
               },
               child: Container(
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(3),
-                      color:check_alarm == false ? Colors.purple.shade200 : kButtonColor),
+                      borderRadius: BorderRadius.circular(50),
+                      color:check_alarm == false ? Color(0xffD0C8C1) : kButtonColor),
                   width: size.width * 0.7,
                   height: size.height * 0.06,
                   child: Center(
@@ -227,7 +231,7 @@ class _Set_AlarmState extends State<Set_Alarm> with WidgetsBindingObserver {
             },
             child: Container(
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(3),
+                    borderRadius: BorderRadius.circular(50),
                     color: kButtonColor),
                 width: size.width * 0.7,
                 height: size.height * 0.06,

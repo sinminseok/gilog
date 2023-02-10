@@ -52,6 +52,7 @@ class _Deliver_Two_Screen extends State<Deliver_Two_Screen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                /*
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Container(
@@ -92,6 +93,8 @@ class _Deliver_Two_Screen extends State<Deliver_Two_Screen> {
                     ),
                   ),
                 ),
+
+                 */
               ],
             ),
             SizedBox(
@@ -121,8 +124,8 @@ class _Deliver_Two_Screen extends State<Deliver_Two_Screen> {
                       width: size.width * 0.41,
                       height: size.height * 0.07,
                       decoration: BoxDecoration(
-                          color: Color(0xffF1E2DB),
-                          borderRadius: BorderRadius.circular(10)),
+                          color: kButtonColor,
+                          borderRadius: BorderRadius.circular(50)),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -130,17 +133,21 @@ class _Deliver_Two_Screen extends State<Deliver_Two_Screen> {
                             child: Text(
                               "14개의 기-록",
                               style: TextStyle(
-                                  fontSize: 20,
+                                  color: Colors.white,
+                                  fontSize: 18,
                                   fontWeight: FontWeight.bold,
                                   fontFamily: "gilogfont"),
                             ),
                           ),
                           check_one == true
+
                               ? Icon(
                                   Icons.check,
-                                  color: Color(0xfff76707),
+                                  color: Colors.white,
                                 )
                               : Container(),
+
+
                         ],
                       ),
                     ),
@@ -161,8 +168,8 @@ class _Deliver_Two_Screen extends State<Deliver_Two_Screen> {
                     width: size.width * 0.41,
                     height: size.height * 0.07,
                     decoration: BoxDecoration(
-                        color: Color(0xffF1E2DB),
-                        borderRadius: BorderRadius.circular(10)),
+                        color: Color(0xffF6E0CF),
+                        borderRadius: BorderRadius.circular(50)),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -170,7 +177,7 @@ class _Deliver_Two_Screen extends State<Deliver_Two_Screen> {
                           child: Text(
                             "28개의 기-록",
                             style: TextStyle(
-                                fontSize: 20,
+                                fontSize: 18,
                                 fontWeight: FontWeight.bold,
                                 fontFamily: "gilogfont"),
                           ),
@@ -193,16 +200,18 @@ class _Deliver_Two_Screen extends State<Deliver_Two_Screen> {
                 width: size.width*0.9,
                 decoration: BoxDecoration(
                   border: Border(
-
                     bottom: BorderSide(width: 1.5, color: Colors.black12),
                   ),
                 ),
               ),
             ),
+            SizedBox(
+              height: size.height * 0.03,
+            ),
             Text("메모리북 신청 부수",style: TextStyle(fontFamily: "gilogfont",fontSize: 32),),
             //Text("신청 부수",style: TextStyle(fontFamily: "gilogfont",fontSize: 32),),
             SizedBox(
-              height: size.height * 0.04,
+              height: size.height * 0.03,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -232,11 +241,11 @@ class _Deliver_Two_Screen extends State<Deliver_Two_Screen> {
                     padding: EdgeInsets.all(10),
                     decoration: check_count_one == true
                         ? BoxDecoration(
-                            color: Color(0xfff76707),
-                            borderRadius: BorderRadius.circular(10))
+                            color: kButtonColor,
+                            borderRadius: BorderRadius.circular(100))
                         : BoxDecoration(
-                            color: Color(0xffF1E2DB),
-                            borderRadius: BorderRadius.circular(10)),
+                            color: Color(0xffF6E0CF),
+                            borderRadius: BorderRadius.circular(100)),
                     child: Center(
                         child: Text(
                       "1권",
@@ -269,11 +278,11 @@ class _Deliver_Two_Screen extends State<Deliver_Two_Screen> {
                     padding: EdgeInsets.all(10),
                     decoration: check_count_two == true
                         ? BoxDecoration(
-                            color: Color(0xfff76707),
-                            borderRadius: BorderRadius.circular(10))
+                        color: kButtonColor,
+                        borderRadius: BorderRadius.circular(100))
                         : BoxDecoration(
-                            color: Color(0xffF1E2DB),
-                            borderRadius: BorderRadius.circular(10)),
+                        color: Color(0xffF6E0CF),
+                        borderRadius: BorderRadius.circular(100)),
                     child: Center(
                         child: Text(
                       "2권",
@@ -306,11 +315,11 @@ class _Deliver_Two_Screen extends State<Deliver_Two_Screen> {
                     padding: EdgeInsets.all(10),
                     decoration: check_count_three == true
                         ? BoxDecoration(
-                            color: Color(0xfff76707),
-                            borderRadius: BorderRadius.circular(10))
+                        color: kButtonColor,
+                        borderRadius: BorderRadius.circular(100))
                         : BoxDecoration(
-                            color: Color(0xffF1E2DB),
-                            borderRadius: BorderRadius.circular(10)),
+                        color: Color(0xffF6E0CF),
+                        borderRadius: BorderRadius.circular(100)),
                     child: Center(
                         child: Text(
                       "3권",
@@ -343,11 +352,11 @@ class _Deliver_Two_Screen extends State<Deliver_Two_Screen> {
                     padding: EdgeInsets.all(10),
                     decoration: check_count_four == true
                         ? BoxDecoration(
-                            color: Color(0xfff76707),
-                            borderRadius: BorderRadius.circular(10))
+                        color: kButtonColor,
+                        borderRadius: BorderRadius.circular(100))
                         : BoxDecoration(
-                            color: Color(0xffF1E2DB),
-                            borderRadius: BorderRadius.circular(10)),
+                        color: Color(0xffF6E0CF),
+                        borderRadius: BorderRadius.circular(100)),
                     child: Center(
                         child: Text(
                       "4권",
@@ -380,11 +389,11 @@ class _Deliver_Two_Screen extends State<Deliver_Two_Screen> {
                     padding: EdgeInsets.all(10),
                     decoration: check_count_five == true
                         ? BoxDecoration(
-                            color: Color(0xfff76707),
-                            borderRadius: BorderRadius.circular(10))
+                        color: kButtonColor,
+                        borderRadius: BorderRadius.circular(100))
                         : BoxDecoration(
-                            color: Color(0xffF1E2DB),
-                            borderRadius: BorderRadius.circular(10)),
+                        color: Color(0xffF6E0CF),
+                        borderRadius: BorderRadius.circular(100)),
                     child: Center(
                         child: Text(
                       "5권",

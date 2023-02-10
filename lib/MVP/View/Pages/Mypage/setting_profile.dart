@@ -249,18 +249,18 @@ class _Setting_ProfileState extends State<Setting_Profile> {
                         decoration: InputDecoration(
                           labelText: '닉네임',
                           hintText: '닉네임을 입력하세요!',
-                          labelStyle: TextStyle(color: Colors.purple),
+                          labelStyle: TextStyle(color: kButtonColor),
                           focusedBorder: OutlineInputBorder(
                             borderRadius:
                                 BorderRadius.all(Radius.circular(10.0)),
                             borderSide:
-                                BorderSide(width: 1, color: Colors.purple),
+                                BorderSide(width: 1, color: kButtonColor),
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius:
                                 BorderRadius.all(Radius.circular(10.0)),
                             borderSide:
-                                BorderSide(width: 1, color: Colors.purple),
+                                BorderSide(width: 1, color: kButtonColor),
                           ),
                           border: OutlineInputBorder(
                             borderRadius:
@@ -275,7 +275,7 @@ class _Setting_ProfileState extends State<Setting_Profile> {
                     padding: const EdgeInsets.all(8.0),
                     child: Container(
                       decoration: BoxDecoration(
-                        border: Border.all(color: Colors.purple),
+                        border: Border.all(color: kButtonColor),
                           borderRadius: BorderRadius.all(Radius.circular(10))
                       ),
                       width: size.width * 0.7,
@@ -339,7 +339,7 @@ class _Setting_ProfileState extends State<Setting_Profile> {
                     },
                     child: Container(
                       decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(3),
+                          borderRadius: BorderRadius.circular(50),
                           color: kButtonColor),
                       width: size.width * 0.7,
                       height: size.height * 0.06,

@@ -71,19 +71,19 @@ class _Login_Oauth_Screen extends State<Login_Oauth_Screen> {
               children: [
                 Center(
                     child: Text(
-                  "기 - log",
+                  "기로그",
                   style: TextStyle(
-                      fontSize: 52,
+                      fontSize: 40,
                       color: Colors.black,
                       fontFamily: "Gilogfont"),
                 )),
                 SizedBox(
-                  height: size.height * 0.05,
+                  height: size.height * 0.02,
                 ),
                 InkWell(
                   onTap: () {},
                   child: Text(
-                    "나만의 추억 장소",
+                    "나만의 추억 저장소",
                     style: TextStyle(
                         fontSize: 21,
                         color: Colors.black,

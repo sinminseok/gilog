@@ -171,14 +171,14 @@ class _Login_ScreenState extends State<Login_Screen> {
                 children: [
                   Center(
                       child: Text(
-                    "기 - log",
-                    style: TextStyle(fontSize: 52, fontFamily: "Gilogfont"),
+                    "기로그",
+                    style: TextStyle(fontSize: 40, fontFamily: "Gilogfont"),
                   )),
                   SizedBox(
-                    height: size.height * 0.05,
+                    height: size.height * 0.02,
                   ),
                   Text(
-                    "나만의 추억 장소",
+                    "나만의 추억 저장소",
                     style: TextStyle(fontSize: 21, fontFamily: "Gilogfont"),
                   ),
                   SizedBox(
@@ -342,7 +342,7 @@ class _Login_ScreenState extends State<Login_Screen> {
                     child: Container(
                       decoration: BoxDecoration(
                           border: Border.all(
-                              color: Colors.black,
+                              color: kButtonColor,
                               style: BorderStyle.solid,
                               width: 3),
                           borderRadius: BorderRadius.circular(10),
@@ -372,12 +372,12 @@ class _Login_ScreenState extends State<Login_Screen> {
                       child: Container(
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
-                            color: Colors.black),
+                            color: kButtonColor),
                         width: size.width * 0.5,
                         height: size.height * 0.07,
                         child: Center(
                             child: Text(
-                          "새로왔어요!",
+                          "새로 왔어요!",
                           style: TextStyle(
                               fontSize: 21,
                               color: Colors.white,
