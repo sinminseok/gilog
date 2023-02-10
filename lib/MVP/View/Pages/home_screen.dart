@@ -255,7 +255,7 @@ class _Home_ScreenState extends State<Home_Screen> {
                           height: size.height*0.35,
                               width: size.width*0.7,
                               child: ClipRRect(
-                          borderRadius: BorderRadius.circular(20.0),
+                          borderRadius: BorderRadius.circular(50.0),
                           child: Image.file(
                               File(image_picked!.path),
                               fit: BoxFit.fitWidth,
@@ -351,12 +351,15 @@ class _Home_ScreenState extends State<Home_Screen> {
                           Center(
                             child: Container(
                               decoration: BoxDecoration(
+                                  /*
                                   border: Border.all(
                                       color: Colors.black,
                                       style: BorderStyle.solid,
                                       width: 3),
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: kPrimaryColor),
+
+                                   */
+                                  borderRadius: BorderRadius.circular(50),
+                                  color: Colors.white),
                               width: size.width * 0.9,
                               height: size.height * 0.12,
                               child: Padding(
@@ -404,14 +407,14 @@ class _Home_ScreenState extends State<Home_Screen> {
                             });
                           },
                           child: Text(
-                            "질문 수정이 완료 되면 여기를 눌러주세요",
+                            "질문 수정 완료",
                             style: TextStyle(
                                 fontFamily: "numberfont",
                                 fontWeight: FontWeight.bold),
                           ),
                         )
                             : Text(
-                          "새로운 질문을 만들래요",
+                          "질문 만들기",
                           style: TextStyle(
                               fontFamily: "numberfont",
                               fontWeight: FontWeight.bold),
