@@ -42,6 +42,8 @@
 		<string>storykompassauth</string>
 		<string>kakaolink</string>
 		<string>kakaotalk-5.9.7</string>
+		<string>https</string>
+		<string>http</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>

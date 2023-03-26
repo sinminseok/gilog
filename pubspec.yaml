@@ -65,6 +65,7 @@ dependencies:
   extended_image: ^6.0.3
   network_handler: ^1.0.1
   cached_network_image: ^3.0.0
+  url_launcher: ^6.1.10
 
 
 
@@ -117,6 +118,7 @@ flutter:
     - assets/images/user_img.png
     - assets/images/pencil_yellowpng.png
     - assets/images/smile_png.png
+    -
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

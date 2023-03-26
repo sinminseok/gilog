@@ -17,8 +17,10 @@
            <intent-filter android:label="flutter_web_auth">
 
                <action android:name="android.intent.action.VIEW" />
+               <data android:scheme="https" />
                <category android:name="android.intent.category.DEFAULT" />
                <category android:name="android.intent.category.BROWSABLE" />
+
 
                <!-- Redirect URI, "kakao${YOUR_NATIVE_APP_KEY}://oauth" 형식 -->
                <data android:scheme="kakaoc4ddd110fec9eaab625667112de706fb" android:host="oauth"/>

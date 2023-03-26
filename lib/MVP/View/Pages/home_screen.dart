@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:flutter/scheduler.dart';
 import 'package:gilog/Local_DB/Utility.dart';
 import 'package:gilog/MVP/Presenter/image_controller.dart';
 import 'package:http/http.dart' as http;
@@ -21,6 +22,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:network_handler/network_handler.dart';
 import '../../Presenter/Http/http_presenter.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/link.dart';
+
 
 
 class Home_Screen extends StatefulWidget {
@@ -53,6 +57,7 @@ class _Home_ScreenState extends State<Home_Screen> {
     myFuture = read_today_question();
     super.initState();
   }
+
 
 
 
@@ -247,10 +252,55 @@ class _Home_ScreenState extends State<Home_Screen> {
                       ),
                       child: Center(
                         child: image_picked == null
-                            ? Image.asset(
-                          "assets/images/photo_null_image.png",
-                          width: size.width * 0.5,
-                        )
+                            //? Image.asset(
+                          //"assets/images/photo_null_image.png",
+                          //width: size.width * 0.5,
+                        //)
+                            ? SizedBox(
+                            height: size.height*0.35,
+                            width: size.width*0.7,
+
+                              child: IconButton(onPressed: (){
+                                  showDialog(
+                                  context: context,
+                                  barrierDismissible: false, // 바깥 영역 터치시 닫을지 여부
+                                  builder: (BuildContext context) {
+                                  return AlertDialog(
+                                  title: Text('기로그 어플 이전 안내'),
+                                  content: SingleChildScrollView(
+                                  child: ListBody(
+                                  children: <Widget>[
+                                  Text('기로기들의 성원에 힘입어 4월 1일 정식 버전의 기로그가 세상에 나오게 됐어요.'),
+                                    Text('새로워진 기로그를 만나러 가볼까요?'),
+                                  ],
+                                  ),
+                                  ),
+                                  actions: <Widget>[
+                                  TextButton(
+                                  child: Text('좋아요!'),
+                                  onPressed: () async {
+                                    Navigator.of(context).pop();
+                                    final Uri _url = Uri.parse('https://onelink.to/cy62c6');
+                                    if (!await launchUrl(_url)) {
+                                      throw Exception('Could not launch $_url');
+                                    }
+
+                                    }
+
+
+
+                                  ,
+                                  ),
+                                  ],
+                                  );
+                                  }
+                                  );
+                        }, icon: Ink.image(
+                              image: AssetImage("assets/images/photo_null_image.png"),
+                              child: Container(),
+                        )),
+                            )
+
                             : Container(
                           height: size.height*0.35,
                               width: size.width*0.7,
