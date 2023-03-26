@@ -201,8 +201,8 @@ class _Login_Oauth_Screen extends State<Login_Oauth_Screen> {
                           ],
                           borderRadius: BorderRadius.circular(10),
                           color: Colors.amber),
-                      width: size.width * 0.7,
-                      height: size.height * 0.05,
+                      width: 300,
+                      height: 45,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -217,7 +217,7 @@ class _Login_Oauth_Screen extends State<Login_Oauth_Screen> {
                               child: Text(
                             "카톡으로 등록",
                             style: TextStyle(
-                              fontSize: 21,
+                              fontSize: 19,
                               color: Colors.black,
                             ),
                           )),
@@ -241,13 +241,13 @@ class _Login_Oauth_Screen extends State<Login_Oauth_Screen> {
                           }
                         },
                         child: Container(
-                          width: size.width * 0.7,
-                          height: size.height * 0.09,
+                          width: 300,
+                          height: 70,
                           child: Image.asset("assets/images/apple_oauth.png"),
                         ),
                       ),
                 SizedBox(
-                  height: size.height * 0.12,
+                  height: size.height * 0.3,
                 ),
                 Text(
                   "@copyright 2022 by Sso-young",
