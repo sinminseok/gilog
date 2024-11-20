@@ -36,17 +36,21 @@
 
 ## 일기 기록 화면
 <div style="display: grid; grid-template-columns: repeat(3, 1fr); grid-gap: 10px;">
-
+        <img src="https://github.com/user-attachments/assets/849cea7b-daad-4182-8be6-523ae7f9bbf0" style="width: 150px;">
+        <img src="https://github.com/user-attachments/assets/ed3ae014-6a6f-4dff-a35f-9255ffa0053e" style="width: 150px;">
+        <img src="https://github.com/user-attachments/assets/0cd4d20f-39a6-4822-b55a-77c4e6cad929" style="width: 150px;">
+        <img src="https://github.com/user-attachments/assets/5c5ee383-c3a9-4473-a89a-8b4127bd5066" style="width: 150px;">
 
 </div>
 
 ### 포토북 제작 화면 
 
 <div style="display: grid; grid-template-columns: repeat(3, 1fr); grid-gap: 10px;">
-        <img src="https://github.com/user-attachments/assets/456f128d-885f-4ef4-ba76-e2cc44ab158c" style="width: 150px;">
-        <img src="https://github.com/user-attachments/assets/23a66bfc-2cfc-455a-b130-4c32d20ac3e2" style="width: 150px;">
-        <img src="https://github.com/user-attachments/assets/6209c51c-2f16-4d41-b9db-5647ec1b8d97" style="width: 150px;">
-        <img src="https://github.com/user-attachments/assets/0a52b841-8e3b-4945-bf45-201102436736" style="width: 150px;">
-        <img src="https://github.com/user-attachments/assets/470dd6a5-ab18-4c68-849f-a8d04644a36d" style="width: 150px;">
+        <img src="https://github.com/user-attachments/assets/d48c1156-8cdc-4442-8504-b9c07441d348" style="width: 150px;">
+        <img src="https://github.com/user-attachments/assets/5500b90b-8931-4a42-9591-60ba15a3978f" style="width: 150px;">
+        <img src="https://github.com/user-attachments/assets/da6cb57c-2983-4ea8-9ccf-d2d53753e5a8" style="width: 150px;">
 </div>
+
+
+
 
